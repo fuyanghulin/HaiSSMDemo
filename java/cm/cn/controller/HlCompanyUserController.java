@@ -19,7 +19,7 @@ public class HlCompanyUserController {
 	@Autowired
 	private HlCompanyUserService hlCompanyUserService;
 
-	// 添加公司的时候同时为其创建账户
+	// 添加公司的同时为其创建账户
 	@RequestMapping("/insertCompanyUserAndPass")
 	@ResponseBody
 	public Map<Integer, String> insertCompanyUserAndPass(HlCompanyuser hlCompanyuser) {
