@@ -8,6 +8,7 @@ var dataUrl = {
         logout:baseUrl+'/HaiSSMDemo/logout.action',
     },
     company:{
+        checkName:baseUrl+'/HaiSSMDemo/checkAccount.action',
         add:baseUrl+'/HaiSSMDemo/insertCompanyUserAndPass.action',
         getID:baseUrl+'/HaiSSMDemo/selectCompanyByName.action?current=1&pageNum=1000&name=',
         getName:baseUrl+'/HaiSSMDemo/selectCompanyByID.action?id=',

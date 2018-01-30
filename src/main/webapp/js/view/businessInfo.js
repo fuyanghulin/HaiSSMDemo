@@ -28,9 +28,35 @@ new Vue({
             if (!value) {
                 callback(new Error('企业账户不能为空'));
             }else{
-                callback();
+                //检查账号是否重复
+                console.log('检查账号是否重复');
+                //var redata=1;
+                $.ajax({
+                        type: 'GET',
+                        url: dataUrl.company.checkName,
+                        data: {"name":value},
+                        cache: false,
+                        success: function (data) {
+                            /*_self.$refs['formCustom'].resetFields();
+                            _self.$Message.success('提交成功!');
+                            _self.state = true;
+                            _self.modal1 = false;
+                            _self.getAll();*/
+                            //redata=data;
+                            console.log('ajax请求');
+                            console.log(typeof data);
+                            if(data[1]){
+                                console.log("判断:1");
+                                callback();
+                            }else{
+                                console.log("判断:0");
+                                callback(new Error('账号已经存在！'));
+                            }
+                        }
+                    });
             }
         };
+
         return {
             userType:'',
             formCustom: {
@@ -48,6 +74,7 @@ new Vue({
                 ],
                 name: [
                     { validator: validateName.bind(this), trigger: 'blur' }
+                    
                 ]
             },
             current: 0,/*添加企业信息步骤*/
@@ -273,19 +300,21 @@ new Vue({
             var _self=this;
             _self.$refs[name].validate(function (valid) {
                 if (valid) {
-                    $.ajax({
-                        type: 'GET',
-                        url: dataUrl.company.add,
-                        data:_self.formCustom,
-                        cache: false,
-                        success: function (data) {
-                            _self.$refs['formCustom'].resetFields();
-                            _self.$Message.success('提交成功!');
-                            _self.state = true;
-                            _self.modal1 = false;
-                            _self.getAll();
-                        }
-                    });
+                    _self.postData(_self, dataUrl.carrier.insert, _self.company);
+                    
+                    // $.ajax({
+                    //     type: 'GET',
+                    //     url: dataUrl.company.add,
+                    //     data:_self.formCustom,
+                    //     cache: false,
+                    //     success: function (data) {
+                    //         _self.$refs['formCustom'].resetFields();
+                    //         _self.$Message.success('提交成功!');
+                    //         _self.state = true;
+                    //         _self.modal1 = false;
+                    //         _self.getAll();
+                    //     }
+                    // });
                 } else {
                     _self.$Message.error('表单验证失败!');
                 }
@@ -337,7 +366,8 @@ new Vue({
                             _self.company.businCertificateTime = _self.month(_self.company.businCertificateTime);
                         }
                         if (_self.openState == "添加") {
-                            _self.postData(_self, dataUrl.carrier.insert, _self.company);
+                            //_self.postData(_self, dataUrl.carrier.insert, _self.company);
+                            _self.state=false;//下一步，不提交
                         }
                         else if (_self.openState == "修改") {
                             _self.postData(_self, dataUrl.carrier.upDate, _self.company);
@@ -358,7 +388,11 @@ new Vue({
             return date.getFullYear() +'-'+ m + '-' + date.getDate();
         },
         cancel: function () {
+            this.$refs['company'].resetFields();
+            this.$refs['formCustom'].resetFields();
             this.modal1 = false;
+            this.loading = false;
+            this.state=true;
         },
         open: function(obj) {
             if ($.trim(obj.currentTarget.innerText)== "添加") {
@@ -462,7 +496,22 @@ new Vue({
                         _self.current += 1;
                         $.get(dataUrl.company.getID+_self.company.name,function (data) {
                             _self.formCustom.companyId=data.dataList[0].id;
+                            $.ajax({
+                                type: 'GET',
+                                url: dataUrl.company.add,
+                                data:_self.formCustom,
+                                cache: false,
+                                success: function (data) {
+                                    _self.$refs['formCustom'].resetFields();
+                                    _self.$Message.success('提交成功!');
+                                    _self.state = true;
+                                    _self.modal1 = false;
+                                    _self.getAll();
+                                }
+                            });
                         });
+
+
                     }else{
                         _self.loading = false;
                         _self.$Message.info('上传成功');
