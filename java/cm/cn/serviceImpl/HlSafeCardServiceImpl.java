@@ -54,7 +54,7 @@ public class HlSafeCardServiceImpl implements HlSafeCardService {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlSafecardExample example = new HlSafecardExample();
 		HlSafecardExample.Criteria criteria = example.createCriteria();
-		criteria.andSafeCardNameEqualTo(safeCardName);
+		criteria.andSafeCardNumEqualTo(safeCardName);
 		return hlSafecardMapper.selectByExample(example);
 	}
 
