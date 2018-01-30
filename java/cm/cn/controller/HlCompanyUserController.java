@@ -11,30 +11,41 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cm.cn.po.HlCompanyMix;
 import cm.cn.po.HlCompanyuser;
+import cm.cn.service.HlCompanyService;
 import cm.cn.service.HlCompanyUserService;
 
 @Controller
 public class HlCompanyUserController {
 	@Autowired
 	private HlCompanyUserService hlCompanyUserService;
-
 	// 添加公司的同时为其创建账户
 	@RequestMapping("/insertCompanyUserAndPass")
 	@ResponseBody
 	public Map<Integer, String> insertCompanyUserAndPass(HlCompanyuser hlCompanyuser) {
 		Map<Integer, String> map = new HashMap<Integer, String>();
 		// 先查询该用户是否存在，存在的话不能添加，不存在的话可以直接添加
-		List<HlCompanyuser> list = hlCompanyUserService.selectByUserName(hlCompanyuser.getName());
-		if (list.size() > 0) {
-			map.put(1, "该用户名已经存在");
-		} else {
-			hlCompanyUserService.addCompanyUserAndPass(hlCompanyuser);
-			map.put(2, "添加成功");
+		int num = hlCompanyUserService.addCompanyUserAndPass(hlCompanyuser);
+		if(num!=0){
+			map.put(1, "添加成功");
+		}else{
+			map.put(0, "添加失败");
 		}
 		return map;
 	}
-
+	@RequestMapping("/checkAccount")
+	@ResponseBody
+	public Map<Integer,String> companyaccount(String name){
+		Map<Integer, String> map = new HashMap<Integer, String>();
+		List<HlCompanyuser> list = hlCompanyUserService.selectByUserName(name);
+		if (list.size() > 0) {
+			map.put(0, "该用户名已经存在");
+		} else {
+			map.put(1, "用户名可用");
+		}
+		return map;
+	}
 	@RequestMapping("/companyUserLogin")
 	@ResponseBody
 	public Map<Integer, Object> companyUserLogin(String name, String pass, HttpSession session) {
