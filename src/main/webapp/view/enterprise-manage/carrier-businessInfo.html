@@ -31,7 +31,10 @@
     <nav>
         <div>
             <i-button type="primary" @click="open($event)" v-if="userType===1">添加</i-button>
-            <i-button type="primary" style="margin-left: 20px;" @click="moreDelete" v-if="userType===1">删除</i-button>
+            <Tooltip content="删除所选企业信息" placement="bottom-start">
+                <i-button type="error" style="margin-left: 20px;" @click="moreDelete" v-if="userType===1">删除</i-button>
+            </Tooltip>
+            
         </div>
         <div>
             <i-input placeholder="请输入企业名称搜索" style="width: 200px;" v-model="searchText"></i-input>
