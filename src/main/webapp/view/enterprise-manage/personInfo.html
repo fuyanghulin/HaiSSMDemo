@@ -40,19 +40,30 @@
     </style>
 </head>
 <body>
+
+<!--     <Row type="flex" justify="center" align="middle" style="height:100vh" >
+        <Spin >
+            <Icon type="load-a" size=50 class="demo-spin-icon-load"></Icon>
+            <div style="font-size: 20px;">Loading</div>
+        </Spin>
+    </Row>试一试loading -->
+
 <div id="app" ref="head" style="display: none">
 
     <nav>
         <div>
             <i-Button type="primary" @click="open($event)" v-if="userType===3">添加</i-Button>
-            <i-Button type="primary" @click="del" v-if="userType===1">删除</i-Button>
+            <Tooltip content="删除所选人员信息" placement="bottom-start">
+                <i-Button type="error" @click="del" v-if="userType===1">删除</i-Button>
+            </Tooltip>
+            
         </div>
         <div>
             <i-Input placeholder="请输入姓名..." style="width: 300px" v-model="searchText"></i-Input>
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
         </div>
     </nav>
-    <i-Table border :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
     <Page :total="totalRecord" show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
@@ -60,7 +71,8 @@
             v-model="modal1"
             width="50%"
             :closable="false"
-    >
+            @on-cancel="cancel"
+    > <!-- 添加一个on-cancel事件 -->
         <i-Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
             <Row>
                 <i-Col span="11">

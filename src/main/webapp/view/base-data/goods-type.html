@@ -29,20 +29,24 @@
     <nav>
         <div>
             <i-Button type="primary" @click="open($event)" v-if="userType===1">添加</i-Button>
-            <i-Button type="primary" @click="del" v-if="userType===1">删除</i-Button>
+            <Tooltip content="删除所选货物信息" placement="bottom-start">
+                <i-Button type="error" @click="del" v-if="userType===1">删除</i-Button>
+            </Tooltip>
+            
         </div>
         <div>
             <i-Input placeholder="请输入名称..." style="width: 300px" v-model="searchText"></i-Input>
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
         </div>
     </nav>
-    <i-Table border :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
     <Page :total="totalRecord" show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum" ></Page>
     <Modal
             v-model="modal1"
             :loading="loading"
-            :closable="false">
+            :closable="false"
+            @on-cancel="cancel">
         <i-Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
             <Row>
                 <Form-Item label="名称" prop="name">
@@ -199,16 +203,21 @@
             },
             del:function() {
                 var _self = this;
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.goodsType.del+_self.delArr,
-                    cache: false,
-                    success: function (data) {
-                        _self.delArr = [];
-                        _self.getData();
-                        _self.$Message.info('刪除成功');
-                    }
-                });
+                //console.log(_self.delArr.length);
+                if(_self.delArr.length>0){//kk加了一个判断
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.goodsType.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];//KK添加
+                }
+                
             },
             search:function() {
                 if (this.searchText.replace(/\s/g, '').length < 1) {
@@ -236,9 +245,14 @@
             },
             chooseAll:function(data) {
                 var _self = this;
-                for (var i in data) {
-                    _self.delArr.push(data[i].id);
+                if(_self.delArr.length){
+                    _self.delArr=[];
+                }else{
+                   for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    } 
                 }
+                
             },
             next:function(data) {
                 this.page.current = data;
@@ -290,23 +304,26 @@
                 var _self = this;
                 _self.loading = true;
                 _self.$refs.formValidate.validate(function (valid) {
-                	
+
                     if (valid) {
                         if (_self.openState == "添加") {
-                        	
+                        	//_self.formValidate.id=null;
                             _self.postData(_self, dataUrl.goodsType.insert, JSON.stringify(_self.formValidate));
                         }
                         else if (_self.openState == "修改") {
                         	_self.formValidate.cratetime=Date.parse(_self.formValidate.cratetime);
                             _self.postData(_self, dataUrl.goodsType.upDate, JSON.stringify(_self.formValidate));
+                            _self.formValidate.id='';
                         }
                     } else {
                         _self.loading = false;
                     }
                 });
+               // _self.$refs['formValidate'].resetFields();//kk添加
             },
             cancel:function() {
                 this.modal1 = false;
+                this.$refs['formValidate'].resetFields();
             },
             postData:function(_self, url, data) {
                 $.ajax(url, {

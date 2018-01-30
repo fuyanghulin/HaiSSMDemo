@@ -22,65 +22,76 @@ new Vue({
                     type: 'selection',
                     width: 60,
                     align: 'center',
+                    width: 120,
                     fixed: 'left'
                 },
                 {
                     title: '车牌号',
                     key: 'carNum',
                     align: 'center',
-                    ellipsis: true
+                    width: 120,
+                    fixed: 'left'
                 },
                 {
                     title: '挂车牌号',
                     key: 'guacarNum',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '车牌颜色',
                     key: 'carnumColor',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '车辆类型',
                     key: 'carType',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '载重',
                     key: 'allowWeight',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '车辆归属',
                     key: 'ownType',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '经营许可证',
                     key: 'cerNum',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '驾驶员',
                     key: 'driverName',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '押运员',
                     key: 'safer',
                     align: 'center',
+                    width: 120,
                     ellipsis: true
                 },
                 {
                     title: '位置',
                     key: 'action',
+                    width: 120,
                     align: 'center',
                     render: function (h, params) {
                         return h('div', [
@@ -145,6 +156,7 @@ new Vue({
                     title: '操作',
                     key: 'action',
                     align: 'center',
+                    width: 150,
                     fixed: 'right',
                     render: function (h, params) {
                         if (this.userType === 1) {

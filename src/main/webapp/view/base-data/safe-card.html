@@ -29,14 +29,17 @@
     <nav>
         <div>
             <i-Button type="primary" @click="open($event)" v-if="userType===1">添加</i-Button>
-            <i-Button type="primary" @click="del" v-if="userType===1">删除</i-Button>
+            
+            <Tooltip content="删除所选安全卡" placement="bottom-start">
+                <i-Button type="error" @click="del" v-if="userType===1">删除</i-Button>
+            </Tooltip>
         </div>
         <div>
             <i-Input placeholder="请输入安全卡名称..." style="width: 300px" v-model="searchText"></i-Input>
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
         </div>
     </nav>
-    <i-Table border :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
     <Page :total="totalRecord" show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
     <Modal
@@ -304,22 +307,37 @@
             },
             del:function() {
                 var _self = this;
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.safeCard.del+_self.delArr,
-                    cache: false,
-                    success: function (data) {
-                        _self.delArr = [];
-                        _self.getData();
-                        _self.$Message.info('刪除成功');
-                    }
-                });
+                if(_self.delArr.length>0){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.safeCard.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }
+                
             },
-            chooseAll:function(data) {
+            /*chooseAll:function(data) {
                 var _self = this;
                 for (var i in data) {
                     _self.delArr.push(data[i].id);
                 }
+            }*/
+            chooseAll:function(data) {
+                var _self = this;
+                if(_self.delArr.length){
+                    _self.delArr=[];
+                }else{
+                   for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    } 
+                }
+                
             },
             handleUpload1:function(file) {
                 this.formValidate.safeCardFile = file;

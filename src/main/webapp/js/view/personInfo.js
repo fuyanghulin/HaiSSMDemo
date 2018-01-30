@@ -8,7 +8,7 @@ new Vue({
             totalRecord: 0,
             page: {
                 current: 1, /*当前页*/
-                pageNum: 20/*每页数据量*/,
+                pageNum: 15/*每页数据量*/,
             },
             isDriver: false, // 判断是否为司机
             formValidate: {
@@ -38,7 +38,10 @@ new Vue({
                     {required: true, message: '请选择性别', trigger: 'change'}
                 ],
                 phone: [
-                    {required: true, message: '手机号不能为空', trigger: 'blur'}
+                    {required: true, message: '手机号不能为空', trigger: 'blur'},
+                    { type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
+                        return Number(value);
+                    }}
                 ],
                 compayId: [
                     {required: true, message: '请选择单位', trigger: 'change', type: 'number'}
@@ -187,6 +190,9 @@ new Vue({
                                         type: 'primary',
                                         size: 'small'
                                     },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
                                     on: {
                                         click: function () {
                                             this.openState = "查看";
@@ -194,7 +200,20 @@ new Vue({
                                             this.modal1 = true;
                                         }.bind(this)
                                     }
-                                }, '查看')
+                                }, '查看'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: function () {
+                                            this.openState = "修改";
+                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
+                                            this.modal1 = true;
+                                        }.bind(this)
+                                    }
+                                }, '修改')
                             ]);
                         }
 
@@ -213,6 +232,7 @@ new Vue({
             var _self = this;
             if (_self.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');
+                //getData();
             } else {
                 $.ajax({
                     type: 'GET',
@@ -256,22 +276,31 @@ new Vue({
         },
         del:function() {
             var _self = this;
-            $.ajax({
-                type: 'GET',
-                url: dataUrl.person.del + _self.delArr,
-                cache: false,
-                success: function (data) {
-                    _self.delArr = [];
-                    _self.getData();
-                    _self.$Message.info('刪除成功');
-                }
-            });
+            if(_self.delArr.length>0){
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.person.del + _self.delArr,
+                    cache: false,
+                    success: function (data) {
+                        _self.delArr = [];
+                        _self.getData();
+                        _self.$Message.info('刪除成功');
+                    }
+                });
+                //_self.delArr = [];
+            }
+            
         },
         chooseAll:function(data) {
             var _self = this;
-            for (var i in data) {
-                _self.delArr.push(data[i].id);
+            if(_self.delArr.length){
+                _self.delArr=[];
+            }{
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                }
             }
+            
         },
         success:function(data) {
             this.formValidate.pictureName = data[0];
@@ -411,6 +440,8 @@ new Vue({
             });
         },
         cancel:function() {
+            console.log("重置一下就好");
+            this.$refs['formValidate'].resetFields();
             this.modal1 = false;
             this.loading = false;
         },
@@ -435,6 +466,8 @@ new Vue({
     created:function() {
         var _self = this;
         var textState = JSON.parse(Cookies.get("state"));
+
+        //this.columns.splice(1,1);
         if (textState != null) {
             if (textState.ID == 0) {
                 window.location.href = "../../state.html";
@@ -465,6 +498,7 @@ new Vue({
                     });
                 } else {
                     _self.userType = 3;
+                    //_self.columns.splice(1,1);//不需要删除的那个选择
                     $.ajax({
                         type: 'GET',
                         url: dataUrl.company.getName + textState.companyID,
