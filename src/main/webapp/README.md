@@ -12,8 +12,14 @@
 
 		两个tab来显示一行文字
 		或者说多行吧
-		`来点高亮的试试`
+
+***
 
 [超链接](https://github.com/qiandaohudiv)
+[md格式学习](#md格式学习)
 
-
+***
+###2018年1月31日08:42:38
+准备把页面理一遍，修复一些页面的小bug
+*页面的一个loading没做
+*goods-type.html:修改了chooseAll函数，并添加了sel_change函数，还需要添加一个刷新按钮，提高用户体验

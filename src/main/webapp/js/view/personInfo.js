@@ -1,6 +1,13 @@
 new Vue({
     el: '#app',
     data:function() {
+        var checkidNum=function(rule, value, callback){
+            if(value.length!=18){
+                callback(new Error('请确认身份证为18位'));
+            }else{
+                callback();
+            }
+        }
         return {
             userType: '',
             uploadUrl:dataUrl.person.upImg,
@@ -14,6 +21,7 @@ new Vue({
             formValidate: {
                 id: '',
                 name: '',
+                idNum: '',
                 sex: '',
                 birthday: '',
                 phone: '',
@@ -36,6 +44,14 @@ new Vue({
                 ],
                 sex: [
                     {required: true, message: '请选择性别', trigger: 'change'}
+                ],
+                // idNum: [
+                //     {required: true, message: '请输入身份证号码', trigger: 'blur'},
+                //     {validator: checkidNum.bind(this) ,trigger: 'blur'}
+                // ],
+                idNum: [
+                    {required: true, message: '请输入身份证号码', trigger: 'blur'},
+                    {validator: checkidNum.bind(this) ,trigger: 'blur'}
                 ],
                 phone: [
                     {required: true, message: '手机号不能为空', trigger: 'blur'},
@@ -99,6 +115,12 @@ new Vue({
                     title: '所在单位',
                     align: 'center',
                     key: 'reserveOne',
+                    width: 200
+                },
+                {
+                    title: '身份证',
+                    key: 'idNum',
+                    align: 'center',
                     width: 200
                 },
                 {
