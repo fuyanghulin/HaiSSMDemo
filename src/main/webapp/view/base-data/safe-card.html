@@ -37,9 +37,10 @@
         <div>
             <i-Input placeholder="请输入安全卡名称..." style="width: 300px" v-model="searchText"></i-Input>
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
+            <i-Button type="primary" @click="refresh" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table border stripe :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-click="console.log('选中一行')"></i-Table>
     <Page :total="totalRecord" show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
     <Modal
@@ -106,6 +107,15 @@
         <!-- <div id="showPDF" style=" height: 500px;" v-show="show"></div> -->
         <img :src="showImg" style=" height: auto;width:100%;background-size:100% 100%" v-show="!show">
     </modal>
+    <Modal
+        v-model="modal3"
+        title="删除提示"
+        :del_arr='delArr'
+        @on-ok="ok_del"
+        @on-cancel="cancel_del">
+        <p v-if="onedel">是否删除该条数据</p>
+        <p v-else>是否确认删除{{delArr.length}}条数据</p>
+    </Modal>
 </div>
 <script src="../../js/jquery-2.1.0.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../js/support/pdfobject.js"></script>
@@ -145,6 +155,7 @@
                 },
                 modal2:false,
                 modal1: false,
+                modal3:false,
                 columns: [
                     {
                         type: 'selection',
@@ -237,8 +248,11 @@
                                         },
                                         on: {
                                             click: function () {
-                                                this.delArr.push(this.data[params.index].id);
-                                                this.del();
+                                                // this.delArr.push(this.data[params.index].id);
+                                                // this.del();
+                                                this.delone=this.data[params.index].id;
+                                                this.del_index(this.data[params.index].id);
+                                                this.onedel=true;
                                             }.bind(this)
                                         }
                                     }, '删除')
@@ -266,7 +280,9 @@
                 loading: false,
                 file: null,
                 delArr: [],
-                searchText:''
+                searchText:'',
+                delone:'',
+                onedel:false
             }
         },
         mounted: function () {
@@ -307,7 +323,45 @@
             },
             del:function() {
                 var _self = this;
+                /*if(_self.delArr.length>0){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.safeCard.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }*/
                 if(_self.delArr.length>0){
+                    _self.modal3=true;
+                }
+                
+            },
+            del_index:function(n){
+                var _self=this;
+                _self.modal3=true;
+
+                
+            },
+            ok_del:function(){
+                var _self=this;
+                if(_self.onedel){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.safeCard.del+_self.delone,
+                        cache: false,
+                        success: function (data) {
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delone='';
+                    _self.onedel=false;
+                }else{
                     $.ajax({
                         type: 'GET',
                         url: dataUrl.safeCard.del+_self.delArr,
@@ -328,7 +382,14 @@
                     _self.delArr.push(data[i].id);
                 }
             }*/
-            chooseAll:function(data) {
+            cancel_del:function(){
+                this.modal2=false;
+                this.delone='';
+                this.onedel=false;
+                this.modal3=false;
+                this.$refs['formValidate'].resetFields();
+            },
+            /*chooseAll:function(data) {
                 var _self = this;
                 if(_self.delArr.length){
                     _self.delArr=[];
@@ -336,6 +397,29 @@
                    for (var i in data) {
                         _self.delArr.push(data[i].id);
                     } 
+                }
+                
+            },*/
+            chooseAll:function(data) {
+                var _self = this;
+                //console.log(this.data.selection);
+                _self.delArr=[];
+                if(data.length){
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
+            sel_change:function(data){
+                var _self = this;
+                //console.log(data);
+                _self.delArr=[];
+                if(data.length){
+
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
                 }
                 
             },
@@ -455,6 +539,8 @@
             cancel:function() {
                 this.modal1 = false;
                 this.loading = false;
+                this.modal3=false;
+                this.$refs['formValidate'].resetFields();
             },
             show:function(index) {
                 this.$Modal.confirm({
@@ -484,8 +570,28 @@
                         _self.$Message.info('上传失败');
                     }
                 });
+            },
+            refresh: function(){
+                var _self=this;
+                _self.searchText='';
+                var textState=JSON.parse(Cookies.get("state"));
+                if(textState!=null){
+                    if(textState.ID==0){
+                        window.location.href="../../state.html";
+                    }else if(textState.ID==1){
+                        if(textState.roleID==1){
+                            _self.userType=1;
+                        }else if(textState.roleID==2){
+                            _self.userType=2;
+                        }
+                        _self.getData();
+                    }
+                }else {
+                    window.location.href="../../state.html";
+                }
             }
         },
+        
         created:function() {
             var _self = this;
             var textState=JSON.parse(Cookies.get("state"));

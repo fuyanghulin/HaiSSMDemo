@@ -32,17 +32,18 @@
         <div>
             <i-button type="primary" @click="open($event)" v-if="userType===1">添加</i-button>
             <Tooltip content="删除所选企业信息" placement="bottom-start">
-                <i-button type="error" style="margin-left: 20px;" @click="moreDelete" v-if="userType===1">删除</i-button>
+                <i-button type="error" style="margin-left: 20px;" @click="del" v-if="userType===1">删除</i-button>
             </Tooltip>
             
         </div>
         <div>
             <i-input placeholder="请输入企业名称搜索" style="width: 200px;" v-model="searchText"></i-input>
             <i-button type="primary" shape="circle" icon="ios-search" @click="search"></i-button>
+            <i-Button type="primary" @click="getAll" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
     <!--数据区块-->
-    <i-Table border :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></i-Table>
+    <i-Table border :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-click="console.log('选中一行')"  ellipsis></i-Table>
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage"
           :page-size="page.pageNum" show-total show-elevator></Page>
@@ -169,8 +170,17 @@
         <!--自定义-->
         <div slot="footer" v-show="state">
             <i-button type="text" style="width: 100px;" @click="cancel">取消</i-button>
-            <i-button type="primary" @click="upMessage" :loading="loading" style="width: 100px;">下一步</i-button>
+            <i-button type="primary" @click="upMessage" :loading="loading" style="width: 100px;">{{openmodal2}}</i-button>
         </div>
+    </Modal>
+    <Modal
+        v-model="modal2"
+        title="删除提示"
+        :del_arr='delArr'
+        @on-ok="ok_del"
+        @on-cancel="cancel_del">
+        <p v-if="onedel">是否删除该条数据</p>
+        <p v-else>是否确认删除{{delArr.length}}条数据</p>
     </Modal>
 </div>
 </body>

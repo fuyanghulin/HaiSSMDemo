@@ -44,12 +44,13 @@
             <i-button type="primary" @click="open($event)" v-if="userType===3">添加</i-button>
             
             <Tooltip content="删除所选车辆信息" placement="bottom-start">
-                <i-button type="error" style="margin-left: 20px;" @click="moreDelete" v-if="userType===1">删除</i-button>
-            </Tooltip>
+                <i-button type="error" style="margin-left: 20px;" @click="del" v-if="userType===1">删除</i-button>
+            </Tooltip><!-- 原来是moredelete函数 -->
         </div>
         <div>
             <i-input placeholder="请输入车牌号" style="width: 200px;" v-model="searchText"></i-input>
             <i-button type="primary" shape="circle" icon="ios-search" @click="search"></i-button>
+            <i-Button type="primary" @click="getAll" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
     <!--数据区块-->
@@ -348,6 +349,15 @@
         <div id="allmap" style="width: 100%;height: 500px;"></div>
         <div slot="footer">
         </div>
+    </Modal>
+    <Modal
+        v-model="modal2"
+        title="删除提示"
+        :del_arr='delArr'
+        @on-ok="ok_del"
+        @on-cancel="cancel_del">
+        <p v-if="onedel">是否删除该条数据</p>
+        <p v-else>是否确认删除{{delArr.length}}条数据</p>
     </Modal>
 </div>
 </body>

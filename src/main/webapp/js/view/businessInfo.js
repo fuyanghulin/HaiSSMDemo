@@ -29,7 +29,7 @@ new Vue({
                 callback(new Error('企业账户不能为空'));
             }else{
                 //检查账号是否重复
-                console.log('检查账号是否重复');
+                //console.log('检查账号是否重复');
                 //var redata=1;
                 $.ajax({
                         type: 'GET',
@@ -43,13 +43,13 @@ new Vue({
                             _self.modal1 = false;
                             _self.getAll();*/
                             //redata=data;
-                            console.log('ajax请求');
-                            console.log(typeof data);
+                            //console.log('ajax请求');
+                            //console.log(typeof data);
                             if(data[1]){
-                                console.log("判断:1");
+                                //console.log("判断:1");
                                 callback();
                             }else{
-                                console.log("判断:0");
+                                //console.log("判断:0");
                                 callback(new Error('账号已经存在！'));
                             }
                         }
@@ -187,6 +187,7 @@ new Vue({
                                     on: {
                                         click: function () {
                                             this.change(params.index);
+                                            this.openmodal2='确认';
                                         }.bind(this)
                                     }
                                 }, '修改'),
@@ -197,7 +198,11 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                            this.deleteOne(params.index);
+                                            //this.deleteOne(params.index);
+                                            //console.log('删除程序');
+                                            this.delone=this.data1[params.index].id;
+                                            this.del_index(this.data1[params.index].id);
+                                            this.onedel=true;
                                         }.bind(this)
                                     }
                                 }, '删除')
@@ -267,7 +272,12 @@ new Vue({
             searchText: '',
             loading: false,
             openState: '',
-            cityData: []
+            cityData: [],
+            modal2: false,
+            onedel:false,
+            delone:'',
+            delArr:[],
+            openmodal2:'下一步'
         }
     },
     created: function () {
@@ -320,6 +330,125 @@ new Vue({
                 }
             });
         },
+        del:function() {
+            var _self = this;
+            //console.log("所选个数："+_self.delArr.length);
+
+            if(_self.delArr.length>0){//kk加了一个判断
+                //console.log("进入modal2");
+                _self.modal2=true;
+                /*if(ensure_del){
+                    ok_del();
+                }*/
+                
+            }
+            
+        },
+        del_index:function(n){
+            var _self=this;
+            _self.modal2=true;
+
+            
+        },
+        ok_del:function(){
+            var _self=this;
+            if(_self.onedel){
+                //console.log('要删除一条');
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.carrier.del+_self.delone,
+                    cache: false,
+                    success: function (data) {
+                        _self.getAll();
+                        _self.$Message.info('刪除成功');
+                    }
+                });
+                _self.delone='';
+                _self.onedel=false;
+            }else{
+                //console.log('想删除多条');
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.carrier.del+_self.delArr,
+                    cache: false,
+                    success: function (data) {
+                        _self.delArr = [];
+                        _self.getAll();
+                        _self.$Message.info('刪除成功');
+                    }
+                });
+                _self.delArr=[];
+            }
+            
+        },
+            getData:function() {
+                var _self = this;
+                _self.$Loading.start();
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.carrier.all,
+                    cache: false,
+                    data: _self.page,
+                    success: function (data) {
+                        _self.$Loading.finish();
+                        if (typeof data == "object") {
+                            _self.totalRecord = data.totalRecord;
+                            _self.page.current = data.currentPage;
+                            for (var key in data.dataList) {
+                                data.dataList[key].createTime = _self.format(data.dataList[key].createTime);
+                            }
+                            _self.data = data.dataList;
+                        } else {
+                            _self.data = [];
+                        }
+                    }
+                });
+            },
+            add0:function(m) {
+                return m < 10 ? '0' + m : m
+            },
+            format:function(nS) {
+                var time = new Date(parseInt(nS));
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                return y + '-' + this.add0(m) + '-' + this.add0(d);
+            },
+       /* moreDelete: function () {
+            var _self = this;
+            if (this.theChecked.length > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.carrier.del+_self.theChecked,
+                    cache: false,
+                    success: function (data) {
+                        alert('删除'+_self.theChecked.length+'条数据');
+                        _self.getAll();
+                    }
+                });
+            }
+        },*/
+        /*deleteOne: function (index) {
+            var arr = [this.data1[index].id];
+            var _self = this;
+            $.ajax({
+                type: 'GET',
+                url: dataUrl.carrier.del + arr,
+                cache: false,
+                success: function (data) {
+                    alert('删除一条数据');
+                    _self.getAll();
+                }
+            });
+        },*/
+        cancel_del:function(){
+            this.modal2=false;
+            this.delone='';
+            this.onedel=false;
+            this.current=0;
+        },
+
+
         reset: function (name) {
             this.$refs[name].resetFields();
         },
@@ -377,6 +506,7 @@ new Vue({
                     }
                 }
             });
+            _self.current=0;
         },
         month: function (date) {
             var m ='';
@@ -395,6 +525,7 @@ new Vue({
             this.state=true;
         },
         open: function(obj) {
+            this.openmodal2='下一步';
             if ($.trim(obj.currentTarget.innerText)== "添加") {
                 for (var key in this.company) {
                     this.company[key] = '';
@@ -404,50 +535,65 @@ new Vue({
             //this.$refs['formValidate'].resetFields();
             this.modal1 = true;
         },
-        chooseAll: function (selection) { // 全选
+        /*chooseAll: function (selection) { // 全选
             this.theChecked = [];
             for (var i = 0 ; i < selection.length; i++) {
                 this.theChecked.push(selection[i].id);
             }
-        },
+        },*/
         change: function (index) {
             this.openState = "修改";
             this.company = JSON.parse(JSON.stringify(this.data1[index]));
             this.modal1 = true;
             // this.op = 1;
         },
+        chooseAll:function(data) {
+            var _self = this;
+            //console.log(this.data.selection);
+            _self.delArr=[];
+            if(data.length){
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                }
+            }
+            
+        },
+        sel_change:function(data){
+            var _self = this;
+            //console.log(data);
+            _self.delArr=[];
+            if(data.length){
+
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                }
+            }
+            
+        },
         time: function (times) {
             // console.log(times);
             var d = new Date(parseInt(times));
             return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
         },
-        deleteOne: function (index) {
-            var arr = [this.data1[index].id];
+        /*refresh:function(){
             var _self = this;
-            $.ajax({
-                type: 'GET',
-                url: dataUrl.carrier.del + arr,
-                cache: false,
-                success: function (data) {
-                    alert('删除一条数据');
-                    _self.getAll();
-                }
-            });
-        },
-        moreDelete: function () {
-            var _self = this;
-            if (this.theChecked.length > 0) {
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.carrier.del+_self.theChecked,
-                    cache: false,
-                    success: function (data) {
-                        alert('删除'+_self.theChecked.length+'条数据');
-                        _self.getAll();
+            _self.searchText='';
+            var textState = JSON.parse(Cookies.get("state"));
+            if (textState != null) {
+                if (textState.ID == 0) {
+                    window.location.href = "../../state.html";
+                } else if (textState.ID == 1) {
+                    if (textState.roleID == 1) {
+                        _self.userType = 1;
+                    } else if (textState.roleID == 2) {
+                        _self.userType = 2;
                     }
-                });
+                    _self.getData();
+                }
+            } else {
+                window.location.href = "../../state.html";
             }
-        },
+        },*/
         changePage: function (cur) {
             //  跳转页面
             // 分页跳转
@@ -478,6 +624,7 @@ new Vue({
                     }
                 }
             });
+            _self.searchText='';
         },
         callback: function (data) {
             this.page.current = data;
@@ -518,6 +665,7 @@ new Vue({
                         _self.modal1 = false;
                         _self.getAll();
                     }
+                    _self.current=0;
                 }
             });
         }
