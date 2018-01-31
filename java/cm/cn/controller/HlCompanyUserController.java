@@ -58,10 +58,15 @@ public class HlCompanyUserController {
 		}
 		return map;
 	}
+	@RequestMapping(value="/noLogin")
+	@ResponseBody
+	public String noLogin(){
+		return "login";
+	}
 	@RequestMapping(value="/checkSession")
 	@ResponseBody
 	public String checkSession(){
-		return "login";
+		return "nosession";
 	}
 	@RequestMapping(value = "/logout")
 	@ResponseBody

@@ -13,9 +13,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			throws Exception {
 		String uri = request.getRequestURI();
 		// TODO Auto-generated method stub
-		System.out.println(uri);
-		System.out.println(" preHandle is running");
-		if(uri.contains("companyUserLogin.action")||uri.contains("checkSession")){
+		if(uri.contains("companyUserLogin.action")||uri.contains("noLogin")){
         	return true;
         }
 		HttpSession session = request.getSession();  
@@ -25,7 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             return true;  
         }
         //response.sendRedirect("login.html");
-        request.getRequestDispatcher("checkSession.action").forward(request, response);
+        request.getRequestDispatcher("noLogin.action").forward(request, response);
         //response.sendRedirect("login.html");
         //System.out.println("checkSession.action");
 		return false;
