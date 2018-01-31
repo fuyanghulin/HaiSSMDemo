@@ -212,19 +212,17 @@
                     url: dataUrl.login.ensuresession,
                     cache: false,
                     success: function (data) {
-                        //_self.get_session=;
-                        console.log(typeof data);
-                        console.log(data);
-                        if(data!=='login'){
-                            //console.log('进入下一个页面')
-                            _self.content=name+'?time='+Date.parse(new Date());
-                        }else{
-                            //console.log('失败，没有session,返回login界面');
+                        if(data==='login'){
+                            
+                            //_self.$Message.info('与服务器断开连接，请重新登录！');
                             var state={
                                 ID:0
                             };
                             Cookies.set("state",state);
                             window.location.href="login.html";
+                        }else{
+                            //console.log('进入下一个页面')
+                            _self.content=name+'?time='+Date.parse(new Date());
                         }
                     }
                 });

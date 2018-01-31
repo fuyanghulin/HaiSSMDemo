@@ -6,6 +6,7 @@ var dataUrl = {
     login:{
         login:baseUrl+'/HaiSSMDemo/companyUserLogin.action',
         logout:baseUrl+'/HaiSSMDemo/logout.action',
+        ensuresession:baseUrl+'/HaiSSMDemo/checkSession.action'
     },
     company:{
         checkName:baseUrl+'/HaiSSMDemo/checkAccount.action',
