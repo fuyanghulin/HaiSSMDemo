@@ -11,9 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cm.cn.po.HlCompanyMix;
 import cm.cn.po.HlCompanyuser;
-import cm.cn.service.HlCompanyService;
 import cm.cn.service.HlCompanyUserService;
 
 @Controller
@@ -60,7 +58,11 @@ public class HlCompanyUserController {
 		}
 		return map;
 	}
-
+	@RequestMapping(value="/checkSession")
+	@ResponseBody
+	public String checkSession(){
+		return "login";
+	}
 	@RequestMapping(value = "/logout")
 	@ResponseBody
 	public String logout(HttpSession session) {
