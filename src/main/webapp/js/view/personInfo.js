@@ -199,8 +199,11 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                            this.delArr.push(this.data[params.index].id);
-                                            this.del();
+                                            /*this.delArr.push(this.data[params.index].id);
+                                            this.del();*/
+                                            this.delone=this.data[params.index].id;
+                                                this.del_index(this.data[params.index].id);
+                                                this.onedel=true;
                                         }.bind(this)
                                     }
                                 }, '删除')
@@ -246,7 +249,10 @@ new Vue({
             openState: '',
             loading: false,
             delArr: [],
-            searchText: ''
+            searchText: '',
+            onedel:false,
+            delone:'',
+            modal2:false
         }
     },
     methods: {
@@ -295,7 +301,7 @@ new Vue({
                 this.formValidate.driveLicence = '';
                 this.formValidate.driveLicenceTime = '';
             }
-        },
+        },/*
         del:function() {
             var _self = this;
             if(_self.delArr.length>0){
@@ -323,7 +329,108 @@ new Vue({
                 }
             }
             
-        },
+        },*/
+            del:function() {
+                var _self = this;
+                /*if(_self.delArr.length>0){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.safeCard.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }*/
+                if(_self.delArr.length>0){
+                    _self.modal2=true;
+                }
+                
+            },
+            del_index:function(n){
+                var _self=this;
+                _self.modal2=true;
+
+                
+            },
+            ok_del:function(){
+                var _self=this;
+                if(_self.onedel){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.person.del+_self.delone,
+                        cache: false,
+                        success: function (data) {
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delone='';
+                    _self.onedel=false;
+                }else{
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.person.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }
+                
+            },
+            /*chooseAll:function(data) {
+                var _self = this;
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                }
+            }*/
+            cancel_del:function(){
+                this.modal2=false;
+                this.delone='';
+                this.onedel=false;
+                this.$refs['formValidate'].resetFields();
+            },
+            /*chooseAll:function(data) {
+                var _self = this;
+                if(_self.delArr.length){
+                    _self.delArr=[];
+                }else{
+                   for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    } 
+                }
+                
+            },*/
+            chooseAll:function(data) {
+                var _self = this;
+                //console.log(this.data.selection);
+                _self.delArr=[];
+                if(data.length){
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
+            sel_change:function(data){
+                var _self = this;
+                //console.log(data);
+                _self.delArr=[];
+                if(data.length){
+
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
         success:function(data) {
             this.formValidate.pictureName = data[0];
             this.formValidate.pictureUrl = data[1];

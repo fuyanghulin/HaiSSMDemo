@@ -186,7 +186,13 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                            this.deleteOne(params.index);
+                                            //this.deleteOne(params.index);
+                                            console.log('想要删除一条数据');
+                                            this.delone=this.data1[params.index].id;
+                                            console.log(this.delone);
+                                            this.del_index(this.data1[params.index].id);
+                                            this.onedel=true;
+                                            console.log(this.onedel);
                                         }.bind(this)
                                     }
                                 }, '删除')
@@ -280,7 +286,11 @@ new Vue({
             dp: 0, // 驾驶员
             sp: 0, // 安全员
             loading: false,
-            searchText: ''
+            searchText: '',
+            onedel:false,
+            delone:'',
+            modal2:false,
+            delArr:[]
         }
     },
     created: function () {
@@ -495,7 +505,107 @@ new Vue({
             }
 
         },
-        deleteOne: function (index) {
+        del:function() {
+                var _self = this;
+                /*if(_self.delArr.length>0){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.safeCard.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getAll();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }*/
+                if(_self.delArr.length>0){
+                    _self.modal2=true;
+                }
+                
+            },
+            del_index:function(n){
+                var _self=this;
+                _self.modal2=true;
+                
+            },
+            ok_del:function(){
+                var _self=this;
+                if(_self.onedel){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.carInfo.del+_self.delone,
+                        cache: false,
+                        success: function (data) {
+                            _self.getAll();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delone='';
+                    _self.onedel=false;
+                }else{
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.carInfo.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getAll();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }
+                
+            },
+            /*chooseAll:function(data) {
+                var _self = this;
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                }
+            }*/
+            cancel_del:function(){
+                this.modal2=false;
+                this.delone='';
+                this.onedel=false;
+                this.$refs['formValidate'].resetFields();
+            },
+            /*chooseAll:function(data) {
+                var _self = this;
+                if(_self.delArr.length){
+                    _self.delArr=[];
+                }else{
+                   for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    } 
+                }
+                
+            },*/
+            chooseAll:function(data) {
+                var _self = this;
+                //console.log(this.data.selection);
+                _self.delArr=[];
+                if(data.length){
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
+            sel_change:function(data){
+                var _self = this;
+                //console.log(data);
+                _self.delArr=[];
+                if(data.length){
+
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
+        /*deleteOne: function (index) {
             var arr = [this.data1[index].id];
             var _self = this;
             $.ajax({
@@ -521,7 +631,7 @@ new Vue({
                     }
                 });
             }
-        },
+        },*/
         changePage: function (cur) {
             // 分页跳转
             this.page.current = cur;
