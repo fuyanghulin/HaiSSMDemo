@@ -11,6 +11,8 @@ public interface HlPeopleService {
 	public List<HlPeople> selAllPeople();
 	//批量删除人员
 	public int delPeopleBatch(int[] arrays);
+	//根据人员id查询照片的文件名
+	public String[] selPictureNameById(int[] arrays);
 	//更改人员信息
 	public int updatePeople(HlPeople hlPeople);
 	//根据人员名字查询信息

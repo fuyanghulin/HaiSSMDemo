@@ -18,7 +18,7 @@
 		FROM
 			hl_goodsinfo
 		WHERE
-			goodstyle_id IN 
+			safecard_id IN 
 		<foreach collection="array" item="id" index="index"
 	          open="(" close=")" separator=",">
 	          #{id}
@@ -30,7 +30,7 @@
 		FROM
 			hl_goodsinfo
 		WHERE
-			safecard_id IN 
+			goodstyle_id IN 
 		<foreach collection="array" item="id" index="index"
 	          open="(" close=")" separator=",">
 	          #{id}

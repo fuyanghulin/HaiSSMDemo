@@ -98,6 +98,16 @@ public class HlSafeCardController {
 	@RequestMapping(value= "/delSafeCardBatch")
 	@ResponseBody
 	public int delSafeCardBatch(int[] arrays){
+		String[] strAarray = hlSafeCardService.selSafeCardFilename(arrays);
+		for(int i=0;i<strAarray.length;i++){
+			File f=new File("D:\\SafeCard\\"+strAarray[i]);
+			f.delete();
+		}
+		String[] strAarray2 = hlSafeCardService.selIntroFilename(arrays);
+		for(int i=0;i<strAarray2.length;i++){
+			File f=new File("D:\\SafeCard\\"+strAarray2[i]);
+			f.delete();
+		}
 		return hlSafeCardService.delSafeCardBatch(arrays);
 	}
 }
