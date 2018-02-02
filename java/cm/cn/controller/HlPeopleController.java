@@ -110,6 +110,11 @@ public class HlPeopleController {
 	@ResponseBody
 	public int delPeopleBatch(int[] arrays){
 		hlDriveruserService.delHlDriveruser(arrays);
+		String[] strAarray = hlPeopleService.selPictureNameById(arrays);
+		for(int i=0;i<strAarray.length;i++){
+			File f=new File("D:\\hailiangpic\\"+strAarray[i]);
+			f.delete();
+		}
 		return hlPeopleService.delPeopleBatch(arrays);
 	}
 }

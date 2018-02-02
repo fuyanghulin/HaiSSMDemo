@@ -12,4 +12,28 @@
 	          #{id}
 	    </foreach>
 	</delete>
+	<select id="selSafeCardFilename" resultType="String">
+	    SELECT
+	        safe_card_name
+	    FROM
+	        hl_safecard
+	    WHERE
+			id IN 
+		<foreach collection="array" item="id" index="index"
+	          open="(" close=")" separator=",">
+	          #{id}
+	    </foreach>
+	</select>
+		<select id="selIntroFilename" resultType="String">
+	    SELECT
+	        introduction_name
+	    FROM
+	        hl_safecard
+	    WHERE
+			id IN 
+		<foreach collection="array" item="id" index="index"
+	          open="(" close=")" separator=",">
+	          #{id}
+	    </foreach>
+	</select>
 </mapper>

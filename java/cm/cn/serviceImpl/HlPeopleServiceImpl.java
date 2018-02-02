@@ -39,6 +39,12 @@ public class HlPeopleServiceImpl implements HlPeopleService {
 	}
 
 	@Override
+	public String[] selPictureNameById(int[] arrays) {
+		// TODO Auto-generated method stub
+		return myPeopleMapper.selPictureNameById(arrays);
+	}
+	
+	@Override
 	public int updatePeople(HlPeople hlPeople) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		// TODO Auto-generated method stub
@@ -62,5 +68,6 @@ public class HlPeopleServiceImpl implements HlPeopleService {
 		criteria.andCompayIdEqualTo(company_id);
 		return hlPeopleMapper.selectByExample(example);
 	}
+
 
 }

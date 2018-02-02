@@ -42,11 +42,11 @@ public class HlSafeCardServiceImpl implements HlSafeCardService {
 	}
 
 	@Override
-	public int delSafeCardBatch(int[] array) {
+	public int delSafeCardBatch(int[] arrays) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		// TODO Auto-generated method stub
-		myGoodsInfoMapper.delGoodsInfoBatchBySafeCardID(array);
-		return mySafeCardMapper.delSafeCardBatch(array);
+		myGoodsInfoMapper.delGoodsInfoBatchBySafeCardID(arrays);
+		return mySafeCardMapper.delSafeCardBatch(arrays);
 	}
 
 	@Override
@@ -57,6 +57,18 @@ public class HlSafeCardServiceImpl implements HlSafeCardService {
 		//criteria.andSafeCardNumEqualTo(safeCardName);
 		criteria.andSafeCardNumLike("%"+safeCardName+"%");
 		return hlSafecardMapper.selectByExample(example);
+	}
+
+	@Override
+	public String[] selSafeCardFilename(int[] arrays) {
+		// TODO Auto-generated method stub
+		return mySafeCardMapper.selSafeCardFilename(arrays);
+	}
+
+	@Override
+	public String[] selIntroFilename(int[] arrays) {
+		// TODO Auto-generated method stub
+		return mySafeCardMapper.selIntroFilename(arrays);
 	}
 
 }

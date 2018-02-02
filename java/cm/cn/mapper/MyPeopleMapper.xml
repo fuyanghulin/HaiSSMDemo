@@ -12,4 +12,16 @@
 	          #{id}
 	    </foreach>
 	</delete>
+	<select id="selPictureNameById" resultType="String">
+		SELECT
+			picture_name 
+		FROM
+			hl_people 
+		WHERE
+			id IN 
+	    <foreach collection="array" item="id" index="index"
+	          open="(" close=")" separator=",">
+	          #{id}
+	    </foreach>
+	</select>
 </mapper>
