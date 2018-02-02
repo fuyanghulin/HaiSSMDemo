@@ -54,7 +54,7 @@
         <div>
             <i-Button type="primary" @click="open($event)" v-if="userType===3">添加</i-Button>
             <Tooltip content="删除所选人员信息" placement="bottom-start">
-                <i-Button type="error" @click="del" v-if="userType===1">删除</i-Button>
+                <i-Button type="error" @click="del" v-if="userType===1||userType===3">删除</i-Button>
             </Tooltip>
             
         </div>
@@ -139,7 +139,7 @@
                             <img :src="formValidate.picUser" v-show="formValidate.picUser"
                                  style="background-position: 100%;height: 100%;width: 100%;" v-bind:disabled="openState==='查看'">
                             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff;padding-top: 80px"
-                                  v-show="!formValidate.picUser"></Icon>
+                                  v-if="!formValidate.picUser"></Icon>
                         </div>
                     </Upload>
                 </i-Col>

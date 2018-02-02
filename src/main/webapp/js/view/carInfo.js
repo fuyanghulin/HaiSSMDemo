@@ -50,7 +50,7 @@ new Vue({
                     title: '车辆类型',
                     key: 'carType',
                     align: 'center',
-                    width: 120,
+                    width: 150,
                     ellipsis: true
                 },
                 {
@@ -71,7 +71,7 @@ new Vue({
                     title: '经营许可证',
                     key: 'cerNum',
                     align: 'center',
-                    width: 120,
+                    width: 130,
                     ellipsis: true
                 },
                 {
@@ -91,7 +91,7 @@ new Vue({
                 {
                     title: '位置',
                     key: 'action',
-                    width: 120,
+                    width: 140,
                     align: 'center',
                     render: function (h, params) {
                         return h('div', [
@@ -115,6 +115,14 @@ new Vue({
                                             		_self.$Notice.info({
                                             			title:'无法获取该车辆的当前定位',
                                             			});
+                                                    /*//暂时自己写点学习下百度地图api
+                                                    _self.model2=true;
+                                                    _self.new_point=new BMap.Point(120.19,30.26);
+                                                    _self.map.centerAndZoom(_self.new_point,15);
+                                                    //var point = new BMap.Point(116.404, 39.915);
+                                                    var marker = new BMap.Marker(_self.new_point);        // 创建标注    
+                                                    _self.map.addOverlay(marker);                     // 将标注添加到地图中 */
+                                                    
                                             	}
                                             	else{
                                             		/*_self.model2=true;

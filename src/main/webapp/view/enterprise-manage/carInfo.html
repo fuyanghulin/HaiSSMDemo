@@ -44,7 +44,7 @@
             <i-button type="primary" @click="open($event)" v-if="userType===3">添加</i-button>
             
             <Tooltip content="删除所选车辆信息" placement="bottom-start">
-                <i-button type="error" style="margin-left: 20px;" @click="del" v-if="userType===1">删除</i-button>
+                <i-button type="error" style="margin-left: 20px;" @click.stop="del" v-if="userType===1||userType===3">删除</i-button>
             </Tooltip><!-- 原来是moredelete函数 -->
         </div>
         <div>
@@ -208,6 +208,37 @@
             </Row>
             <Row>
                 <i-Col span="11">
+                    <Form-Item label="道路运输证年审有效期">
+                        <Date-Picker type="date" placeholder="选择日期" v-model="formValidate.roadDate"
+                                     style="width: 100%" v-bind:disabled="openState==='查看'"></Date-Picker>
+                    </Form-Item>
+                </i-Col>
+                <i-col span="2"></i-col>
+                <i-Col span="11">
+                    <Form-Item label="行驶证年审有效期">
+                        <Date-Picker type="date" placeholder="选择日期" v-model="formValidate.certyearDate"
+                                     style="width: 100%" v-bind:disabled="openState==='查看'"></Date-Picker>
+                    </Form-Item>
+                </i-Col>
+            </Row>
+            <Row>
+                <i-Col span="11">
+                    <Form-Item label="证件有效期">
+                        <Date-Picker type="date" placeholder="选择日期" v-model="formValidate.certDate"
+                                     style="width: 100%" v-bind:disabled="openState==='查看'"></Date-Picker>
+                    </Form-Item>
+                </i-Col>
+                <i-col span="2"></i-col>
+                <i-Col span="11">
+                    <Form-Item label="证件有效期">
+                        <Date-Picker type="date" placeholder="选择日期" v-model="formValidate.certagrDate"
+                                     style="width: 100%" v-bind:disabled="openState==='查看'"></Date-Picker>
+                    </Form-Item>
+                </i-Col>
+            </Row>
+            
+            <!-- <Row>
+                <i-Col span="11">
                     <Row>
                         <i-Col span="11">
                             <Form-Item label="道路运输证年审有效期">
@@ -242,7 +273,7 @@
                         </i-Col>
                     </Row>
                 </i-Col>
-            </Row>
+            </Row> -->
             <Row>
                 <i-Col span="11">
                     <Form-Item label="罐体年检有效期">

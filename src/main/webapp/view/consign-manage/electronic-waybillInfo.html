@@ -47,20 +47,25 @@
     <nav>
         <div>
             <i-Button type="primary" @click="open($event)" v-if="userType===3">添加</i-Button>
-            <i-Button type="primary" @click="del" v-if="userType===1">删除</i-Button>
+            
+            <Tooltip content="删除所选货物信息" placement="bottom-start">
+                <i-Button type="error" @click="del" v-if="userType===1||userType===3">删除</i-Button>
+            </Tooltip>
         </div>
         <div>
             <i-Input placeholder="请输入托运方..." style="width: 300px" v-model="searchText"></i-Input>
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
+            <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table border :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table border :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change"></i-Table>
     <Page :total="totalRecord"  show-total
           show-elevator :current="page.current" @on-change="next" :page-size="page.pageNum"></Page>
     <Modal
-            width="60%"
+            width="70%"
             v-model="modal1"
-            :closable="false">
+            :closable="false"
+            @on-cancel="cancel">
         <i-form ref="formValidate" :model="formValidate" :rules="ruleValidate">
             <Row>
                 <i-Col span="11">
@@ -101,7 +106,7 @@
                 <i-col span="2"></i-col>
                 <i-Col span="11">
                     <Form-Item label="发货省市">
-                        <Cascader :data="cityData" v-model="theSendCity" style="width: 100%" ></Cascader>
+                        <Cascader :data="cityData" v-model="theSendCity" style="width: 100%" v-bind:disabled="openState==='查看'"></Cascader>
                     </Form-Item>
                 </i-Col>
             </Row>
@@ -274,7 +279,7 @@
                         </Row>
                         <Row>
                             <form-Item label="身份证">
-                                <i-input disabled></i-input>
+                                <i-input disabled v-model="carMessage.driveridNum"></i-input>
                             </form-Item>
                         </Row>
                     </i-Col>
@@ -307,7 +312,7 @@
                         </Row>
                         <Row>
                             <form-Item label="身份证">
-                                <i-input disabled></i-input>
+                                <i-input disabled v-model="carMessage.saferidNum"></i-input>
                             </form-Item>
                         </Row>
                     </i-Col>
@@ -350,6 +355,15 @@
             </ul>
         </div>
 
+    </Modal>
+    <Modal
+        v-model="modal3"
+        title="删除提示"
+        :del_arr='delArr'
+        @on-ok="ok_del"
+        @on-cancel="cancel_del">
+        <p v-if="onedel">是否删除该条数据</p>
+        <p v-else>是否确认删除{{delArr.length}}条数据</p>
     </Modal>
 </div>
 <script src="../../js/jquery-2.1.0.min.js" type="text/javascript" charset="utf-8"></script>

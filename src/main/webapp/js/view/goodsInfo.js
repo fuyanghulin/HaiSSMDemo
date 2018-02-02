@@ -69,7 +69,10 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                            this.deleteOne(params.index);
+                                            //this.deleteOne(params.index);
+                                            this.delone=this.data1[params.index].id;
+                                            this.del_index(this.data1[params.index].id);
+                                            this.onedel=true;
                                         }.bind(this)
                                     }
                                 }, '删除')
@@ -142,7 +145,11 @@ new Vue({
                 ]
             },
             TypeList: [],
-            cardList: []
+            cardList: [],
+            delArr: [],
+            delone: '',
+            onedel:false,
+            modal2: false,
         }
     },
     created: function () {
@@ -218,16 +225,88 @@ new Vue({
                 '备注：' + this.data1[index].remark
             });
         },
-        chooseAll: function (selection) { // 全选
+        /*chooseAll: function (selection) { // 全选
             this.theChecked = [];
             for (var i = 0; i < selection.length; i++) {
                 this.theChecked.push(selection[i].id);
             }
+        },*/
+        chooseAll:function(data) {
+            var _self = this;
+            //console.log(this.data.selection);
+            _self.delArr=[];
+            if(data.length){
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                }
+            }
+            
         },
+            sel_change:function(data){
+                var _self = this;
+                //console.log(data);
+                _self.delArr=[];
+                if(data.length){
+
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
         change: function (index) {
             this.goods = JSON.parse(JSON.stringify(this.data1[index]));
             this.modal1 = true;
             this.op = 1;
+        },
+        del:function() {
+            var _self = this;
+            //console.log("所选个数："+_self.delArr.length);
+
+            if(_self.delArr.length>0){//kk加了一个判断
+                //console.log("进入modal2");
+                _self.modal2=true;
+                /*if(ensure_del){
+                    ok_del();
+                }*/
+                
+            }
+            
+        },
+        del_index:function(n){
+            var _self=this;
+            _self.modal2=true;
+
+            
+        },
+        ok_del:function(){
+            var _self=this;
+            if(_self.onedel){
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.goods.del+_self.delone,
+                    cache: false,
+                    success: function (data) {
+                        _self.getAll();
+                        _self.$Message.info('刪除成功');
+                    }
+                });
+                _self.delone='';
+                _self.onedel=false;
+            }else{
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.goods.del+_self.delArr,
+                    cache: false,
+                    success: function (data) {
+                        _self.delArr = [];
+                        _self.getAll();
+                        _self.$Message.info('刪除成功');
+                    }
+                });
+                _self.delArr=[];
+            }
+            
         },
         time: function (times) {
             // console.log(times);
@@ -236,6 +315,14 @@ new Vue({
         },
         cancel: function () {
             this.modal1 = false;
+            //this.modal2 false;
+            this.$refs['goods'].resetFields();
+        },
+        cancel_del:function(){
+            this.modal2=false;
+            this.delone='';
+            this.onedel=false;
+            this.$refs['goods'].resetFields();
         },
         open: function (name, op) {
             this.op = op;
@@ -247,7 +334,7 @@ new Vue({
                 //addressInit('cmbProvince', 'cmbCity', 'cmbArea');
             }
         },
-        deleteOne: function (index) {
+        /*deleteOne: function (index) {
             var arr = [this.data1[index].id];
             var _self = this;
             $.ajax({
@@ -273,7 +360,7 @@ new Vue({
                     }
                 });
             }
-        },
+        },*/
         changePage: function (cur) { //  跳转页面
             this.page.current = cur;
             this.getAll();
@@ -297,6 +384,7 @@ new Vue({
                     }
                 }
             });
+            _self.searchText="";
         },
         upMessage: function () {
             this.loading = true;

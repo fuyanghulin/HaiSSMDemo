@@ -138,7 +138,7 @@ new Vue({
                     key: 'uploadLinkmanPhone'
                 },
                 {
-                    width: 100,
+                    width: 150,
                     align: 'center',
                     title: '货物名称',
                     key: 'goodName'
@@ -234,13 +234,13 @@ new Vue({
                     }.bind(this)
                 },
                 {
-                    width: 150,
+                    width: 200,
                     title: '操作',
                     key: 'action',
                     align: 'center',
                     fixed: 'right',
                     render: function (h, params) {
-                        if (this.userType === 1) {
+                        /*if (this.userType === 1) {
                             return h('div', [
                                 h('Button', {
                                     props: {
@@ -275,6 +275,9 @@ new Vue({
                                                 this.carPosition = params.index;
                                             }
                                             this.carChange(this.formValidate.carNum);
+                                            //this.goodsChange(this.data[params.index]);
+                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
+                                            this.checkGoods(new_goods);
                                             this.modal1 = true;
                                         }.bind(this)
                                     }
@@ -292,7 +295,7 @@ new Vue({
                                     }
                                 }, '删除')
                             ]);
-                        } else {
+                        } else */{
                             return h('div', [
                                 h('Button', {
                                     props: {
@@ -304,14 +307,101 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
+
+
                                             this.openState = "查看";
-                                            console.log(this.data[params.index]);
                                             this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
-                                            //this.carChange();
+                                            this.theSendCity = this.data[params.index].sendCity.split('/');
+                                            this.theReceiveCity = this.data[params.index].receiveCity.split('/');
+                                            if (!this.formValidate.goodName && this.goodsList.length > 0) {
+                                                this.formValidate.goodName = this.goodsList[0].name;
+                                                this.formValidate.nationCode = this.goodsList[0].code;
+                                                this.formValidate.code = this.goodsList[0].reserveTwo;
+                                            }
+                                            if (!this.formValidate.carNum && this.carList.length > 0) {
+                                                this.formValidate.carNum = this.carList[0].carNum;
+                                                this.carMessage.allowWeight = this.carList[0].allowWeight;
+                                                this.carMessage.guacarNum = this.carList[0].guacarNum;
+                                                this.carMessage.carType = this.carList[0].carType;
+                                                this.carMessage.driverName = this.carList[0].driverName;
+                                                this.carMessage.safer = this.carList[0].safer;
+                                            }
+                                            if (this.carList[params.index]) {
+                                                this.carPosition = params.index;
+                                            }
+                                            this.carChange(this.formValidate.carNum);
+                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
+                                            this.checkGoods(new_goods);
+                                            //this.goodsChange(this.data[params.index]);
+                                            //this.modal1 = true;
+
+
+
+                                            //this.openState = "查看";
+                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
                                             this.modal1 = true;
                                         }.bind(this)
                                     }
-                                }, '查看')
+                                }, '查看'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: function () {
+                                            this.openState = "修改";
+                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
+                                            // this.carList=[];
+                                            // this.carList.push(this.formValidate);
+                                            this.theSendCity = this.data[params.index].sendCity.split('/');
+                                            this.theReceiveCity = this.data[params.index].receiveCity.split('/');
+                                            if (!this.formValidate.goodName && this.goodsList.length > 0) {
+                                                this.formValidate.goodName = this.goodsList[0].name;
+                                                this.formValidate.nationCode = this.goodsList[0].code;
+                                                this.formValidate.code = this.goodsList[0].reserveTwo;
+                                            }
+                                            if (!this.formValidate.carNum && this.carList.length > 0) {
+                                                this.formValidate.carNum = this.carList[0].carNum;
+                                                this.carMessage.allowWeight = this.carList[0].allowWeight;
+                                                this.carMessage.guacarNum = this.carList[0].guacarNum;
+                                                this.carMessage.carType = this.carList[0].carType;
+                                                this.carMessage.driverName = this.carList[0].driverName;
+                                                this.carMessage.safer = this.carList[0].safer;
+                                            }
+                                            if (this.carList[params.index]) {
+                                                this.carPosition = params.index;
+                                            }
+                                            this.carChange(this.formValidate.carNum);
+                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
+                                            this.checkGoods(new_goods);
+                                            //this.goodsChange(this.data[params.index]);
+
+                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
+                                            this.checkGoods(new_goods);
+
+                                            this.modal1 = true;
+                                        }.bind(this)
+                                    }
+                                }, '修改'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: function () {
+                                            /*this.delArr.push(this.data[params.index].id);
+                                            this.del();*/
+                                            this.delone=this.data[params.index].id;
+                                            this.del_index(this.data[params.index].id);
+                                            this.onedel=true;
+                                        }.bind(this)
+                                    }
+                                }, '删除')
                             ]);
                         }
 
@@ -332,14 +422,20 @@ new Vue({
             carList: [],
             goodsPosition: 0,
             carPosition: 0,
+
             carMessage: {
                 driverPictureUrl: '',
-                saferPictureUrl: ''
+                saferPictureUrl: '',
+                idNum:0
             },
+
             driverLog: [],
             carChecked: [],
             theDriverLog: [],
-            theCarChecked: []
+            theCarChecked: [],
+            delone: '',
+            onedel: false,
+            modal3:false
         }
     },
     created: function () {
@@ -373,6 +469,7 @@ new Vue({
                     _self.formValidate.goodName = _self.goodsList[0].name;
                     _self.formValidate.nationCode = _self.goodsList[0].code;
                     _self.formValidate.code = _self.goodsList[0].reserveTwo;
+                    console.log(data);
                 }
             }
         });
@@ -395,6 +492,8 @@ new Vue({
                         _self.carMessage.carType = data.dataList[0].carType;
                         _self.carMessage.driverName = data.dataList[0].driverName;
                         _self.carMessage.safer = data.dataList[0].safer;
+
+                        console.log(data);
                     }
                 }
             });
@@ -417,6 +516,15 @@ new Vue({
                 }
             });
         }
+
+        //人员具体信息是否可以这样获取
+        // _self.carChange();
+        /*console.log(_self.formValidate.carNum);
+        console.log(_self.carMessage);
+        console.log(_self.formValidate);*/
+        //console.log();
+        //console.log();
+
 
         /// 获得地区
         $.getJSON('../../cityData.json', function (data) {
@@ -449,6 +557,7 @@ new Vue({
                 });
             }
         },
+
         upMessage: function () {
             var _self = this;
             _self.loading = true;
@@ -462,7 +571,7 @@ new Vue({
                         _self.formValidate.sendCity = _self.theSendCity.join('/');
                         _self.formValidate.receiveCity = _self.theReceiveCity.join('/');
                         /////////
-                        console.log(_self.formValidate);
+                        console.log('_self.formValidate'+_self.formValidate);
                         if (_self.formValidate.consignDate instanceof Date) {
                             _self.formValidate.consignDate = _self.month(_self.formValidate.consignDate);
                         }
@@ -485,6 +594,9 @@ new Vue({
                     }
                 }
             });
+
+            _self.$refs['formValidate'].resetFields();
+            console.log('清空内容');
         },
         month: function (date) {
             var m = '';
@@ -500,8 +612,89 @@ new Vue({
             return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate();
         },
         cancel: function () {
-            this.modal1 = false;
+            var _self=this;
+            _self.modal1 = false;
+            _self.$refs['formValidate'].resetFields();
+            console.log('清空内容');
+            _self.loading=false;//其他页面还没加这个
         },
+            del:function() {
+                var _self = this;
+                //console.log("所选个数："+_self.delArr.length);
+
+                if(_self.delArr.length>0){//kk加了一个判断
+                    //console.log("进入modal2");
+                    _self.modal3=true;
+                    /*if(ensure_del){
+                        ok_del();
+                    }*/
+                    
+                }
+                
+            },
+            del_index:function(n){
+                var _self=this;
+                _self.modal3=true;
+
+                
+            },
+            ok_del:function(){
+                var _self=this;
+                if(_self.onedel){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.waybill.del+_self.delone,
+                        cache: false,
+                        success: function (data) {
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delone='';
+                    _self.onedel=false;
+                }else{
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.waybill.del+_self.delArr,
+                        cache: false,
+                        success: function (data) {
+                            _self.delArr = [];
+                            _self.getData();
+                            _self.$Message.info('刪除成功');
+                        }
+                    });
+                    _self.delArr=[];
+                }
+                
+            },
+            cancel_del:function(){
+                this.modal3=false;
+                this.delone='';
+                this.onedel=false;
+            },
+            chooseAll:function(data) {
+                var _self = this;
+                //console.log(this.data.selection);
+                _self.delArr=[];
+                if(data.length){
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
+            sel_change:function(data){
+                var _self = this;
+                //console.log(data);
+                _self.delArr=[];
+                if(data.length){
+
+                    for (var i in data) {
+                        _self.delArr.push(data[i].id);
+                    }
+                }
+                
+            },
         carChange: function (num) {
         	if (num) {
         		// console.log(num);
@@ -530,6 +723,7 @@ new Vue({
                         _self.carMessage.drivezigezheng = data.dataList[0].drivezigezheng;
                         _self.carMessage.driverPhone = data.dataList[0].phone;
                         _self.carMessage.driverPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
+                        _self.carMessage.driveridNum = data.dataList[0].idNum;
                     }
                 }
             });
@@ -543,16 +737,45 @@ new Vue({
                         _self.carMessage.saferzigezheng = data.dataList[0].drivezigezheng;
                         _self.carMessage.saferPhone = data.dataList[0].phone;
                         _self.carMessage.saferPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
+                        _self.carMessage.saferidNum = data.dataList[0].idNum;
                     }
                 }
             });
         },
+        checkGoods:function(_name){
+            var _self=this;
+            //.goodName;
+            //console.log(_name);
+            //console.log(_self.goodsList);
+            var flag=0;
+            for(var i in this.goodsList){
+                //console.log(i.name);
+                if(_self.goodsList[i].name==_name){
+                    /*_self.formValidate.goodName = _self.goodsList[i].name;
+                    _self.formValidate.code = _self.goodsList[i].reserveTwo;
+                    _self.formValidate.nationCode = _self.goodsList[i].code;*/
+                    _self.goodsPosition=flag;
+                    console.log(flag);
+                    break;//跳出循环
+
+                }
+                flag++;
+            }
+        },
         goodsChange: function () {
+            var _self=this;
+            /*if(num){
+                _self.formValidate.goodName = _self.goodsList[num].name;
+                _self.formValidate.code = _self.goodsList[num].reserveTwo;
+                _self.formValidate.nationCode = _self.goodsList[num].code;
+
+            }*/
             this.formValidate.goodName = this.goodsList[this.goodsPosition].name;
             this.formValidate.code = this.goodsList[this.goodsPosition].reserveTwo;
             this.formValidate.nationCode = this.goodsList[this.goodsPosition].code;
         },
-        del: function () {
+
+        /*del: function () {
             var _self = this;
             $.ajax({
                 type: 'GET',
@@ -564,13 +787,13 @@ new Vue({
                     _self.$Message.info('刪除成功');
                 }
             });
-        },
-        chooseAll: function (data) {
+        },*/
+        /*chooseAll: function (data) {
             var _self = this;
             for (var i in data) {
                 _self.delArr.push(data[i].id);
             }
-        },
+        },*/
         handleUpload1: function (file) {
             this.formValidate.safeCardFile = file;
             return false;
@@ -595,6 +818,7 @@ new Vue({
         },
         open: function (obj) {
             if ($.trim(obj.currentTarget.innerText) == "添加") {
+                //_self.$refs['formValidate'].resetFields();
                 for (var key in this.formValidate) {
                     this.formValidate[key] = '';
                 }
@@ -603,6 +827,7 @@ new Vue({
                     this.formValidate.goodName = this.goodsList[0].name;
                     this.formValidate.nationCode = this.goodsList[0].code;
                     this.formValidate.code = this.goodsList[0].reserveTwo;
+                                            //this.goodsChange();//kk
                 }
                 // 初始化车辆类型信息
                 if (this.carList.length > 0) {
@@ -619,6 +844,7 @@ new Vue({
             }
             //this.$refs['formValidate'].resetFields();
             this.modal1 = true;
+
         },
         getData: function () {
             var _self = this;
@@ -637,6 +863,7 @@ new Vue({
                             _self.totalRecord = data.totalRecord;
                             _self.page.current = data.currentPage;
                             _self.data = data.dataList;
+                            //console.log(data.dataList);
                             // 循环对时间进行处理
                             for (var i = 0; i < _self.data.length; i++) {
                                 if (_self.data[i].consignDate) {
@@ -692,6 +919,7 @@ new Vue({
                     }
                 });
             }
+            _self.searchText='';
         },
         postData: function (_self, url, data) {
             $.ajax({
