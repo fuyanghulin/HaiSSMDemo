@@ -63,4 +63,13 @@ public class HlCarInfoServiceImpl implements HlCarInfoService {
 		return hlCarinfoMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<HlCarinfo> selectByCompanyId(int id) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		HlCarinfoExample example = new HlCarinfoExample();
+		HlCarinfoExample.Criteria criteria = example.createCriteria();
+		criteria.andCompanyIdEqualTo(id);
+		return hlCarinfoMapper.selectByExample(example);
+	}
+
 }

@@ -1,10 +1,10 @@
 package cm.cn.mapper;
 
 public interface MyGoodsInfoMapper {
-	//¸ù¾İ»õÎïĞÅÏ¢Ö÷¼üÅúÁ¿É¾³ı
+	//æ ¹æ®è´§ç‰©ä¿¡æ¯ä¸»é”®æ‰¹é‡åˆ é™¤
 	public int delGoodsInfoBatch(int[] arrays);
-	//¸ù¾İ°²È«¿¨ ID ÅúÁ¿É¾³ı
+	//æ ¹æ®å®‰å…¨å¡ ID æ‰¹é‡åˆ é™¤
 	public int delGoodsInfoBatchBySafeCardID(int[] arrays);
-	//¸ù¾İ»õÎïÀàĞÍ ID ÅúÁ¿É¾³ı
+	//æ ¹æ®è´§ç‰©ç±»å‹ ID æ‰¹é‡åˆ é™¤
 	public int delGoodsInfoBatchByGoodsTypeId(int[] arrays);
 }

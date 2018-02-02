@@ -17,4 +17,6 @@ public interface HlCarInfoService {
 	public List<HlCarinfo> selectByCarLicense(String carLicense);
 	//根据公司名查询车的信息
 	public List<HlCarinfo> selectByCompanyName(String company_name);
+	//根据公司id查询车的信息
+	public List<HlCarinfo> selectByCompanyId(int id);
 }
