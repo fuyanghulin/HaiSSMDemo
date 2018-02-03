@@ -23,9 +23,26 @@
     .ivu-modal {
         top: 50px;
     }
+        /* 加载loading */
+        #tloading{
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        #tloading img {
+        position: absolute;
+        top: 300px;
+        left: 50%;
+        width: 100px;
+        height: 100px; 
+      }
+         
 </style>
 <body>
 <!--总区块-->
+    <div id="tloading">
+        <img src="../../img/Spin-1.6s-200px.gif" alt="loading">
+    </div>
 <div id="app" ref="head" style="display: none">
     <!--頭部區塊-->
     <nav>

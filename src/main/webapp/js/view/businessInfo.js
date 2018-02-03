@@ -281,6 +281,7 @@ new Vue({
         }
     },
     created: function () {
+        document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
         var textState=JSON.parse(Cookies.get("state"));
         if(textState!=null){
