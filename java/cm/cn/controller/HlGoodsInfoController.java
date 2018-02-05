@@ -36,6 +36,18 @@ public class HlGoodsInfoController {
 			return null;
 		}
 	}
+	@RequestMapping("/selectGoodsInfoByCompanyId")
+	@ResponseBody
+	public Page<HlGoodsinfo> selectGoodsInfoByCompanyId(int current,int pageNum,int companyId){
+		List<HlGoodsinfo> list = hlGoodsInfoService.selectGoodsInfoByCompanyId(companyId);
+		Page<HlGoodsinfo> page = null;
+		if(list.size()>0){
+			page = new Page<>(current,pageNum,list);
+			return page;
+		}else{
+			return null;
+		}
+	}
 	@RequestMapping("/selectGoodsInfoList")
 	@ResponseBody
 	public List<HlGoodsinfo> selectGoodsInfoList(){

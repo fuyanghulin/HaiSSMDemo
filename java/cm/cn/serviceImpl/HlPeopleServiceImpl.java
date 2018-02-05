@@ -69,5 +69,4 @@ public class HlPeopleServiceImpl implements HlPeopleService {
 		return hlPeopleMapper.selectByExample(example);
 	}
 
-
 }

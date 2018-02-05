@@ -7,31 +7,49 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cm.cn.datasource.CustomerContextHolder;
+import cm.cn.mapper.HlGoodstypeMapper;
+import cm.cn.mapper.HlPeopleMapper;
+import cm.cn.mapper.HlSafecardMapper;
+import cm.cn.mapper.MyCarInfoMapper;
+import cm.cn.mapper.MyGoodsInfoMapper;
 import cm.cn.mapper.MyGpsMapper;
+import cm.cn.po.GpsMsg;
 import cm.cn.po.Gpsinfo;
-import cm.cn.po.Gpsinfo20171128;
+import cm.cn.po.HlPeople;
+import cm.cn.po.HlPeopleExample;
 import cm.cn.service.HlGpsService;
 import cm.cn.util.GpsStatus;
 @Service
 public class HlGpsServiceImpl  implements HlGpsService {
     @Autowired
     private MyGpsMapper myGpsMapper;
+    @Autowired 
+    private MyCarInfoMapper myCarInfoMapper;
+    @Autowired
+    private HlPeopleMapper hlPeopleMapper;
+    @Autowired
+    private MyGoodsInfoMapper myGoodsInfoMapper;
+    @Autowired
+    private HlGoodstypeMapper hlGoodstypeMapper;
+    @Autowired
+    private HlSafecardMapper hlSafecardMapper;
 	@Override
-	public Gpsinfo20171128 selectGpsByPlateNo(String PlateNo) {
+	public Gpsinfo selectGpsByPlateNo(String PlateNo) {
 		//CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GPS);
-		//Gpsinfo20171128Example example = new Gpsinfo20171128Example();
-		//Gpsinfo20171128Example.Criteria criteria =  example.createCriteria();
+		//GpsinfoExample example = new GpsinfoExample();
+		//GpsinfoExample.Criteria criteria =  example.createCriteria();
 		//criteria.andPlatenoEqualTo(PlateNo);
-		//return gpsinfo20171128Mapper.selectByExample(example);
-		//List<Gpsinfo20171128> list;
-		Gpsinfo20171128 gpsinfo20171128 = new Gpsinfo20171128();
+		//return gpsinfoMapper.selectByExample(example);
+		//List<Gpsinfo> list;
+		Gpsinfo gpsinfo = new Gpsinfo();
 		Connection con;
 		//驱动程序名
 		String driver = "com.mysql.jdbc.Driver";
@@ -64,10 +82,10 @@ public class HlGpsServiceImpl  implements HlGpsService {
 		              ResultSet rs = statement.executeQuery(sql); 
 		              while(rs.next()){
 		                  //获取stuname这列数据
-		            	  gpsinfo20171128.setGpsid(rs.getInt("gpsId"));
-		            	  gpsinfo20171128.setCreatedate(rs.getDate("createDate"));
-		                  gpsinfo20171128.setLatitude(rs.getDouble("latitude"));
-		                  gpsinfo20171128.setLongitude(rs.getDouble("longitude"));		              
+		            	  gpsinfo.setGpsid(rs.getInt("gpsId"));
+		            	  gpsinfo.setCreatedate(rs.getDate("createDate"));
+		                  gpsinfo.setLatitude(rs.getDouble("latitude"));
+		                  gpsinfo.setLongitude(rs.getDouble("longitude"));		              
 		            }
 		              statement.close();
 		              rs.close();
@@ -85,26 +103,47 @@ public class HlGpsServiceImpl  implements HlGpsService {
 		         }finally{
 		              //System.out.println("数据库数据成功获取！！");
 		         }
-		          return gpsinfo20171128;
+		          return gpsinfo;
 	}
 
 	@Override
-	public Gpsinfo selectGpsByPlate(String plateNo) {
-		Gpsinfo20171128 gpsinfo20171128 = new Gpsinfo20171128();
+	public GpsMsg selectGpsByPlate(String plateNo,int goods_id) {
 		Gpsinfo gpsinfo = new Gpsinfo();
+		GpsMsg gpsMsg = new GpsMsg();
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GPS);
 		Date date=new Date();
 		DateFormat format=new SimpleDateFormat("yyyyMMdd");
 		String tableName="gpsinfo"+format.format(date);
 		//System.out.println(myGpsMapper.selectMaxVelocity(plateNo));
 		//System.out.println(myGpsMapper.selectOverSpeedTimes(plateNo));
-		gpsinfo20171128 = myGpsMapper.selectGpsByPlateNo(tableName,plateNo);
-		gpsinfo.setMaxVelocity(myGpsMapper.selectMaxVelocity(plateNo));
-		gpsinfo.setOverSpeedVelocityTimes(myGpsMapper.selectOverSpeedTimes(plateNo));
-		gpsinfo.setGpsinfo20171128(gpsinfo20171128);
-		Integer status = gpsinfo20171128.getStatus();
-	    gpsinfo.setStatus(GpsStatus.statusdeal(status));
-		return gpsinfo;
+		gpsinfo = myGpsMapper.selectGpsByPlateNo(tableName,plateNo);
+		if(gpsinfo!=null){
+		gpsMsg.setMaxVelocity(myGpsMapper.selectMaxVelocity(plateNo));
+		gpsMsg.setOverSpeedVelocityTimes(myGpsMapper.selectOverSpeedTimes(plateNo));
+		gpsMsg.setGpsinfo(gpsinfo);
+		Integer status = gpsinfo.getStatus();
+		gpsMsg.setStatus(GpsStatus.statusdeal(status));
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		String driverName = myCarInfoMapper.selDriver(plateNo);
+		String safeName = myCarInfoMapper.selSafer(plateNo);
+		System.out.println(driverName+safeName);
+		List<HlPeople> list = new ArrayList<>(2);
+		HlPeopleExample example = new HlPeopleExample();
+		HlPeopleExample.Criteria criteria = example.createCriteria();
+		criteria.andNameEqualTo(driverName);
+		list.add(hlPeopleMapper.selectByExample(example).get(0));
+		
+		HlPeopleExample example2 = new HlPeopleExample();
+		HlPeopleExample.Criteria criteria2 = example2.createCriteria();
+		criteria2.andNameEqualTo(safeName);
+		list.add(hlPeopleMapper.selectByExample(example2).get(0));
+		gpsMsg.setHlPeople(list);
+		}
+		int goodsTypeId = myGoodsInfoMapper.selGoodsTypeIdByGoodsId(goods_id);
+		int safeCardid = myGoodsInfoMapper.selSafeCardIdByGoodsId(goods_id);
+		gpsMsg.setHlGoodstype(hlGoodstypeMapper.selectByPrimaryKey(goodsTypeId));
+		gpsMsg.setHlSafecard(hlSafecardMapper.selectByPrimaryKey(safeCardid));
+		return gpsMsg;
 	}
  }
 

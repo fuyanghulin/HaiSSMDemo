@@ -7,6 +7,8 @@ import cm.cn.po.HlGoodsinfo;
 public interface HlGoodsInfoService {
 	//查询所有货物信息
 	public List<HlGoodsinfo> selectAllGoodsInfo();
+	//根据公司Id查询货物信息
+	public List<HlGoodsinfo> selectGoodsInfoByCompanyId(int companyId);
 	//添加一条货物信息
 	public int insertHlGoodsinfo(HlGoodsinfo goodsinfo);
 	//批量删除货物信息

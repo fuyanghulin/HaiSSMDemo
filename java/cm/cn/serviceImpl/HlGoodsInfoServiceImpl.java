@@ -10,6 +10,7 @@ import cm.cn.mapper.HlGoodsinfoMapper;
 import cm.cn.mapper.MyGoodsInfoMapper;
 import cm.cn.po.HlGoodsinfo;
 import cm.cn.po.HlGoodsinfoExample;
+import cm.cn.po.HlGoodsinfoExample.Criteria;
 import cm.cn.service.HlGoodsInfoService;
 @Service
 public class HlGoodsInfoServiceImpl implements HlGoodsInfoService {
@@ -21,6 +22,15 @@ public class HlGoodsInfoServiceImpl implements HlGoodsInfoService {
 	public List<HlGoodsinfo> selectAllGoodsInfo() {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlGoodsinfoExample example = new HlGoodsinfoExample();
+		return hlGoodsinfoMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<HlGoodsinfo> selectGoodsInfoByCompanyId(int companyId) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		HlGoodsinfoExample example = new HlGoodsinfoExample();
+		Criteria criteria = example.createCriteria();
+		criteria.andCompanyIdEqualTo(companyId);
 		return hlGoodsinfoMapper.selectByExample(example);
 	}
 
