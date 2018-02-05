@@ -36,4 +36,21 @@
 	          #{id}
 	    </foreach>
 	</delete>
+		<select id="selGoodsTypeIdByGoodsId" parameterType="Integer" resultType="Integer">
+		SELECT
+			goodstyle_id 
+		FROM
+			hl_goodsinfo 
+		WHERE
+			id = #{goods_id};
+	</select>
+	<select id="selSafeCardIdByGoodsId" parameterType="Integer" resultType="Integer">
+	    SELECT
+			safecard_id 
+		FROM
+			hl_goodsinfo 
+		WHERE
+			id = #{goods_id};
+	</select>
+	
 </mapper>

@@ -68,7 +68,7 @@ public class HlCarInfoController {
 		List<HlCarinfo> list = HlCarinfoService.selectByCompanyId(company_id);
 		Page<HlCarinfo> page = null;
 		if (list.size()>0) {
-			page = new Page<>(current, pageNum,  list);
+			page = new Page<>(current, pageNum, list);
 			return page;
 		}
 		else {
