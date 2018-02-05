@@ -42,7 +42,7 @@
 		SELECT
 			max( velocity ) 
 		FROM
-			gpsinfo20180203 
+			gpsinfo20180205 
 		WHERE
 			plateNo = #{plateNo}
   </select>
@@ -50,7 +50,7 @@
 		SELECT
 			COUNT( * ) 
 		FROM
-			gpsinfo20180203
+			gpsinfo20180205
 		WHERE
 			plateNo = #{plateNo} 
 			AND velocity > 85
