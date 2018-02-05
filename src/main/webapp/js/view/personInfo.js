@@ -170,12 +170,29 @@ new Vue({
                 {
                     title: '操作',
                     key: 'action',
-                    width: 150,
+                    width: 180,
                     align: 'center',
                     fixed: 'right',
                     render: function (h, params) {
-                        if (this.userType === 1) {
+                        if (this.userType === 3) {
                             return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: function () {
+                                            this.openState = "查看";
+                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
+                                            //this.getRightDate(this.formValidate);
+                                            this.modal1 = true;
+                                        }.bind(this)
+                                    }
+                                }, '查看'),
                                 h('Button', {
                                     props: {
                                         type: 'primary',
@@ -225,20 +242,7 @@ new Vue({
                                             this.modal1 = true;
                                         }.bind(this)
                                     }
-                                }, '查看'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            this.openState = "修改";
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
-                                            this.modal1 = true;
-                                        }.bind(this)
-                                    }
-                                }, '修改')
+                                }, '查看')
                             ]);
                         }
 
@@ -252,7 +256,8 @@ new Vue({
             searchText: '',
             onedel:false,
             delone:'',
-            modal2:false
+            modal2:false,
+            spinShow:true
         }
     },
     methods: {
@@ -287,6 +292,13 @@ new Vue({
                         }
                     }
                 });
+            }
+        },
+        getRightDate:function(obj){
+            for(var i in obj){
+                obj[i].birthday = _self.format(obj[i].birthday);
+                obj[i].driLicenceTime = _self.format(obj[i].driLicenceTime);
+                obj[i].driverzigezhengTime = _self.format(obj[i].driverzigezhengTime);
             }
         },
         // 公司名称
@@ -460,12 +472,25 @@ new Vue({
         add0:function(m) {
             return m < 10 ? '0' + m : m
         },
-        format:function(nS) {
+        format:function(nS) {/*
             var time = new Date(nS);
             var y = time.getFullYear();
             var m = time.getMonth() + 1;
             var d = time.getDate();
-            return y + '-' + this.add0(m) + '-' + this.add0(d);
+            return y + '-' + this.add0(m) + '-' + this.add0(d);*/
+            if(typeof nS=="object"&&nS!==null||typeof nS=="number"){
+                console.log(nS)
+                var time = new Date(nS);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                console.log(y + '-' + this.add0(m) + '-' + this.add0(d));
+                return y + '-' + this.add0(m) + '-' + this.add0(d);
+            }/*else if(typeof nS=="number"){
+                return nS;
+            }*/else{
+                return null;
+            }
         },
         open:function(obj) {
             if ($.trim(obj.currentTarget.innerText) == "添加") {
@@ -490,7 +515,7 @@ new Vue({
                     cache: false,
                     success: function (data) {
                         _self.$Loading.finish();
-
+                        console.log(data);
                         if (typeof data == "object") {
                             _self.totalRecord = data.totalRecord;
                             _self.page.current = data.currentPage;
@@ -501,11 +526,16 @@ new Vue({
                                     data.dataList[i].type = '押运员';
                                 }
                                 data.dataList[i].picUser = baseUrl + '/pic/' + data.dataList[i].pictureName;
+
+
+                                console.log("执行了转换");
                                 data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
                                 data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
                                 data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);
                             }
                             _self.data = data.dataList;
+                            console.log('输出显示数据');
+                            console.log(_self.data);
                         } else {
                             _self.data = [];
                         }
@@ -562,6 +592,8 @@ new Vue({
                         else if (_self.openState == "修改") {
                             _self.postData(_self, dataUrl.person.upDate,_self.formValidate);
                         }
+                        console.log('输出请求信息');
+                        console.log(_self.formValidate);
                     } else {
                         _self.loading = false;
                     }
@@ -593,6 +625,10 @@ new Vue({
         }
     },
     created:function() {
+        document.body.removeChild(document.getElementById('tloading'));
+        /*setTimeout(function() {
+          document.getElementById('app').style.display = 'block';
+        }, 500)*/
         var _self = this;
         var textState = JSON.parse(Cookies.get("state"));
 
@@ -601,6 +637,7 @@ new Vue({
             if (textState.ID == 0) {
                 window.location.href = "../../state.html";
             } else if (textState.ID == 1) {
+                _self.spinShow=false;
                 if (textState.roleID == 1) {
                     _self.userType = 1;
                     $.ajax({
@@ -627,7 +664,6 @@ new Vue({
                     });
                 } else {
                     _self.userType = 3;
-                    //_self.columns.splice(1,1);//不需要删除的那个选择
                     $.ajax({
                         type: 'GET',
                         url: dataUrl.company.getName + textState.companyID,
@@ -637,6 +673,7 @@ new Vue({
                         }
                     });
                 }
+                console.log('即将执行getDate');
                 _self.getData();
             }
         } else {

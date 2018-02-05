@@ -4,7 +4,7 @@
 new Vue({
     el: '#app',
     data: function () {
-    	const validatePass = function(rule, value, callback){
+        const validatePass = function(rule, value, callback){
             if (value === '') {
                 callback(new Error('不能为空'));
             } else {
@@ -102,19 +102,19 @@ new Vue({
                                 },
                                 on: {
                                     click: function () {  
-                                    	var _self=this;
-                                    	_self.$Notice.destroy();
-                                    	$.ajax({
-                                    		dataType:'JSON',
-                                    		type:'GET',
-                                    		url:dataUrl.carInfo.map+encodeURIComponent(params.row.carNum),
+                                        var _self=this;
+                                        _self.$Notice.destroy();
+                                        $.ajax({
+                                            dataType:'JSON',
+                                            type:'GET',
+                                            url:dataUrl.carInfo.map+encodeURIComponent(params.row.carNum),
                                             cache:false,
-                                    		success:function(data){
-                                    			if(data.longitude==null){
-                                    				
-                                            		_self.$Notice.info({
-                                            			title:'无法获取该车辆的当前定位',
-                                            			});
+                                            success:function(data){
+                                                if(data.longitude==null){
+                                                    
+                                                    _self.$Notice.info({
+                                                        title:'无法获取该车辆的当前定位',
+                                                        });
                                                     /*//暂时自己写点学习下百度地图api
                                                     _self.model2=true;
                                                     _self.new_point=new BMap.Point(120.19,30.26);
@@ -123,19 +123,19 @@ new Vue({
                                                     var marker = new BMap.Marker(_self.new_point);        // 创建标注    
                                                     _self.map.addOverlay(marker);                     // 将标注添加到地图中 */
                                                     
-                                            	}
-                                            	else{
-                                            		/*_self.model2=true;
-                                            		_self.map.clearOverlays();
+                                                }
+                                                else{
+                                                    /*_self.model2=true;
+                                                    _self.map.clearOverlays();
                                                     _self.new_point = new BMap.Point(data.longitude,data.latitude);
                                                     _self.marker = new BMap.Marker(_self.new_point);  // 创建标注
                                                     _self.map.addOverlay(_self.marker);              // 将标注添加到地图中
                                                    setTimeout(function(){
-                                                	   _self.map.panTo(_self.new_point);
+                                                       _self.map.panTo(_self.new_point);
                                                    },500);*/
-                                            		_self.model2=true;
-                                            		
-                                            		_self.new_point=new BMap.Point(data.longitude,data.latitude);
+                                                    _self.model2=true;
+                                                    
+                                                    _self.new_point=new BMap.Point(data.longitude,data.latitude);
                                                    setTimeout(function(){
                                                        var convertor = new BMap.Convertor();
                                                        var pointArr = [];
@@ -151,9 +151,9 @@ new Vue({
                                                        _self.map.setCenter(data.points[0]);
                                                      }
                                                    }
-                                            	}  
-                                    		}
-                                    	});
+                                                }  
+                                            }
+                                        });
                                     }.bind(this)
                                 }
                             }, '查看')
@@ -164,11 +164,12 @@ new Vue({
                     title: '操作',
                     key: 'action',
                     align: 'center',
-                    width: 150,
+                    width: 180,
                     fixed: 'right',
                     render: function (h, params) {
-                        if (this.userType === 1) {
+                        if (this.userType === 3) {
                             return h('div', [
+
                                 h('Button', {
                                     props: {
                                         type: 'primary',
@@ -179,11 +180,40 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                        	this.title = '修改货运信息';
+                                            // this.openState = "查看";
+                                            // this.open();
+                                            // this.data1[params.index].dp = 0;
+                                            // this.data1[params.index].sp = 0;
+                                            // this.driverList = [{name: this.data1[params.index].driverName}];
+                                            // this.saferList = [{name: this.data1[params.index].safer}];
+                                            // this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
+                                            // //this.model1 = true;
+                                            this.openState='查看';
+                                            console.log('输出当行的人员信息');
+                                            console.log(this.data1[params.index]);
                                             this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
-                                            this.model1 = true;
-                                            this.op = 1;
-                                            //this.change(params.index);
+                                            this.open(this.data1[params.index].driverName,this.data1[params.index].safer);
+                                        }.bind(this)
+                                    }
+                                }, '查看'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: function () {
+                                             this.title = '修改货运信息';
+                                            // this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
+                                            // this.model1 = true;
+                                            // this.op = 1;
+                                            // //this.change(params.index);
+                                            this.openState='修改';
+                                            this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
+                                            this.open(this.data1[params.index].driverName,this.data1[params.index].safer);
                                         }.bind(this)
                                     }
                                 }, '修改'),
@@ -214,13 +244,19 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                            this.openState = "查看";
-                                            this.data1[params.index].dp = 0;
-                                            this.data1[params.index].sp = 0;
-                                            this.driverList = [{name: this.data1[params.index].driverName}];
-                                            this.saferList = [{name: this.data1[params.index].safer}];
+                                            // this.openState = "查看";
+                                            // this.open();
+                                            // this.data1[params.index].dp = 0;
+                                            // this.data1[params.index].sp = 0;
+                                            // this.driverList = [{name: this.data1[params.index].driverName}];
+                                            // this.saferList = [{name: this.data1[params.index].safer}];
+                                            // this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
+                                            // //this.model1 = true;
+                                            this.openState='查看';
+                                            console.log('输出当行的人员信息');
+                                            console.log(this.data1[params.index]);
                                             this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
-                                            this.model1 = true;
+                                            this.open(this.data1[params.index].driverName,this.data1[params.index].safer);
                                         }.bind(this)
                                     }
                                 }, '查看')
@@ -287,10 +323,18 @@ new Vue({
                 scope: [{required: true, message: '经营范围不能为空', trigger: 'blur'}]
             },
             carType: ['栏板货车', '中性厢式货车', '重型箱式半挂车', '厢式货车', '罐式货车', '仓栅式货车', '重型半挂牵引车', '重型仓栅式半挂车', '重型罐式半挂车'],
-            driverList: [],
+            driverList: [
+
+            ],
             safeList: [],
-            driver: {},
-            safer: {},
+            driver: {
+                driveLicence:'',
+                phone: 0
+            },
+            safer: {
+                drivezigezheng:'',
+                phone: 0
+            },
             dp: 0, // 驾驶员
             sp: 0, // 安全员
             loading: false,
@@ -302,6 +346,7 @@ new Vue({
         }
     },
     created: function () {
+        document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
         var textState = JSON.parse(Cookies.get("state"));
         if (textState != null) {
@@ -311,12 +356,15 @@ new Vue({
                 _self.formValidate.companyName = textState.companyName;
                 if (textState.roleID == 1) {
                     _self.userType = 1;
+                    _self.getAll();
                 } else if (textState.roleID == 2) {
                     _self.userType = 2;
+                    _self.getAll();
                 } else {
                     _self.userType = 3;
+                    _self.getAll();
                 }
-                _self.getAll();
+                //_self.getAll();
             }
         } else {
             window.location.href = "../../state.html";
@@ -330,7 +378,7 @@ new Vue({
         this.map.enableScrollWheelZoom(true);
     },
     methods: {
-    	
+        
         search: function () {
             if (this.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');
@@ -353,8 +401,10 @@ new Vue({
             }
         },
         theDriver: function () {
+            
             this.driver = this.driverList[this.dp];
             this.formValidate.driverName = this.driverList[this.dp].name;
+            console.log(this.driver);
         },
         theSafer: function () {
             this.safer = this.safeList[this.sp];
@@ -369,16 +419,31 @@ new Vue({
                     _self.model1 = false;
                 } else {
                     if (valid) { // 验证通过
+
+                        _self.formValidate.insuranceDate = _self.format(_self.formValidate.insuranceDate);
+                        _self.formValidate.dutyInsurancedate = _self.format(_self.formValidate.dutyInsurancedate);
+                        _self.formValidate.dutypeoDate = _self.format(_self.formValidate.dutypeoDate);
+                        _self.formValidate.roadDate = _self.format(_self.formValidate.roadDate);
+                        _self.formValidate.certDate = _self.format(_self.formValidate.certDate);
+                        _self.formValidate.certyearDate = _self.format(_self.formValidate.certyearDate);
+                        _self.formValidate.certagrDate = _self.format(_self.formValidate.certagrDate);
+                        _self.formValidate.yearcheckDate = _self.format(_self.formValidate.yearcheckDate);
+                        _self.formValidate.tecDate = _self.format(_self.formValidate.tecDate);
+                        _self.formValidate.secImprovedate = _self.format(_self.formValidate.secImprovedate);
                         var theData = {};
                         for (var key in _self.formValidate) {
-                            if (_self.formValidate[key] != '') {
+                            //if (_self.formValidate[key] !==null) {
                                 theData[key] = _self.formValidate[key];
-                            }
+                                
+                            //}
                         }
+                        //theData.safer=_self.safer;
+                        console.log('输出提交的信息');
+                        console.log(theData);
                         var url = '';
-                        if (_self.op == 0) {
+                        if (_self.openState == "添加") {
                             url = dataUrl.carInfo.insert;
-                        } else {
+                        } else if(_self.openState == "修改"){
                             url = dataUrl.carInfo.upDate;
                         }
                         $.ajax({
@@ -387,6 +452,7 @@ new Vue({
                             data:theData,
                             cache: false,
                             success: function (data) {
+                                console.log('请求成功');
                                 _self.loading = false;
                                 _self.model1 = false;
                                 _self.getAll();
@@ -397,6 +463,7 @@ new Vue({
                                 _self.formValidate.carType = '栏板货车';
                             },
                             error:function () {
+                                console.log('请求失败');
                                 _self.loading = false;
                             }
                         });
@@ -446,14 +513,38 @@ new Vue({
                 this.getAll();
             }
         },
-        open: function (obj) {
-            this.model1 = true;
-            if ($.trim(obj.currentTarget.innerText) == "添加") {
-                this.$refs['formValidate'].resetFields();
-                this.openState = $.trim(obj.currentTarget.innerText);
-                if (this.formValidate.id != undefined)
-                    this.formValidate.id = '';
+        add0:function(m) {
+            return m < 10 ? '0' + m : m
+        },
+        format:function(nS) {
+            if(typeof nS=="object"&&nS!==null||typeof nS=="number"){
+                console.log(nS)
+                var time = new Date(nS);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                console.log(y + '-' + this.add0(m) + '-' + this.add0(d));
+                return y + '-' + this.add0(m) + '-' + this.add0(d);
+            }/*else if(typeof nS=="number"){
+                return nS;
+            }*/else{
+                return null;
             }
+            
+        },
+        open: function (dd,ss,event) {
+            console.log('执行open函数，会拿到公司最新人员信息');
+            //console.log(event.currentTarget.innerText);
+            this.model1 = true;
+            if (event&&event.currentTarget.innerText == "添加") {
+                console.log(event.currentTarget.innerText);
+                this.$refs['formValidate'].resetFields();
+                this.openState ='添加';
+                if (this.formValidate.id != undefined){
+                    this.formValidate.id = '';
+                }
+            }
+            console.log(this.formValidate.id);
             ////请求最新驾驶员数据
             var _self = this;
             if(_self.userType===3){
@@ -475,12 +566,38 @@ new Vue({
                                     _self.safeList.push(data.dataList[i]);
                                 }
                             }
-                            // 给司机驾驶员赋初值
-                            _self.driver = _self.driverList[_self.dp];
-                            _self.safer = _self.safeList[_self.sp];
+                            console.log('输出最新的驾驶员名单');
+                            console.log(_self.driverList);
+                            if(_self.openState =='添加'){//初始化人员
 
-                            _self.formValidate.driverName = _self.driverList[_self.dp].name;
-                            _self.formValidate.safer = _self.safeList[_self.sp].name;
+                                //console.log(_self.driverList);
+                                console.log('添加');
+                                // 给司机驾驶员赋初值
+                                _self.driver = _self.driverList[0];
+                                _self.safer = _self.safeList[0];
+
+                                _self.formValidate.driverName = _self.driverList[0].name;//_self.op
+                                _self.formValidate.safer = _self.safeList[0].name;//_self.sp
+
+                            }else{//将传入的人员信息渲染
+                                for(var i=0;i<_self.driverList.length;i++){
+                                    console.log(dd);
+                                    if(_self.driverList[i].name==dd){
+                                        _self.dp=i;
+                                        _self.driver=_self.driverList[i];
+                                        _self.formValidate.driverName = _self.driverList[i].name;
+                                    }
+                                }
+                                for(var i=0;i<_self.safeList.length;i++){
+                                    console.log(ss);
+                                    if(_self.safeList[i].name==ss){
+                                        _self.sp=i;
+                                        console.log(_self.sp);
+                                        _self.safer=_self.safeList[i];
+                                        _self.formValidate.safer = _self.safeList[i].name;
+                                    }
+                                }
+                            }
 
                         }
                     }
@@ -503,10 +620,29 @@ new Vue({
                                 }
                             }
                             // 给司机驾驶员赋初值
-                            _self.driver = _self.driverList[_self.dp];
+                            /*_self.driver = _self.driverList[_self.dp];
                             _self.safer = _self.safeList[_self.sp];
                             _self.formValidate.driverName = _self.driverList[_self.dp].name;
-                            _self.formValidate.safer = _self.safeList[_self.sp].name;
+                            _self.formValidate.safer = _self.safeList[_self.sp].name;*/
+
+
+                            for(var i=0;i<_self.driverList.length;i++){
+                                    console.log(dd);
+                                    if(_self.driverList[i].name==dd){
+                                        _self.dp=i;
+                                        _self.driver=_self.driverList[i];
+                                        _self.formValidate.driverName = _self.driverList[i].name;
+                                    }
+                                }
+                                for(var i=0;i<_self.safeList.length;i++){
+                                    console.log(ss);
+                                    if(_self.safeList[i].name==ss){
+                                        _self.sp=i;
+                                        console.log(_self.sp);
+                                        _self.safer=_self.safeList[i];
+                                        _self.formValidate.safer = _self.safeList[i].name;
+                                    }
+                                }
                         }
                     }
                 });
@@ -657,10 +793,27 @@ new Vue({
                     cache: false,
                     success: function (data) {
                         if (data != null) {
+                            console.log('输出得到的公司信息');
+                            console.log(data);
+                            console.log(data.dataList);
                             _self.data1 = data.dataList;
                             _self.totalRecord = data.totalRecord;
                             _self.current = data.currentPage;
                             _self.theChecked = [];
+                           /* for(var i in data.dataList){
+                                data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
+
+                        _self.formValidate.insuranceDate = _self.format(_self.formValidate.insuranceDate);
+                        _self.formValidate.dutyInsurancedate = _self.format(_self.formValidate.dutyInsurancedate);
+                        _self.formValidate.dutypeoDate = _self.format(_self.formValidate.dutypeoDate);
+                        _self.formValidate.roadDate = _self.format(_self.formValidate.roadDate);
+                        _self.formValidate.certDate = _self.format(_self.formValidate.certDate);
+                        _self.formValidate.certyearDate = _self.format(_self.formValidate.certyearDate);
+                        _self.formValidate.certagrDate = _self.format(_self.formValidate.certagrDate);
+                        _self.formValidate.yearcheckDate = _self.format(_self.formValidate.yearcheckDate);
+                        _self.formValidate.tecDate = _self.format(_self.formValidate.tecDate);
+                        _self.formValidate.secImprovedate = _self.format(_self.formValidate.secImprovedate);
+                            }*/
                         } else {
                             _self.data1 = [];
                         }
