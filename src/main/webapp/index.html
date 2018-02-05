@@ -113,6 +113,8 @@
 
     <div class="layout" v-else>
         <div class="layout-content" >
+
+            
             <i-Menu mode="horizontal" theme="dark" active-name="1" >
                 <div class="layout-logo" style="background-image: url('img/logo_left .png')"></div>
                 <div class="layout-ceiling-main">
@@ -122,9 +124,11 @@
                     <a href="javascript:;" @click="exit">退出</a>
                 </div>
             </i-Menu>
+
+
             <Row>
                 <i-Col span="4" >
-                    <i-Menu width="auto" style=" height:100vh;" @on-select="route" accordion theme="light">
+                    <i-Menu width="auto" style=" height:1000px;" @on-select="route" accordion theme="light">
                         <Menu-Item name="view/home-page/home.html" style="text-align: center;font-size: 21px;font-weight: bold;border-bottom: 1px dashed #cfcfcf">首页</Menu-Item>
                         <Submenu name="1" v-if="userType===1||userType===2">
                             <template slot="title">
@@ -143,7 +147,7 @@
                             <Menu-Item name="view/enterprise-manage/personInfo.html">人员信息</Menu-Item>
                             <Menu-Item name="view/enterprise-manage/carInfo.html">车辆信息</Menu-Item>
                         </Submenu>
-                        <Submenu name="4" v-if="userType===1||userType===2">
+                        <Submenu name="4">
                             <template slot="title">
                                 <Icon type="ios-analytics"></Icon>
                                 货物管理

@@ -47,8 +47,8 @@
     <!--頭部區塊-->
     <nav>
         <div>
-            <i-button type="primary" @click="open('添加',0)" v-if="userType===1">添加</i-button>
-            <i-button type="error" style="margin-left: 20px;" @click="del" v-if="userType===1">删除</i-button><!-- moreDelete -->
+            <i-button type="primary" @click="open('添加',0)" v-if="userType===3">添加</i-button>
+            <i-button type="error" style="margin-left: 20px;" @click="del" v-if="userType===3">删除</i-button><!-- moreDelete -->
         </div>
         <div>
             <i-input placeholder="请输入名称..." style="width: 200px;" v-model="searchText"></i-input>

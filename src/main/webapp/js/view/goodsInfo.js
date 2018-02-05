@@ -46,7 +46,7 @@ new Vue({
                     key: 'action',
                     align: 'center',
                     render: function (h, params) {
-                        if(this.userType===1){
+                        if(this.userType===3){
                             return h('div', [
                                 h('Button', {
                                     props: {
@@ -107,7 +107,7 @@ new Vue({
             content: {},
             page: {
                 current: 1,
-                pageNum: 20
+                pageNum: 15
             },
             op: 0,
             title: '',
@@ -368,23 +368,49 @@ new Vue({
         },
         getAll: function () {
             var _self = this;
-            $.ajax({
-                type: 'GET',
-                url: dataUrl.goods.all,
-                data:_self.page,
-                cache: false,
-                success: function (data) {
-                    if (data != null && data.dataList != undefined) {
-                        var d;
-                        _self.data1 = data.dataList;
-                        _self.totalRecord = data.totalRecord;
-                        _self.page.current = data.currentPage;
-                        _self.theChecked = [];
-                    } else {
-                        _self.data1 = [];
-                    }
+            if(_self.userType=='3'){
+                var idata={};
+                for(var key in _self.page){
+                    idata[key]=_self.page[key];
                 }
-            });
+                idata.id=textState.companyID;
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.goods.company,
+                    data:idata,
+                    cache: false,
+                    success: function(data){
+                        if (data != null && data.dataList != undefined) {
+                            //var d;
+                            _self.data1 = data.dataList;
+                            _self.totalRecord = data.totalRecord;
+                            _self.page.current = data.currentPage;
+                            _self.theChecked = [];
+                        } else {
+                            _self.data1 = [];
+                        }
+                    }
+                });
+            }else{
+                 $.ajax({
+                    type: 'GET',
+                    url: dataUrl.goods.all,
+                    data:_self.page,
+                    cache: false,
+                    success: function (data) {
+                        if (data != null && data.dataList != undefined) {
+                            //var d;
+                            _self.data1 = data.dataList;
+                            _self.totalRecord = data.totalRecord;
+                            _self.page.current = data.currentPage;
+                            _self.theChecked = [];
+                        } else {
+                            _self.data1 = [];
+                        }
+                    }
+                });
+            }
+            
             _self.searchText="";
         },
         upMessage: function () {
@@ -399,12 +425,17 @@ new Vue({
                         url = dataUrl.goods.upDate;
                     }
                     // 发出请求
+                    var idata={};
+                    for(var key in _self.goods){
+                        idata[key]=_self.goods[key];
+                    }
+                    idata.id=textState.companyID;
                     $.ajax({
                         type: 'POST',
                         url: url,
                         dataType: 'json',
                         contentType: "application/json",
-                        data:JSON.stringify(_self.goods),
+                        data:JSON.stringify(idata),
                         cache: false,
                         success: function (data) {
                             _self.loading = false;
