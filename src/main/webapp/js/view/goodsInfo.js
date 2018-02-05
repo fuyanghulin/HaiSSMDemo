@@ -150,24 +150,32 @@ new Vue({
             delone: '',
             onedel:false,
             modal2: false,
+            textState:{}
         }
     },
     created: function () {
         document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
-        var textState = JSON.parse(Cookies.get("state"));
-        if (textState != null) {
-            if (textState.ID == 0) {
+        var cookobj = JSON.parse(Cookies.get("state"));
+        for(var key in cookobj){
+            _self.textState[key]=cookobj[key];
+        }
+        if (_self.textState != null) {
+            if (_self.textState.ID == 0) {
                 window.location.href = "../../state.html";
-            } else if (textState.ID == 1) {
-                if (textState.roleID == 1) {
+            } else if (_self.textState.ID == 1) {
+                if (_self.textState.roleID == 1) {
                     _self.userType = 1;
-                } else if (textState.roleID == 2) {
+                    _self.getAll();
+                } else if (_self.textState.roleID == 2) {
                     _self.userType = 2;
+                    _self.getAll();
                 } else {
                     _self.userType = 3;
+                    _self.getAll();
+
                 }
-                _self.getAll();
+                //_self.getAll();
             }
         } else {
             window.location.href = "../../state.html";
@@ -367,13 +375,16 @@ new Vue({
             this.getAll();
         },
         getAll: function () {
+            console.log('执行getAll函数');
             var _self = this;
             if(_self.userType=='3'){
                 var idata={};
                 for(var key in _self.page){
                     idata[key]=_self.page[key];
                 }
-                idata.id=textState.companyID;
+                idata.companyId=_self.textState.companyID;
+                console.log('输出请求参数idata');
+                console.log(idata);
                 $.ajax({
                     type: 'GET',
                     url: dataUrl.goods.company,
@@ -410,7 +421,7 @@ new Vue({
                     }
                 });
             }
-            
+            console.log(idata);
             _self.searchText="";
         },
         upMessage: function () {
@@ -429,7 +440,9 @@ new Vue({
                     for(var key in _self.goods){
                         idata[key]=_self.goods[key];
                     }
-                    idata.id=textState.companyID;
+                    idata.companyId=_self.textState.companyID;
+                    console.log('上传信息输出：');
+                    console.log(idata);
                     $.ajax({
                         type: 'POST',
                         url: url,
@@ -442,9 +455,11 @@ new Vue({
                             _self.$Message.info('上传成功');
                             _self.modal1 = false;
                             _self.getAll();
+                            console.log(idata);
                         },
-                        error:function () {
+                        error:function (err) {
                         	_self.$Message.info('上传失败');
+                            console.log(err);
                             _self.loading = false;
                         }
                     });

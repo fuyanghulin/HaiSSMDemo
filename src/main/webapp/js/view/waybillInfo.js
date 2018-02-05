@@ -459,21 +459,67 @@ new Vue({
             window.location.href = "../../state.html";
         }
 
+
+        //_self.page.company_name = JSON.parse(Cookies.get("state")).companyName;
+
         /// 获得货物名称
-        $.ajax({
-            type: 'GET',
-            url: dataUrl.waybill.goodInfo,
-            cache: false,
-            success: function (data) {
-                if (data.length > 0) {
-                    _self.goodsList = data;
-                    _self.formValidate.goodName = _self.goodsList[0].name;
-                    _self.formValidate.nationCode = _self.goodsList[0].code;
-                    _self.formValidate.code = _self.goodsList[0].reserveTwo;
-                    console.log(data);
-                }
+        //企业
+        console.log('即将进入if语段');
+        if(_self.userType=='3'){
+            console.log('进入该if语段');
+            var idata={};
+            for(var key in _self.page){
+                idata[key]=_self.page[key];
             }
-        });
+            idata.companyId=JSON.parse(Cookies.get("state")).companyID;
+            console.log('输出请求参数idata');
+            console.log(idata);
+            $.ajax({
+                type: 'GET',
+                url: dataUrl.goods.company,
+                data:idata,
+                cache: false,
+                success: function(data){
+                    /*if (data != null && data.dataList != undefined) {
+                        //var d;
+                        _self.data1 = data.dataList;
+                        _self.totalRecord = data.totalRecord;
+                        _self.page.current = data.currentPage;
+                        _self.theChecked = [];
+                    } else {
+                        _self.data1 = [];
+                    }*/
+                    console.log('输出返回的货物信息列表');
+                    console.log(data);
+                    if (data != null && data.dataList != undefined) {
+                        _self.goodsList = data.dataList;
+                        _self.formValidate.goodName = _self.goodsList[0].name;
+                        _self.formValidate.nationCode = _self.goodsList[0].code;
+                        _self.formValidate.code = _self.goodsList[0].reserveTwo;
+                    }
+                }
+            });
+        }else{
+            $.ajax({
+                type: 'GET',
+                url: dataUrl.waybill.goodInfo,
+                cache: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        _self.goodsList = data;
+                        _self.formValidate.goodName = _self.goodsList[0].name;
+                        _self.formValidate.nationCode = _self.goodsList[0].code;
+                        _self.formValidate.code = _self.goodsList[0].reserveTwo;
+                        console.log(data);
+                    }
+                }
+            });
+        }
+
+
+
+        //全部
+        
 
         /////获取车辆列表
         if (_self.userType === 3) {

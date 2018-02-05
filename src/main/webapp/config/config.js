@@ -71,7 +71,7 @@ var dataUrl = {
         search: baseUrl + '/HaiSSMDemo/selectGoodsInfoByName.action?current=1&pageNum=1000&name=',
         del: baseUrl + '/HaiSSMDemo/delGoodsInfoBatch.action?arrays=',
         all: baseUrl + '/HaiSSMDemo/allGoodsInfo.action',
-        company:baseUrl + '/HaiSSMDemo/companyGoodsInfo.action'
+        company:baseUrl + '/HaiSSMDemo/selectGoodsInfoByCompanyId.action'
     },
     waybill: {
         getWaybillByCompanyID:baseUrl+'/HaiSSMDemo/selWaybillByCompanyId.action',

@@ -342,22 +342,26 @@ new Vue({
             onedel:false,
             delone:'',
             modal2:false,
-            delArr:[]
+            delArr:[],
+            textState:{}
         }
     },
     created: function () {
         document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
-        var textState = JSON.parse(Cookies.get("state"));
-        if (textState != null) {
-            if (textState.ID == 0) {
+        var cookobj = JSON.parse(Cookies.get("state"));
+        for(var key in cookobj){
+            _self.textState[key]=cookobj[key];
+        }
+        if (_self.textState != null) {
+            if (_self.textState.ID == 0) {
                 window.location.href = "../../state.html";
-            } else if (textState.ID == 1) {
-                _self.formValidate.companyName = textState.companyName;
-                if (textState.roleID == 1) {
+            } else if (_self.textState.ID == 1) {
+                _self.formValidate.companyName = _self.textState.companyName;
+                if (_self.textState.roleID == 1) {
                     _self.userType = 1;
                     _self.getAll();
-                } else if (textState.roleID == 2) {
+                } else if (_self.textState.roleID == 2) {
                     _self.userType = 2;
                     _self.getAll();
                 } else {
@@ -437,6 +441,10 @@ new Vue({
                                 
                             //}
                         }
+                        theData.companyId=_self.textState.companyID;
+                        console.log(_self.safer);
+                        theData.saferId=_self.safer.id;
+                        theData.driverId=_self.driver.id;
                         //theData.safer=_self.safer;
                         console.log('输出提交的信息');
                         console.log(theData);

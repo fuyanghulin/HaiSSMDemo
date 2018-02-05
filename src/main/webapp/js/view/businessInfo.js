@@ -100,7 +100,7 @@ new Vue({
                 },
                 {
                     title: '营业执照有效期',
-                    key: 'realLinceTime',
+                    key: 'businLicenceTime',/*realLinceTime*/
                     width: 200,
                     align: 'center',
                     sortable: true
@@ -113,7 +113,7 @@ new Vue({
                 },
                 {
                     title: '经营许可证有效期',
-                    key: 'realCertTime',
+                    key: 'businCertificateTime',/*realCertTime这里使用了两个新值来代替原来的time，kk将其改成了html中的值*/
                     width: 200,
                     align: 'center',
                     sortable: true
@@ -461,18 +461,21 @@ new Vue({
                 cache: false,
                 success: function (data) {
                     if (data != null && data.dataList != undefined) {
-                        var d;
+                        
                         _self.data1 = data.dataList;
                         _self.totalRecord = data.totalRecord;
                         _self.theChecked = [];
                         for (var i = 0; i < _self.data1.length; i++) {
-                            d = new Date(data.dataList[i].businLicenceTime);
+                            /*d = new Date(data.dataList[i].businLicenceTime);
                             _self.data1[i].realLinceTime = d.getFullYear()+'-'+(d.getMonth()+ 1)+'-'+ (d.getDate());
                             d = new Date(data.dataList[i].businCertificateTime);
-                            _self.data1[i].realCertTime = d.getFullYear()+'-'+(d.getMonth()+ 1)+'-'+ (d.getDate());
+                            _self.data1[i].realCertTime = d.getFullYear()+'-'+(d.getMonth()+ 1)+'-'+ (d.getDate());*/
+
+                            _self.data1[i].businCertificateTime= _self.format(_self.data1[i].businCertificateTime);
+                            _self.data1[i].businLicenceTime= _self.format(_self.data1[i].businLicenceTime);
                         }
-                    } else {
-                        _self.data1 = [];
+                    }else{
+                        _self.data1 = [];//
                     }
                 }
             });
@@ -489,12 +492,11 @@ new Vue({
                         _self.company.province = _self.theCity[0];
                         _self.company.city = _self.theCity[1];
                         _self.company.county = _self.theCity[2];
-                        if (_self.company.businLicenceTime instanceof Date) {
-                            _self.company.businLicenceTime = _self.month(_self.company.businLicenceTime);
-                        }
-                        if (_self.company.businCertificateTime instanceof Date) {
-                            _self.company.businCertificateTime = _self.month(_self.company.businCertificateTime);
-                        }
+                        //if (_self.company.businLicenceTime instanceof Date) {
+                         _self.company.businLicenceTime = _self.format(_self.company.businLicenceTime);
+                        
+                        _self.company.businCertificateTime = _self.format(_self.company.businCertificateTime);
+                        
                         if (_self.openState == "添加") {
                             //_self.postData(_self, dataUrl.carrier.insert, _self.company);
                             _self.state=false;//下一步，不提交
@@ -508,6 +510,29 @@ new Vue({
                 }
             });
             _self.current=0;
+        },
+        add0:function(m) {
+            return m < 10 ? '0' + m : m
+        },
+        format:function(nS) {/*
+            var time = new Date(nS);
+            var y = time.getFullYear();
+            var m = time.getMonth() + 1;
+            var d = time.getDate();
+            return y + '-' + this.add0(m) + '-' + this.add0(d);*/
+            if(typeof nS=="object"&&nS!==null||typeof nS=="number"){
+                console.log(nS)
+                var time = new Date(nS);
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                console.log(y + '-' + this.add0(m) + '-' + this.add0(d));
+                return y + '-' + this.add0(m) + '-' + this.add0(d);
+            }/*else if(typeof nS=="number"){
+                return nS;
+            }*/else{
+                return null;
+            }
         },
         month: function (date) {
             var m ='';
@@ -615,10 +640,15 @@ new Vue({
                         _self.totalRecord = data.totalRecord;
                         _self.theChecked = [];
                         for (var i = 0; i < _self.data1.length; i++) {
-                            d = new Date(data.dataList[i].businLicenceTime);
+                            /*d = new Date(data.dataList[i].businLicenceTime);
                             _self.data1[i].realLinceTime = d.getFullYear()+'-'+(d.getMonth()+ 1)+'-'+ (d.getDate());
                             d = new Date(data.dataList[i].businCertificateTime);
-                            _self.data1[i].realCertTime = d.getFullYear()+'-'+(d.getMonth()+ 1)+'-'+ (d.getDate());
+                            _self.data1[i].realCertTime = d.getFullYear()+'-'+(d.getMonth()+ 1)+'-'+ (d.getDate());*/
+                            _self.data1[i].realLinceTime = _self.format(data.dataList[i].realLinceTime);
+                            _self.data1[i].realCertTime = _self.format(data.dataList[i].realCertTime);
+                            _self.data1[i].businCertificateTime= _self.format(data.dataList[i].businCertificateTime);
+                            _self.data1[i].businLicenceTime= _self.format(data.dataList[i].businLicenceTime);
+                            //businLicenceTime
                         }
                     } else {
                         _self.data1 = [];
@@ -626,6 +656,8 @@ new Vue({
                 }
             });
             _self.searchText='';
+            console.log('输出get得到的信息');
+            console.log(_self.data1);
         },
         callback: function (data) {
             this.page.current = data;
