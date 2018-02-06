@@ -50,7 +50,7 @@ public class HlCarInfoServiceImpl implements HlCarInfoService {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlCarinfoExample example = new HlCarinfoExample();
 		HlCarinfoExample.Criteria criteria = example.createCriteria();
-		criteria.andCarNumEqualTo(carLicense);
+		criteria.andCarNumLike("%"+carLicense+"%");
 		return hlCarinfoMapper.selectByExample(example);
 	}
 

@@ -56,7 +56,7 @@ public class HlPeopleServiceImpl implements HlPeopleService {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlPeopleExample example = new HlPeopleExample();
 		HlPeopleExample.Criteria criteria = example.createCriteria();
-		criteria.andNameEqualTo(name);
+		criteria.andNameLike("%"+name+"%");
 		return hlPeopleMapper.selectByExample(example);
 	}
 

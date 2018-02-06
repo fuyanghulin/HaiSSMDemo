@@ -57,7 +57,7 @@ public class HlGoodsInfoServiceImpl implements HlGoodsInfoService {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlGoodsinfoExample example = new HlGoodsinfoExample();
 		HlGoodsinfoExample.Criteria criteria = example.createCriteria();
-		criteria.andNameEqualTo(name);
+		criteria.andNameLike("%"+name+"%");
 		return hlGoodsinfoMapper.selectByExample(example);
 	}
 
