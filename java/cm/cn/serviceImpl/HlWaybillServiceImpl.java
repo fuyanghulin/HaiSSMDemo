@@ -83,7 +83,7 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 		// TODO Auto-generated method stub
 		HlWaybillExample example = new HlWaybillExample();
 		HlWaybillExample.Criteria criteria = example.createCriteria();
-		criteria.andShipperEqualTo(Shipper);
+		criteria.andShipperLike("%"+Shipper+"%");
 		return hlWaybillMapper.selectByExample(example);
 	}
 	
