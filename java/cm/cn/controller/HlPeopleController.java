@@ -57,6 +57,19 @@ public class HlPeopleController {
 			return null;
 		}
 	}
+	@RequestMapping("/selectPeopleByCompanyIdAndName")
+	@ResponseBody
+	public Page<HlPeople> selectPeopleByCompanyIdAndName(int current,int pageNum,int companyId,String name){
+		List<HlPeople> list = hlPeopleService.selectPeopleByCompanyIdAndName(companyId, name);
+		Page<HlPeople> page = null;
+		if (list.size()>0) {
+			page = new Page<>(current, pageNum, list);
+			return page;
+		}
+		else {
+			return null;
+		}
+	}
 	@RequestMapping("/upPicture")
 	@ResponseBody
 	public List<String> upPicture(MultipartFile file){

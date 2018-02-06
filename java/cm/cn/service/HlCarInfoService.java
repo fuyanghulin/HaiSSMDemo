@@ -19,4 +19,6 @@ public interface HlCarInfoService {
 	public List<HlCarinfo> selectByCompanyName(String company_name);
 	//根据公司id查询车的信息
 	public List<HlCarinfo> selectByCompanyId(int id);
+	//根据公司id,对车牌进行模糊查询
+	public List<HlCarinfo> selectCarInfoByCompanyIdAndCarNum(int companyId,String carNum);
 }

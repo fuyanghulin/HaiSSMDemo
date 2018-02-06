@@ -2,6 +2,6 @@ package cm.cn.mapper;
 
 public interface MyCarInfoMapper {
 	public int delCarInfoBatch(int[] arrays);
-	public String selDriver(String plateNo);
-	public String selSafer(String plateNo);
+	public int selDriver(String plateNo);
+	public int selSafer(String plateNo);
 }

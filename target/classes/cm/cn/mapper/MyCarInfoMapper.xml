@@ -12,17 +12,17 @@
 	          #{id}
 	    </foreach>
 	</delete>
-	<select id="selDriver" parameterType="String" resultType="String">
+	<select id="selDriver" parameterType="String" resultType="Integer">
 	   SELECT
-			driver_name 
+			driver_id 
 	   FROM
 			hl_carinfo 
 	   WHERE
 			car_num = #{plateNo}
 	</select>
-	<select id="selSafer" parameterType="String" resultType="String">
+	<select id="selSafer" parameterType="String" resultType="Integer">
 	   SELECT
-			safer 
+			safer_id 
 	   FROM
 			hl_carinfo 
 	   WHERE

@@ -69,4 +69,14 @@ public class HlPeopleServiceImpl implements HlPeopleService {
 		return hlPeopleMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<HlPeople> selectPeopleByCompanyIdAndName(int companyId, String name) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		HlPeopleExample example = new HlPeopleExample();
+		HlPeopleExample.Criteria criteria = example.createCriteria();
+		criteria.andCompayIdEqualTo(companyId);
+		criteria.andNameLike("%"+name+"%");
+		return hlPeopleMapper.selectByExample(example);
+	}
+
 }

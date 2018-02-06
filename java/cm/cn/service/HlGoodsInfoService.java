@@ -17,4 +17,6 @@ public interface HlGoodsInfoService {
 	public int updateHlGoodsinfo(HlGoodsinfo goodsinfo);
 	//根据货物名称查询货物信息
 	public List<HlGoodsinfo> selectGoodsInfoByName(String name);
+	//根据公司id,通过货物名称模糊查询货物信息
+	public List<HlGoodsinfo> selectGoodsInfoByCompanyIdAndName(int companyId,String name);
 }

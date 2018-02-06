@@ -75,6 +75,19 @@ public class HlCarInfoController {
 			return null;
 		}
 	}
+	@RequestMapping("/selectCarInfoByCompanyIdAndCarNum")
+	@ResponseBody
+	public Page<HlCarinfo> selectCarInfoByCompanyIdAndCarNum(int current,int pageNum,int companyId,String carNum){
+		List<HlCarinfo> list = HlCarinfoService.selectCarInfoByCompanyIdAndCarNum(companyId, carNum);
+		Page<HlCarinfo> page = null;
+		if (list.size()>0) {
+			page = new Page<>(current, pageNum, list);
+			return page;
+		}
+		else {
+			return null;
+		}
+	}
 	@RequestMapping("/getCarInfoList")
 	@ResponseBody
 	public List<HlCarinfo> getSafeCardsList(){

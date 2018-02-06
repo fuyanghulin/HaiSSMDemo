@@ -34,6 +34,17 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 		return hlWaybillMapper.selectByExample(example);
 	}
 	@Override
+	public List<HlWaybill> selWaybillByCompanyIdAndShipper(int companyId, String Shipper) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		// TODO Auto-generated method stub
+		HlWaybillExample example = new HlWaybillExample();
+		HlWaybillExample.Criteria criteria = example.createCriteria();
+		criteria.andCompayIdEqualTo(companyId);
+		criteria.andShipperLike("%"+Shipper+"%");
+		return hlWaybillMapper.selectByExample(example);
+	}
+
+	@Override
 	public int insertWaybill(HlWaybill hlWaybill) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		// TODO Auto-generated method stub
@@ -75,6 +86,6 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 		criteria.andShipperEqualTo(Shipper);
 		return hlWaybillMapper.selectByExample(example);
 	}
-
+	
 
 }

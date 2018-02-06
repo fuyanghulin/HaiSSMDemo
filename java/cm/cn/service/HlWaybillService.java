@@ -9,6 +9,8 @@ public interface HlWaybillService {
 	public List<HlWaybill> selAllWaybill();
 	//根据公司查找订单
 	public List<HlWaybill> selWaybillByCompanyId(int company_id);
+	//根据公司id,电子运单托运方模糊查询公司电子运单
+	public List<HlWaybill> selWaybillByCompanyIdAndShipper(int companyId,String Shipper);
 	//根据托运方查找订单
 	public List<HlWaybill> selWaybillByShipper(String Shipper);
 	//添加订单

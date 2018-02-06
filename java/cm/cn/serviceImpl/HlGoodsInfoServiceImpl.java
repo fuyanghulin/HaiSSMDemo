@@ -61,4 +61,14 @@ public class HlGoodsInfoServiceImpl implements HlGoodsInfoService {
 		return hlGoodsinfoMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<HlGoodsinfo> selectGoodsInfoByCompanyIdAndName(int companyId, String name) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		HlGoodsinfoExample example = new HlGoodsinfoExample();
+		HlGoodsinfoExample.Criteria criteria = example.createCriteria();
+		criteria.andCompanyIdEqualTo(companyId);
+		criteria.andNameLike("%"+name+"%");
+		return hlGoodsinfoMapper.selectByExample(example);
+	}
+
 }

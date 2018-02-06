@@ -46,6 +46,19 @@ public class HlWaybillController {
 			return null;
 		}
 	}
+	@RequestMapping("/selWaybillByCompanyIdAndShipper")
+	@ResponseBody
+	public Page<HlWaybill> selWaybillByCompanyIdAndShipper(int current,int pageNum,int companyId,String Shipper){
+		List<HlWaybill> list = hlWaybillService.selWaybillByCompanyIdAndShipper(companyId, Shipper);
+		Page<HlWaybill> page = null;
+		if (list.size()>0) {
+			page = new Page<>(current, pageNum,  list);
+			return page;
+		}
+		else {
+			return null;
+		}
+	}
 	@RequestMapping("/selWaybillByShipper")
 	@ResponseBody
 	public Page<HlWaybill> selWaybillByShipper(int current,int pageNum,String Shipper){

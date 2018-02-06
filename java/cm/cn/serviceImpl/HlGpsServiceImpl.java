@@ -123,20 +123,14 @@ public class HlGpsServiceImpl  implements HlGpsService {
 		gpsMsg.setGpsinfo(gpsinfo);
 		Integer status = gpsinfo.getStatus();
 		gpsMsg.setStatus(GpsStatus.statusdeal(status));
-		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
-		String driverName = myCarInfoMapper.selDriver(plateNo);
-		String safeName = myCarInfoMapper.selSafer(plateNo);
-		System.out.println(driverName+safeName);
-		List<HlPeople> list = new ArrayList<>(2);
-		HlPeopleExample example = new HlPeopleExample();
-		HlPeopleExample.Criteria criteria = example.createCriteria();
-		criteria.andNameEqualTo(driverName);
-		list.add(hlPeopleMapper.selectByExample(example).get(0));
 		
-		HlPeopleExample example2 = new HlPeopleExample();
-		HlPeopleExample.Criteria criteria2 = example2.createCriteria();
-		criteria2.andNameEqualTo(safeName);
-		list.add(hlPeopleMapper.selectByExample(example2).get(0));
+		
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		int driverId = myCarInfoMapper.selDriver(plateNo);
+		int saferId = myCarInfoMapper.selSafer(plateNo);
+		List<HlPeople> list = new ArrayList<>(2);
+		list.add(hlPeopleMapper.selectByPrimaryKey(driverId));
+		list.add(hlPeopleMapper.selectByPrimaryKey(saferId));
 		gpsMsg.setHlPeople(list);
 		}
 		int goodsTypeId = myGoodsInfoMapper.selGoodsTypeIdByGoodsId(goods_id);
