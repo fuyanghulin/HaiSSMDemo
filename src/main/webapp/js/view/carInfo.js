@@ -391,7 +391,7 @@ new Vue({
                 if(_self.userType==1||_self.userType==2){
                     $.ajax({
                         type: 'GET',
-                        url: dataUrl.carInfo.search+encodeURI(_self.searchText.replace(/\s/g, '')),
+                        url: dataUrl.carInfo.search+encodeURI(_self.searchText),
                         cache: false,
                         success: function (data) {
                             if (typeof data == "object") {
