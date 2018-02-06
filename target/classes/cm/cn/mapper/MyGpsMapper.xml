@@ -38,21 +38,21 @@
         where plateNo='${plateNo}'
         order by createDate desc limit 1
   </select>
-  <select id="selectMaxVelocity" parameterType="String" resultType="String">
+  <select id="selectMaxVelocity" parameterType="String" resultType="String" statementType="STATEMENT">
 		SELECT
 			max( velocity ) 
 		FROM
-			gpsinfo20180205 
+			${tableName} 
 		WHERE
-			plateNo = #{plateNo}
+			plateNo = '${plateNo}'
   </select>
-  <select id="selectOverSpeedTimes" parameterType="String" resultType="String">
+  <select id="selectOverSpeedTimes" parameterType="String" resultType="String" statementType="STATEMENT">
 		SELECT
 			COUNT( * ) 
 		FROM
-			gpsinfo20180205
+			${tableName}
 		WHERE
-			plateNo = #{plateNo} 
+			plateNo = '${plateNo}' 
 			AND velocity > 85
   </select>
 </mapper>

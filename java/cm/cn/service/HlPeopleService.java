@@ -21,4 +21,6 @@ public interface HlPeopleService {
 	public List<HlPeople> selectByCompanyId(int company_id);
 	//通过公司id和人员姓名进行模糊查询
 	public List<HlPeople> selectPeopleByCompanyIdAndName(int companyId,String name);
+	//根据人员id查找人员信息
+	public HlPeople selectPeopleById(int id);
 }

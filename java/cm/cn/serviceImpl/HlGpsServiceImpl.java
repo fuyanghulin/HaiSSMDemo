@@ -118,8 +118,8 @@ public class HlGpsServiceImpl  implements HlGpsService {
 		//System.out.println(myGpsMapper.selectOverSpeedTimes(plateNo));
 		gpsinfo = myGpsMapper.selectGpsByPlateNo(tableName,plateNo);
 		if(gpsinfo!=null){
-		gpsMsg.setMaxVelocity(myGpsMapper.selectMaxVelocity(plateNo));
-		gpsMsg.setOverSpeedVelocityTimes(myGpsMapper.selectOverSpeedTimes(plateNo));
+		gpsMsg.setMaxVelocity(myGpsMapper.selectMaxVelocity(tableName,plateNo));
+		gpsMsg.setOverSpeedVelocityTimes(myGpsMapper.selectOverSpeedTimes(tableName,plateNo));
 		gpsMsg.setGpsinfo(gpsinfo);
 		Integer status = gpsinfo.getStatus();
 		gpsMsg.setStatus(GpsStatus.statusdeal(status));

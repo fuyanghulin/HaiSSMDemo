@@ -25,9 +25,9 @@ public class HlPeopleController {
 	private HlPeopleService hlPeopleService;
 	@Autowired
 	private HlDriveruserService hlDriveruserService;
-	@RequestMapping("/selectPeopleById")
+	@RequestMapping("/selectPeopleByCompanyId")
 	@ResponseBody
-	public Page<HlPeople> selectPeopleById(int current,int pageNum,int id){
+	public Page<HlPeople> selectPeopleByCompanyId(int current,int pageNum,int id){
 		List<HlPeople> list = hlPeopleService.selectByCompanyId(id);
 		Page<HlPeople> page = null;
 		if (list.size()>0) {
@@ -35,6 +35,16 @@ public class HlPeopleController {
 			return page;
 		}
 		else {
+			return null;
+		}
+	}
+	@RequestMapping("/selectPeopleById")
+	@ResponseBody
+	public HlPeople selectPeopleById(int id){
+		HlPeople hlPeople = hlPeopleService.selectPeopleById(id);
+		if(hlPeople!=null){
+			return hlPeople;
+		}else{
 			return null;
 		}
 	}

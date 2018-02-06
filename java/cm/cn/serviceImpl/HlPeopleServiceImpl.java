@@ -79,4 +79,9 @@ public class HlPeopleServiceImpl implements HlPeopleService {
 		return hlPeopleMapper.selectByExample(example);
 	}
 
+	@Override
+	public HlPeople selectPeopleById(int id) {
+		return hlPeopleMapper.selectByPrimaryKey(id);
+	}
+
 }
