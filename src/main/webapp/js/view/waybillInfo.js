@@ -10,7 +10,7 @@ new Vue({
             totalRecord: 0, /*总页数*/
             page: {
                 current: 1, /*当前页*/
-                pageNum: 20/*每页数据量*/
+                pageNum: 15/*每页数据量*/
             },
             formValidate: {
                 shipper: '',
@@ -28,6 +28,7 @@ new Vue({
                 uploadLinkman: '',
                 uploadLinkmanPhone: '',
                 goodName: '',
+                goodsId:'',
                 nationCode: '',
                 code: '',
                 total: '',
@@ -35,7 +36,8 @@ new Vue({
                 volume: '',
                 freight: '',
                 carNum: '',
-                reserveOne: ''
+                reserveOne: '',
+
             },
             ruleValidate: {
                 shipper: [
@@ -240,62 +242,6 @@ new Vue({
                     align: 'center',
                     fixed: 'right',
                     render: function (h, params) {
-                        /*if (this.userType === 1) {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            this.openState = "修改";
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
-                                            // this.carList=[];
-                                            // this.carList.push(this.formValidate);
-                                            this.theSendCity = this.data[params.index].sendCity.split('/');
-                                            this.theReceiveCity = this.data[params.index].receiveCity.split('/');
-                                            if (!this.formValidate.goodName && this.goodsList.length > 0) {
-                                                this.formValidate.goodName = this.goodsList[0].name;
-                                                this.formValidate.nationCode = this.goodsList[0].code;
-                                                this.formValidate.code = this.goodsList[0].reserveTwo;
-                                            }
-                                            if (!this.formValidate.carNum && this.carList.length > 0) {
-                                                this.formValidate.carNum = this.carList[0].carNum;
-                                                this.carMessage.allowWeight = this.carList[0].allowWeight;
-                                                this.carMessage.guacarNum = this.carList[0].guacarNum;
-                                                this.carMessage.carType = this.carList[0].carType;
-                                                this.carMessage.driverName = this.carList[0].driverName;
-                                                this.carMessage.safer = this.carList[0].safer;
-                                            }
-                                            if (this.carList[params.index]) {
-                                                this.carPosition = params.index;
-                                            }
-                                            this.carChange(this.formValidate.carNum);
-                                            //this.goodsChange(this.data[params.index]);
-                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
-                                            this.checkGoods(new_goods);
-                                            this.modal1 = true;
-                                        }.bind(this)
-                                    }
-                                }, '修改'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            this.delArr.push(this.data[params.index].id);
-                                            this.del();
-                                        }.bind(this)
-                                    }
-                                }, '删除')
-                            ]);
-                        } else */
                         if (this.userType === 1){
                             return h('div', [
                                 h('Button', {
@@ -436,28 +382,18 @@ new Vue({
                 idata[key]=_self.page[key];
             }
             idata.companyId=JSON.parse(Cookies.get("state")).companyID;
-            //console.log('输出请求参数idata');
-            //console.log(idata);
             $.ajax({
                 type: 'GET',
                 url: dataUrl.goods.company,
                 data:idata,
                 cache: false,
                 success: function(data){
-                    /*if (data != null && data.dataList != undefined) {
-                        //var d;
-                        _self.data1 = data.dataList;
-                        _self.totalRecord = data.totalRecord;
-                        _self.page.current = data.currentPage;
-                        _self.theChecked = [];
-                    } else {
-                        _self.data1 = [];
-                    }*/
                     console.log('输出返回的货物信息列表');
                     console.log(data);
                     if (data != null && data.dataList != undefined) {
                         _self.goodsList = data.dataList;
                         _self.formValidate.goodName = _self.goodsList[0].name;
+                        _self.formValidate.goodsId=_self.goodsList[0].goodsId;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
                     }
@@ -466,12 +402,13 @@ new Vue({
         }else{
             $.ajax({
                 type: 'GET',
-                url: dataUrl.waybill.goodInfo,
+                url: dataUrl.waybill.goodInfo,//获取全部的电子运单
                 cache: false,
                 success: function (data) {
                     if (data.length > 0) {
                         _self.goodsList = data;
                         _self.formValidate.goodName = _self.goodsList[0].name;
+                        _self.formValidate.goodsId=_self.goodsList[0].goodsId;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
                         //console.log(data);
@@ -482,11 +419,16 @@ new Vue({
         /////获取车辆列表
         if (_self.userType === 3) {
             //根据公司Name查询数据
-            _self.page.company_name = JSON.parse(Cookies.get("state")).companyName;
+            console.log('看下cookiees');
+            console.log(JSON.parse(Cookies.get("state")));
+            idata={};
+            idata.current=_self.page.current;
+            idata.pageNum=_self.page.pageNum;
+            idata.company_id = JSON.parse(Cookies.get("state")).companyID;
             $.ajax({
                 type: 'GET',
-                url: dataUrl.carInfo.getCarByCompanyName,
-                data:_self.page,
+                url: dataUrl.carInfo.selectCarInfoByCompanyId,//selectCarInfoByCompanyId
+                data:idata,
                 cache: false,
                 success: function (data) {
                     if (data.dataList.length > 0) {
@@ -541,9 +483,11 @@ new Vue({
         btnclick:function(obj,paramss){
             var _self=this;
             var idata={};//ajax请求参数
-            for(var key in _self.page){
-                idata[key]=_self.page[key];
-            }
+            // for(var key in _self.page){
+            //     idata[key]=_self.page[key];
+            // }
+            idata.current=_self.page.current;
+            idata.pageNum=_self.page.pageNum;
             idata.companyId=obj.compayId;
 
 
@@ -586,8 +530,9 @@ new Vue({
                             _self.formValidate = JSON.parse(JSON.stringify(obj));
                             _self.theSendCity = obj.sendCity.split('/');
                             _self.theReceiveCity = obj.receiveCity.split('/');
-                            if (!_self.formValidate.goodName && _self.goodsList.length > 0) {
+                            if (!_self.formValidate.goodName && _self.goodsList.length > 0) {//改成id判断
                                 _self.formValidate.goodName = _self.goodsList[0].name;
+                                _self.formValidate.goodsId=_self.goodsList[0].goodsId;
                                 _self.formValidate.nationCode = _self.goodsList[0].code;
                                 _self.formValidate.code = _self.goodsList[0].reserveTwo;
                             }
@@ -609,7 +554,7 @@ new Vue({
                             console.log(_self.carMessage);
                             _self.carChange(_self.formValidate.carNum);
 
-                            var new_goods=obj.goodName;//kk写的一个确定当前货物信息方法
+                            var new_goods=obj.goodName;//改成id
                             _self.checkGoods(new_goods);
 
 
@@ -629,21 +574,49 @@ new Vue({
             if (this.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');
             } else {
+
                 var _self = this;
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.waybill.search+encodeURI(_self.searchText.replace(/\s/g, '')),
-                    cache: false,
-                    success: function (data) {
-                        if (typeof data == "object") {
-                            _self.totalRecord = data.totalRecord;
-                            _self.page.current = data.currentPage;
-                            _self.data = data.dataList;
-                        } else {
-                            _self.data = [];
+
+                if(_self.userType==1||_self.userType==2){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.waybill.search+encodeURI(_self.searchText.replace(/\s/g, '')),
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                _self.data = data.dataList;
+                            } else {
+                                _self.data = [];
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    var idata={};
+                    idata.current=_self.page.current;
+                    idata.pageNum=_self.page.pageNum;
+                    //console.log(JSON.parse(Cookies.get("state")));    searchCompany
+                    idata.companyId=JSON.parse(Cookies.get("state")).companyID;
+                    idata.Shipper=_self.searchText;
+                    console.log(idata);
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.waybill.searchCompany,
+                        data:idata,
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                _self.data = data.dataList;
+                            } else {
+                                _self.data = [];
+                            }
+                        }
+                    });
+                }
+                
             }
         },
         thegoodsInfo:function(_id){//企业传入 JSON.parse(Cookies.get("state")).companyID,管理员传入得到的id值
@@ -667,6 +640,7 @@ new Vue({
                     if (data != null && data.dataList != undefined) {
                         _self.goodsList = data.dataList;
                         _self.formValidate.goodName = _self.goodsList[0].name;
+                        _self.formValidate.goodsId=_self.goodsList[0].goodsId;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
                     }
@@ -729,6 +703,8 @@ new Vue({
                         }
                         if (_self.openState == "添加") {
                             _self.formValidate.reserveOne = "未执行";
+                            //上传时添加一个货物id
+
                             _self.formValidate.compayId = JSON.parse(Cookies.get("state")).companyID;
 
                             _self.postData(_self, dataUrl.waybill.insert, _self.formValidate);
@@ -844,7 +820,10 @@ new Vue({
                 
             },
         carChange: function (num) {
+            console.log('输出车辆信息');
             var _self=this;
+                console.log(_self.carList[_self.carPosition])
+            
         	if (num) {
         		// console.log(num);
         		for (var i = 0; i < this.carList.length; i++) {
@@ -864,31 +843,40 @@ new Vue({
                 this.formValidate.carNum = this.carList[this.carPosition].carNum;
                 var _self = this;
                 // 驾驶员
-                $.ajax({
+                var idata1={};
+                idata1.id=_self.carList[_self.carPosition].driverId
+                $.ajax({/////////////////////getPeople//////////////////////////////////////////////////////////////////////////////
                     type: 'GET',
-                    url: dataUrl.waybill.people+encodeURI(_self.carList[_self.carPosition].driverName),
+                    url: dataUrl.company.getPeople,//+encodeURI(_self.carList[_self.carPosition].driverName),
+                    data:idata1,
                     cache: false,
                     success: function (data) {
-                        if (data.dataList.length > 0) {
-                            _self.carMessage.driveLicence = data.dataList[0].driveLicence;
-                            _self.carMessage.drivezigezheng = data.dataList[0].drivezigezheng;
-                            _self.carMessage.driverPhone = data.dataList[0].phone;
-                            _self.carMessage.driverPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
-                            _self.carMessage.driveridNum = data.dataList[0].idNum;
+                        console.log(data);
+                        if (data.id) {
+                            _self.carMessage.driveLicence = data.driveLicence;
+                            _self.carMessage.drivezigezheng = data.drivezigezheng;
+                            _self.carMessage.driverPhone = data.phone;
+                            _self.carMessage.driverPictureUrl = baseUrl + '/pic/' + data.pictureName;
+                            _self.carMessage.driveridNum = data.idNum;
                         }
                     }
                 });
                 // 押运员
+                console.log(_self.carList[_self.carPosition]);
+                idata2={};
+                idata2.id=_self.carList[_self.carPosition].saferId
                 $.ajax({
                     type: 'GET',
-                    url: dataUrl.waybill.people+encodeURI(this.carList[this.carPosition].safer),
+                    url: dataUrl.company.getPeople,//+encodeURI(this.carList[this.carPosition].safer),
                     cache: false,
+                    data:idata2,
                     success: function (data) {
-                        if (data.dataList.length > 0) {
-                            _self.carMessage.saferzigezheng = data.dataList[0].drivezigezheng;
-                            _self.carMessage.saferPhone = data.dataList[0].phone;
-                            _self.carMessage.saferPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
-                            _self.carMessage.saferidNum = data.dataList[0].idNum;
+                        //console.log(data);
+                        if (data.id) {
+                            _self.carMessage.saferzigezheng = data.drivezigezheng;
+                            _self.carMessage.saferPhone = data.phone;
+                            _self.carMessage.saferPictureUrl = baseUrl + '/pic/' + data.pictureName;
+                            _self.carMessage.saferidNum = data.idNum;
                         }
                     }
                 });
@@ -942,6 +930,7 @@ new Vue({
             }*/
             if(_self.goodsList.length>0){
                 this.formValidate.goodName = this.goodsList[this.goodsPosition].name;
+                _self.formValidate.goodsId=_self.goodsList[0].goodsId;
                 this.formValidate.code = this.goodsList[this.goodsPosition].reserveTwo;
                 this.formValidate.nationCode = this.goodsList[this.goodsPosition].code;                
             }
@@ -970,6 +959,7 @@ new Vue({
             return y + '-' + this.add0(m) + '-' + this.add0(d);
         },
         open: function (obj) {
+            var _self=this;
             if ($.trim(obj.currentTarget.innerText) == "添加") {
                 //_self.$refs['formValidate'].resetFields();
                 for (var key in this.formValidate) {
@@ -978,6 +968,7 @@ new Vue({
                 // 初始化货物类型信息
                 if (this.goodsList.length > 0) {
                     this.formValidate.goodName = this.goodsList[0].name;
+                    _self.formValidate.goodsId=_self.goodsList[0].goodsId;
                     this.formValidate.nationCode = this.goodsList[0].code;
                     this.formValidate.code = this.goodsList[0].reserveTwo;
                                             //this.goodsChange();//kk
@@ -996,6 +987,8 @@ new Vue({
                 this.openState = $.trim(obj.currentTarget.innerText);
             }
             //this.$refs['formValidate'].resetFields();
+            this.carChange();
+            this.goodsChange();
             this.modal1 = true;
 
         },

@@ -51,7 +51,7 @@
             <i-button type="error" style="margin-left: 20px;" @click="del" v-if="userType===3">删除</i-button><!-- moreDelete -->
         </div>
         <div>
-            <i-input placeholder="请输入名称..." style="width: 200px;" v-model="searchText"></i-input>
+            <i-input placeholder="请输入名称..." style="width: 200px;" v-model="searchText" @keyup.native.enter="search"></i-input>
             <i-button type="primary" shape="circle" icon="ios-search" @click="search"></i-button>
             <i-Button type="primary" @click="getAll" style="margin-left:20px;">刷新</i-Button>
         </div>

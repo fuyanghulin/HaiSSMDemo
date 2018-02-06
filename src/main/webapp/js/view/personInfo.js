@@ -267,7 +267,7 @@ new Vue({
                 alert('搜索内容不可为空');
                 //getData();
             } else {
-                /*if(JSON.parse(Cookies.get("state")).roleID==1||JSON.parse(Cookies.get("state")).roleID==2){
+                if(_self.userType===1||_self.userType===2){//JSON.parse(Cookies.get("state")).roleID
                        $.ajax({
                         type: 'GET',
                         url: dataUrl.person.search + encodeURI(this.searchText.replace(/\s/g, '')),
@@ -294,33 +294,48 @@ new Vue({
                         }
                     }); 
                 }else{
-
-                }*/
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.person.search + encodeURI(this.searchText.replace(/\s/g, '')),
-                    cache: false,
-                    success: function (data) {
-                        if (typeof data == "object") {
-                        	_self.totalRecord = data.totalRecord;
-                            _self.page.current = data.currentPage;
-                            for (var i in data.dataList) {
-                                if (data.dataList[i].peopleType == 1) {
-                                    data.dataList[i].type = '驾驶员';
-                                } else if (data.dataList[i].peopleType == 2) {
-                                    data.dataList[i].type = '押运员';
-                                }
-                                data.dataList[i].picUser = baseUrl + '/pic/' + data.dataList[i].pictureName;
-                                data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
-                                data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
-                                data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);
-                            }
-                            _self.data = data.dataList;
-                        } else {
-                            _self.data = [];
+                    var idata={};
+                    console.log(_self.page);
+                    //delete _self.page.id;
+                    for(var key in _self.page){
+                        if(key!=='id'){
+                            idata[key]=_self.page[key];
+                            console.log(key);
                         }
+
                     }
-                });
+                    //console.log(JSON.parse(Cookies.get("state")));
+                    idata.companyId=JSON.parse(Cookies.get("state")).companyID;
+                    idata.name=_self.searchText;
+                    //console.log(idata);
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.person.searchCompany,
+                        cache: false,
+                        data:idata,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                for (var i in data.dataList) {
+                                    if (data.dataList[i].peopleType == 1) {
+                                        data.dataList[i].type = '驾驶员';
+                                    } else if (data.dataList[i].peopleType == 2) {
+                                        data.dataList[i].type = '押运员';
+                                    }
+                                    data.dataList[i].picUser = baseUrl + '/pic/' + data.dataList[i].pictureName;
+                                    data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
+                                    data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
+                                    data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);
+                                }
+                                _self.data = data.dataList;
+                            } else {
+                                _self.data = [];
+                            }
+                        }
+                    });
+                }
+                
             }
         },
         getRightDate:function(obj){
@@ -539,7 +554,7 @@ new Vue({
                 _self.page.id=JSON.parse(Cookies.get("state")).companyID;
                 $.ajax({
                     type: 'GET',
-                    url: dataUrl.company.getPeople,
+                    url: dataUrl.company.getCompanyPeople,
                     data:_self.page,
                     cache: false,
                     success: function (data) {

@@ -14,6 +14,7 @@ var dataUrl = {
         getID:baseUrl+'/HaiSSMDemo/selectCompanyByName.action?current=1&pageNum=1000&name=',
         getName:baseUrl+'/HaiSSMDemo/selectCompanyByID.action?id=',
         getPeople:baseUrl+'/HaiSSMDemo/selectPeopleById.action',
+        getCompanyPeople:baseUrl+'/HaiSSMDemo/selectPeopleByCompanyId.action'
     },
     alarm: {
         /*del: baseUrl + '/HaiSSMDemo/delPeopleBatch.action?arrays=',*/
@@ -41,6 +42,7 @@ var dataUrl = {
         selectCarInfoByCompanyId:baseUrl+'/HaiSSMDemo/selectCarInfoByCompanyId.action',
         allPeople: baseUrl + '/HaiSSMDemo/allPeople.action?current=1&pageNum=1000',
         search: baseUrl + '/HaiSSMDemo/selectCarByCarLicense.action?current=1&pageNum=1000&carLicense=',
+        searchCompany:baseUrl+'/HaiSSMDemo/selectCarInfoByCompanyIdAndCarNum.action',
         insert: baseUrl + '/HaiSSMDemo/insertCarInfo.action',
         upDate: baseUrl + '/HaiSSMDemo/updateCarInfo.action',
         del: baseUrl + '/HaiSSMDemo/delCarInfoBatch.action?arrays=',
@@ -56,6 +58,7 @@ var dataUrl = {
     },
     person: {
         search: baseUrl + '/HaiSSMDemo/selectPeopleByName.action?current=1&pageNum=1000&name=',
+        searchCompany:baseUrl + '/HaiSSMDemo/selectPeopleByCompanyIdAndName.action',
         del: baseUrl + '/HaiSSMDemo/delPeopleBatch.action?arrays=',
         upPicture: baseUrl + '/HaiSSMDemo/upPicture.action',
         all: baseUrl + '/HaiSSMDemo/allPeople.action?time=',
@@ -70,6 +73,7 @@ var dataUrl = {
         insert: baseUrl + '/HaiSSMDemo/insertGoodsInfo.action',
         upDate: baseUrl + '/HaiSSMDemo/updateGoodsInfo.action',
         search: baseUrl + '/HaiSSMDemo/selectGoodsInfoByName.action?current=1&pageNum=1000&name=',
+        searchCompany:baseUrl + '/HaiSSMDemo/selectGoodsInfoByCompanyIdAndName.action',
         del: baseUrl + '/HaiSSMDemo/delGoodsInfoBatch.action?arrays=',
         all: baseUrl + '/HaiSSMDemo/allGoodsInfo.action',
         company:baseUrl + '/HaiSSMDemo/selectGoodsInfoByCompanyId.action'
@@ -82,6 +86,7 @@ var dataUrl = {
         goodInfo: baseUrl + '/HaiSSMDemo/selectGoodsInfoList.action',
         carInfo: baseUrl + '/HaiSSMDemo/getCarInfoList.action',
         search: baseUrl + '/HaiSSMDemo/selWaybillByShipper.action?current=1&pageNum=1000&Shipper=',
+        searchCompany:baseUrl + '/HaiSSMDemo/selWaybillByCompanyIdAndShipper.action',
         insert: baseUrl + '/HaiSSMDemo/insertWaybill.action',
         upDate: baseUrl + '/HaiSSMDemo/updateWaybill.action',
         people: baseUrl + '/HaiSSMDemo/selectPeopleByName.action?current=1&pageNum=1&name=',

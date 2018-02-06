@@ -203,24 +203,52 @@ new Vue({
     },
     methods: {
         search: function () {
+            var _self=this;
             if (this.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');
             } else {
-                var _self = this;
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.goods.search + encodeURI(this.searchText.replace(/\s/g, '')),
-                    cache: false,
-                    success: function (data) {
-                        if (typeof data == "object") {
-                            _self.totalRecord = data.totalRecord;
-                            _self.page.current = data.currentPage;
-                            _self.data1 = data.dataList;
-                        } else {
-                            _self.data1 = [];
+                if(_self.userType==1||_self.userType==2){
+                    var _self = this;
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.goods.search + encodeURI(this.searchText),
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                _self.data1 = data.dataList;
+                            } else {
+                                _self.data1 = [];
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    var idata={};
+                    idata.current=_self.page.current;
+                    idata.pageNum=_self.page.pageNum;
+                    //console.log(JSON.parse(Cookies.get("state")));    searchCompany
+                    idata.companyId=JSON.parse(Cookies.get("state")).companyID;
+                    idata.name=_self.searchText;
+                    console.log(idata);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.goods.searchCompany,
+                        data:idata,
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                _self.data1 = data.dataList;
+                            } else {
+                                _self.data1 = [];
+                            }
+                        }
+                    });
+
+                }
             }
         },
         showOne: function (index) {

@@ -388,20 +388,46 @@ new Vue({
                 alert('搜索内容不可为空');
             } else {
                 var _self = this;
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.carInfo.search+encodeURI(_self.searchText.replace(/\s/g, '')),
-                    cache: false,
-                    success: function (data) {
-                        if (typeof data == "object") {
-                            _self.totalRecord = data.totalRecord;
-                            _self.page.current = data.currentPage;
-                            _self.data1 = data.dataList;
-                        } else {
-                            _self.data1 = [];
+                if(_self.userType==1||_self.userType==2){
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.carInfo.search+encodeURI(_self.searchText.replace(/\s/g, '')),
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                _self.data1 = data.dataList;
+                            } else {
+                                _self.data1 = [];
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    var idata={};
+                    idata.current=_self.page.current;
+                    idata.pageNum=_self.page.pageNum;
+                    //console.log(JSON.parse(Cookies.get("state")));    searchCompany
+                    idata.companyId=JSON.parse(Cookies.get("state")).companyID;
+                    idata.carNum=_self.searchText;
+                    console.log(idata);
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.carInfo.searchCompany,
+                        data:idata,
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                _self.data1 = data.dataList;
+                            } else {
+                                _self.data1 = [];
+                            }
+                        }
+                    });
+                }
+                
             }
         },
         theDriver: function () {
@@ -560,7 +586,7 @@ new Vue({
                 _self.page.id=JSON.parse(Cookies.get("state")).companyID;
                 $.ajax({
                     type: 'GET',
-                    url: dataUrl.company.getPeople,
+                    url: dataUrl.company.getCompanyPeople,
                     data:_self.page,
                     cache: false,
                     success: function (data) {
@@ -845,6 +871,7 @@ new Vue({
                     }
                 });
             }
+            _self.searchText='';
         }
     }
 });
