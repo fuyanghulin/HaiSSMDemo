@@ -65,7 +65,7 @@
             <i-Button type="primary" @click="open($event)" v-if="userType===3">添加</i-Button>
             
             <Tooltip content="删除所选货物信息" placement="bottom-start">
-                <i-Button type="error" @click="del" v-if="userType===1||userType===3">删除</i-Button>
+                <i-Button type="error" @click="del" v-if="userType===1">删除</i-Button>
             </Tooltip>
         </div>
         <div>

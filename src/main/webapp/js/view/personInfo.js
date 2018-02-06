@@ -267,6 +267,35 @@ new Vue({
                 alert('搜索内容不可为空');
                 //getData();
             } else {
+                /*if(JSON.parse(Cookies.get("state")).roleID==1||JSON.parse(Cookies.get("state")).roleID==2){
+                       $.ajax({
+                        type: 'GET',
+                        url: dataUrl.person.search + encodeURI(this.searchText.replace(/\s/g, '')),
+                        cache: false,
+                        success: function (data) {
+                            if (typeof data == "object") {
+                                _self.totalRecord = data.totalRecord;
+                                _self.page.current = data.currentPage;
+                                for (var i in data.dataList) {
+                                    if (data.dataList[i].peopleType == 1) {
+                                        data.dataList[i].type = '驾驶员';
+                                    } else if (data.dataList[i].peopleType == 2) {
+                                        data.dataList[i].type = '押运员';
+                                    }
+                                    data.dataList[i].picUser = baseUrl + '/pic/' + data.dataList[i].pictureName;
+                                    data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
+                                    data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
+                                    data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);
+                                }
+                                _self.data = data.dataList;
+                            } else {
+                                _self.data = [];
+                            }
+                        }
+                    }); 
+                }else{
+
+                }*/
                 $.ajax({
                     type: 'GET',
                     url: dataUrl.person.search + encodeURI(this.searchText.replace(/\s/g, '')),

@@ -295,7 +295,8 @@ new Vue({
                                     }
                                 }, '删除')
                             ]);
-                        } else */{
+                        } else */
+                        if (this.userType === 1){
                             return h('div', [
                                 h('Button', {
                                     props: {
@@ -307,38 +308,9 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-
-
-                                            this.openState = "查看";
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
-                                            this.theSendCity = this.data[params.index].sendCity.split('/');
-                                            this.theReceiveCity = this.data[params.index].receiveCity.split('/');
-                                            if (!this.formValidate.goodName && this.goodsList.length > 0) {
-                                                this.formValidate.goodName = this.goodsList[0].name;
-                                                this.formValidate.nationCode = this.goodsList[0].code;
-                                                this.formValidate.code = this.goodsList[0].reserveTwo;
-                                            }
-                                            if (!this.formValidate.carNum && this.carList.length > 0) {
-                                                this.formValidate.carNum = this.carList[0].carNum;
-                                                this.carMessage.allowWeight = this.carList[0].allowWeight;
-                                                this.carMessage.guacarNum = this.carList[0].guacarNum;
-                                                this.carMessage.carType = this.carList[0].carType;
-                                                this.carMessage.driverName = this.carList[0].driverName;
-                                                this.carMessage.safer = this.carList[0].safer;
-                                            }
-                                            if (this.carList[params.index]) {
-                                                this.carPosition = params.index;
-                                            }
-                                            this.carChange(this.formValidate.carNum);
-                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
-                                            this.checkGoods(new_goods);
-                                            //this.goodsChange(this.data[params.index]);
-                                            //this.modal1 = true;
-
-
-
-                                            //this.openState = "查看";
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
+                                            this.openState = "查看";//需要在这里添加一步，修改拿到的货物和车辆信息
+                                            var _self=this;
+                                            this.btnclick(this.data[params.index],params);
                                             this.modal1 = true;
                                         }.bind(this)
                                     }
@@ -354,36 +326,10 @@ new Vue({
                                     on: {
                                         click: function () {
                                             this.openState = "修改";
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
-                                            // this.carList=[];
-                                            // this.carList.push(this.formValidate);
-                                            this.theSendCity = this.data[params.index].sendCity.split('/');
-                                            this.theReceiveCity = this.data[params.index].receiveCity.split('/');
-                                            if (!this.formValidate.goodName && this.goodsList.length > 0) {
-                                                this.formValidate.goodName = this.goodsList[0].name;
-                                                this.formValidate.nationCode = this.goodsList[0].code;
-                                                this.formValidate.code = this.goodsList[0].reserveTwo;
-                                            }
-                                            if (!this.formValidate.carNum && this.carList.length > 0) {
-                                                this.formValidate.carNum = this.carList[0].carNum;
-                                                this.carMessage.allowWeight = this.carList[0].allowWeight;
-                                                this.carMessage.guacarNum = this.carList[0].guacarNum;
-                                                this.carMessage.carType = this.carList[0].carType;
-                                                this.carMessage.driverName = this.carList[0].driverName;
-                                                this.carMessage.safer = this.carList[0].safer;
-                                            }
-                                            if (this.carList[params.index]) {
-                                                this.carPosition = params.index;
-                                            }
-                                            this.carChange(this.formValidate.carNum);
-                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
-                                            this.checkGoods(new_goods);
-                                            //this.goodsChange(this.data[params.index]);
+                                            var _self=this;
+                                            var click_obj=this.data[params.index];//把点击的这个信息保存下
 
-                                            var new_goods=this.data[params.index].goodName;//kk写的一个确定当前货物信息方法
-                                            this.checkGoods(new_goods);
-
-                                            this.modal1 = true;
+                                            _self.btnclick(_self.data[params.index],params);//fengzhuan                                        
                                         }.bind(this)
                                     }
                                 }, '修改'),
@@ -394,14 +340,32 @@ new Vue({
                                     },
                                     on: {
                                         click: function () {
-                                            /*this.delArr.push(this.data[params.index].id);
-                                            this.del();*/
                                             this.delone=this.data[params.index].id;
                                             this.del_index(this.data[params.index].id);
                                             this.onedel=true;
                                         }.bind(this)
                                     }
                                 }, '删除')
+                            ]);
+                        }else{
+                            return h('div', [
+                                 h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: function () {
+                                            this.openState = "查看";//需要在这里添加一步，修改拿到的货物和车辆信息
+                                            var _self=this;
+                                            this.btnclick(this.data[params.index],params);
+                                            this.modal1 = true;
+                                        }.bind(this)
+                                    }
+                                }, '查看')
                             ]);
                         }
 
@@ -464,16 +428,16 @@ new Vue({
 
         /// 获得货物名称
         //企业
-        console.log('即将进入if语段');
+        //console.log('即将进入if语段');
         if(_self.userType=='3'){
-            console.log('进入该if语段');
+            //console.log('进入该if语段');
             var idata={};
             for(var key in _self.page){
                 idata[key]=_self.page[key];
             }
             idata.companyId=JSON.parse(Cookies.get("state")).companyID;
-            console.log('输出请求参数idata');
-            console.log(idata);
+            //console.log('输出请求参数idata');
+            //console.log(idata);
             $.ajax({
                 type: 'GET',
                 url: dataUrl.goods.company,
@@ -510,17 +474,11 @@ new Vue({
                         _self.formValidate.goodName = _self.goodsList[0].name;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
-                        console.log(data);
+                        //console.log(data);
                     }
                 }
             });
         }
-
-
-
-        //全部
-        
-
         /////获取车辆列表
         if (_self.userType === 3) {
             //根据公司Name查询数据
@@ -544,7 +502,7 @@ new Vue({
                     }
                 }
             });
-        } else {
+         } else {
             $.ajax({
                 type: 'GET',
                 url: dataUrl.carInfo.all,
@@ -564,13 +522,7 @@ new Vue({
             });
         }
 
-        //人员具体信息是否可以这样获取
-        // _self.carChange();
-        /*console.log(_self.formValidate.carNum);
-        console.log(_self.carMessage);
-        console.log(_self.formValidate);*/
-        //console.log();
-        //console.log();
+
 
 
         /// 获得地区
@@ -583,6 +535,96 @@ new Vue({
         this.$refs.head.style.display = 'block';
     },
     methods: {
+        //btnclick函数是在用户点击查看、修改时触发，将点击一行的数据传入，
+        //主要是通过公司id获取数据，当然查看的时候其实不需要做这些处理，这里为了简便就一起处理了
+        //企业添加的逻辑还是用原来的，暂时未做修改
+        btnclick:function(obj,paramss){
+            var _self=this;
+            var idata={};//ajax请求参数
+            for(var key in _self.page){
+                idata[key]=_self.page[key];
+            }
+            idata.companyId=obj.compayId;
+
+
+            _self.goodsList=[];
+            $.ajax({//先请求拿到货物信息
+                type: 'GET',
+                url: dataUrl.goods.company,
+                data:idata,
+                cache: false,
+                success: function(data_ajax){
+                    if (data_ajax != null && data_ajax.dataList != undefined) {
+                        _self.data1 = data_ajax.dataList;
+                        _self.totalRecord = data_ajax.totalRecord;
+                        _self.page.current = data_ajax.currentPage;
+                        _self.theChecked = [];
+                    } else {
+                        _self.data1 = [];
+                    }
+                    if (data_ajax != null && data_ajax.dataList != undefined) {
+                        _self.goodsList = data_ajax.dataList;
+                    }
+
+                    
+                    _self.carList=[];//在请求成功后请求车辆信息
+                    delete idata.companyId;
+                    idata.company_id=obj.compayId
+                    $.ajax({
+                        type: 'GET',
+                        url: dataUrl.carInfo.selectCarInfoByCompanyId,
+                        data:idata,
+                        cache: false,
+                        success: function (data222) {
+                            if (data222.dataList.length > 0) {
+                                _self.carList = data222.dataList;
+                            }
+
+                            //两个请求都成功后可以做下一步操作
+                            //_self.btnclick(click_obj,params);
+
+                            _self.formValidate = JSON.parse(JSON.stringify(obj));
+                            _self.theSendCity = obj.sendCity.split('/');
+                            _self.theReceiveCity = obj.receiveCity.split('/');
+                            if (!_self.formValidate.goodName && _self.goodsList.length > 0) {
+                                _self.formValidate.goodName = _self.goodsList[0].name;
+                                _self.formValidate.nationCode = _self.goodsList[0].code;
+                                _self.formValidate.code = _self.goodsList[0].reserveTwo;
+                            }
+                            if (!_self.formValidate.carNum && _self.carList.length > 0) {
+                                _self.formValidate.carNum = _self.carList[0].carNum;
+                                _self.carMessage.allowWeight = _self.carList[0].allowWeight;
+                                _self.carMessage.guacarNum = _self.carList[0].guacarNum;
+                                _self.carMessage.carType = _self.carList[0].carType;
+                                _self.carMessage.driverName = _self.carList[0].driverName;
+                                _self.carMessage.safer = _self.carList[0].safer;
+                            }
+                            //console.log(_self.carList);
+                            // if (_self.carList[paramss.index]) {
+                            //     _self.carPosition = paramss.index;
+
+                            // }
+                            var new_car=obj.carNum;
+                            _self.checkCar(new_car);
+                            console.log(_self.carMessage);
+                            _self.carChange(_self.formValidate.carNum);
+
+                            var new_goods=obj.goodName;//kk写的一个确定当前货物信息方法
+                            _self.checkGoods(new_goods);
+
+
+                            _self.modal1 = true;
+
+                        }
+
+                    });
+
+                }
+            });
+
+
+
+        },
         search: function () {
             if (this.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');
@@ -603,6 +645,63 @@ new Vue({
                     }
                 });
             }
+        },
+        thegoodsInfo:function(_id){//企业传入 JSON.parse(Cookies.get("state")).companyID,管理员传入得到的id值
+            var _self=this;
+            var idata={};
+            for(var key in _self.page){
+                idata[key]=_self.page[key];
+            }
+            idata.companyId=_id;
+            console.log(_id);
+            console.log('输出请求参数idata');
+            console.log(idata);
+            $.ajax({
+                type: 'GET',
+                url: dataUrl.goods.company,
+                data:idata,
+                cache: false,
+                success: function(data){
+                    console.log('输出返回的货物信息列表');
+                    console.log(data);
+                    if (data != null && data.dataList != undefined) {
+                        _self.goodsList = data.dataList;
+                        _self.formValidate.goodName = _self.goodsList[0].name;
+                        _self.formValidate.nationCode = _self.goodsList[0].code;
+                        _self.formValidate.code = _self.goodsList[0].reserveTwo;
+                    }
+                }
+            });
+        },
+        thecarInfo:function(company_id){//JSON.parse(Cookies.get("state")).companyId,,企业换成companyId
+            var _self=this;
+
+            var idata={};
+            for(var key in _self.page){
+                idata[key]=_self.page[key];
+            }
+            idata.company_id = company_id;
+
+            $.ajax({
+                type: 'GET',
+                url: dataUrl.carInfo.getCarByCompanyId,
+                data:idata,
+                cache: false,
+                success: function (data) {
+                    //console.log(data);
+                    if (data.dataList.length > 0) {
+                        _self.carList = data.dataList;
+                        _self.formValidate.carNum = data.dataList[0].carNum;
+                        _self.carMessage.allowWeight = data.dataList[0].allowWeight;
+                        _self.carMessage.guacarNum = data.dataList[0].guacarNum;
+                        _self.carMessage.carType = data.dataList[0].carType;
+                        _self.carMessage.driverName = data.dataList[0].driverName;
+                        _self.carMessage.safer = data.dataList[0].safer;
+
+                        //console.log(data);
+                    }
+                }
+            });
         },
 
         upMessage: function () {
@@ -631,9 +730,11 @@ new Vue({
                         if (_self.openState == "添加") {
                             _self.formValidate.reserveOne = "未执行";
                             _self.formValidate.compayId = JSON.parse(Cookies.get("state")).companyID;
+
                             _self.postData(_self, dataUrl.waybill.insert, _self.formValidate);
                         }
                         else if (_self.openState == "修改") {
+                            console.log(_self.formValidate);
                             _self.postData(_self, dataUrl.waybill.upDate, _self.formValidate);
                         }
                     } else {
@@ -643,7 +744,7 @@ new Vue({
             });
 
             _self.$refs['formValidate'].resetFields();
-            console.log('清空内容');
+            //console.log('清空内容');
         },
         month: function (date) {
             var m = '';
@@ -743,6 +844,7 @@ new Vue({
                 
             },
         carChange: function (num) {
+            var _self=this;
         	if (num) {
         		// console.log(num);
         		for (var i = 0; i < this.carList.length; i++) {
@@ -752,49 +854,68 @@ new Vue({
         			} 
         		}
         	}
-            this.carMessage.allowWeight = this.carList[this.carPosition].allowWeight;
-            this.carMessage.guacarNum = this.carList[this.carPosition].guacarNum;
-            this.carMessage.carType = this.carList[this.carPosition].carType;
-            this.carMessage.driverName = this.carList[this.carPosition].driverName;
-            this.carMessage.safer = this.carList[this.carPosition].safer;
-            this.formValidate.carNum = this.carList[this.carPosition].carNum;
-            var _self = this;
-            // 驾驶员
-            $.ajax({
-                type: 'GET',
-                url: dataUrl.waybill.people+encodeURI(_self.carList[_self.carPosition].driverName),
-                cache: false,
-                success: function (data) {
-                    if (data.dataList.length > 0) {
-                        _self.carMessage.driveLicence = data.dataList[0].driveLicence;
-                        _self.carMessage.drivezigezheng = data.dataList[0].drivezigezheng;
-                        _self.carMessage.driverPhone = data.dataList[0].phone;
-                        _self.carMessage.driverPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
-                        _self.carMessage.driveridNum = data.dataList[0].idNum;
+            this.checkCar();
+            if(this.carList.length>0){
+                this.carMessage.allowWeight = this.carList[this.carPosition].allowWeight;
+                this.carMessage.guacarNum = this.carList[this.carPosition].guacarNum;
+                this.carMessage.carType = this.carList[this.carPosition].carType;
+                this.carMessage.driverName = this.carList[this.carPosition].driverName;
+                this.carMessage.safer = this.carList[this.carPosition].safer;
+                this.formValidate.carNum = this.carList[this.carPosition].carNum;
+                var _self = this;
+                // 驾驶员
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.waybill.people+encodeURI(_self.carList[_self.carPosition].driverName),
+                    cache: false,
+                    success: function (data) {
+                        if (data.dataList.length > 0) {
+                            _self.carMessage.driveLicence = data.dataList[0].driveLicence;
+                            _self.carMessage.drivezigezheng = data.dataList[0].drivezigezheng;
+                            _self.carMessage.driverPhone = data.dataList[0].phone;
+                            _self.carMessage.driverPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
+                            _self.carMessage.driveridNum = data.dataList[0].idNum;
+                        }
                     }
-                }
-            });
-            // 押运员
-            $.ajax({
-                type: 'GET',
-                url: dataUrl.waybill.people+encodeURI(this.carList[this.carPosition].safer),
-                cache: false,
-                success: function (data) {
-                    if (data.dataList.length > 0) {
-                        _self.carMessage.saferzigezheng = data.dataList[0].drivezigezheng;
-                        _self.carMessage.saferPhone = data.dataList[0].phone;
-                        _self.carMessage.saferPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
-                        _self.carMessage.saferidNum = data.dataList[0].idNum;
+                });
+                // 押运员
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.waybill.people+encodeURI(this.carList[this.carPosition].safer),
+                    cache: false,
+                    success: function (data) {
+                        if (data.dataList.length > 0) {
+                            _self.carMessage.saferzigezheng = data.dataList[0].drivezigezheng;
+                            _self.carMessage.saferPhone = data.dataList[0].phone;
+                            _self.carMessage.saferPictureUrl = baseUrl + '/pic/' + data.dataList[0].pictureName;
+                            _self.carMessage.saferidNum = data.dataList[0].idNum;
+                        }
                     }
-                }
-            });
+                });
+
+            }
         },
-        checkGoods:function(_name){
+        checkCar:function(_num){
+            var _self=this;
+            var flag=0;
+            for(var i in this.carList){
+                //console.log(i.name);
+                if(_self.carList[i].carNum==_num){
+                    _self.carPosition=flag;
+                    break;//跳出循环
+
+                }
+                flag++;
+            }
+
+        },
+        checkGoods:function(_name){//这里应该要改成id
             var _self=this;
             //.goodName;
             //console.log(_name);
             //console.log(_self.goodsList);
             var flag=0;
+                    //console.log(_self.goodsList);//这里为什么是空的？？？？？？
             for(var i in this.goodsList){
                 //console.log(i.name);
                 if(_self.goodsList[i].name==_name){
@@ -810,6 +931,8 @@ new Vue({
             }
         },
         goodsChange: function () {
+
+
             var _self=this;
             /*if(num){
                 _self.formValidate.goodName = _self.goodsList[num].name;
@@ -817,30 +940,13 @@ new Vue({
                 _self.formValidate.nationCode = _self.goodsList[num].code;
 
             }*/
-            this.formValidate.goodName = this.goodsList[this.goodsPosition].name;
-            this.formValidate.code = this.goodsList[this.goodsPosition].reserveTwo;
-            this.formValidate.nationCode = this.goodsList[this.goodsPosition].code;
-        },
-
-        /*del: function () {
-            var _self = this;
-            $.ajax({
-                type: 'GET',
-                url: dataUrl.waybill.del+_self.delArr,
-                cache: false,
-                success: function (data) {
-                    _self.delArr = [];
-                    _self.getData();
-                    _self.$Message.info('刪除成功');
-                }
-            });
-        },*/
-        /*chooseAll: function (data) {
-            var _self = this;
-            for (var i in data) {
-                _self.delArr.push(data[i].id);
+            if(_self.goodsList.length>0){
+                this.formValidate.goodName = this.goodsList[this.goodsPosition].name;
+                this.formValidate.code = this.goodsList[this.goodsPosition].reserveTwo;
+                this.formValidate.nationCode = this.goodsList[this.goodsPosition].code;                
             }
-        },*/
+
+        },
         handleUpload1: function (file) {
             this.formValidate.safeCardFile = file;
             return false;
@@ -884,8 +990,8 @@ new Vue({
                     this.carMessage.carType = this.carList[0].carType;
                     this.carMessage.driverName = this.carList[0].driverName;
                     this.carMessage.safer = this.carList[0].safer;
-                    this.carPosition = 0;
-                    this.carChange();
+                    //this.carPosition = 0;
+                    //this.carChange();
                 }
                 this.openState = $.trim(obj.currentTarget.innerText);
             }
@@ -979,6 +1085,7 @@ new Vue({
                     _self.$Message.info('上传成功');
                     _self.modal1 = false;
                     _self.getData();
+
                 }
             });
         }

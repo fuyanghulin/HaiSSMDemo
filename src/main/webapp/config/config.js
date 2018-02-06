@@ -38,6 +38,7 @@ var dataUrl = {
     },
     carInfo: {
         getCarByCompanyName:baseUrl+'/HaiSSMDemo/selectCarInfoByCompanyName.action',
+        selectCarInfoByCompanyId:baseUrl+'/HaiSSMDemo/selectCarInfoByCompanyId.action',
         allPeople: baseUrl + '/HaiSSMDemo/allPeople.action?current=1&pageNum=1000',
         search: baseUrl + '/HaiSSMDemo/selectCarByCarLicense.action?current=1&pageNum=1000&carLicense=',
         insert: baseUrl + '/HaiSSMDemo/insertCarInfo.action',

@@ -78,7 +78,7 @@
             
         </div>
         <div>
-            <i-Input placeholder="请输入姓名..." style="width: 300px" v-model="searchText"></i-Input>
+            <i-Input placeholder="请输入姓名..." style="width: 300px" v-model="searchText" @keyup.enter='search'></i-Input>
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
             <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
