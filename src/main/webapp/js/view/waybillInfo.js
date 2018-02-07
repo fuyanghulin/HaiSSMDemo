@@ -393,7 +393,7 @@ new Vue({
                     if (data != null && data.dataList != undefined) {
                         _self.goodsList = data.dataList;
                         _self.formValidate.goodName = _self.goodsList[0].name;
-                        _self.formValidate.goodsId=_self.goodsList[0].goodsId;
+                        _self.formValidate.goodsId=_self.goodsList[0].id;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
                     }
@@ -408,7 +408,7 @@ new Vue({
                     if (data.length > 0) {
                         _self.goodsList = data;
                         _self.formValidate.goodName = _self.goodsList[0].name;
-                        _self.formValidate.goodsId=_self.goodsList[0].goodsId;
+                        _self.formValidate.goodsId=_self.goodsList[0].id;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
                         //console.log(data);
@@ -532,7 +532,7 @@ new Vue({
                             _self.theReceiveCity = obj.receiveCity.split('/');
                             if (!_self.formValidate.goodName && _self.goodsList.length > 0) {//改成id判断
                                 _self.formValidate.goodName = _self.goodsList[0].name;
-                                _self.formValidate.goodsId=_self.goodsList[0].goodsId;
+                                _self.formValidate.goodsId=_self.goodsList[0].id;
                                 _self.formValidate.nationCode = _self.goodsList[0].code;
                                 _self.formValidate.code = _self.goodsList[0].reserveTwo;
                             }
@@ -640,10 +640,11 @@ new Vue({
                     if (data != null && data.dataList != undefined) {
                         _self.goodsList = data.dataList;
                         _self.formValidate.goodName = _self.goodsList[0].name;
-                        _self.formValidate.goodsId=_self.goodsList[0].goodsId;
+                        _self.formValidate.goodsId=_self.goodsList[0].id;
                         _self.formValidate.nationCode = _self.goodsList[0].code;
                         _self.formValidate.code = _self.goodsList[0].reserveTwo;
                     }
+
                 }
             });
         },
@@ -680,6 +681,8 @@ new Vue({
 
         upMessage: function () {
             var _self = this;
+            console.log('输出upmessage信息');
+            console.log(_self.formValidate);
             _self.loading = true;
             _self.$refs.formValidate.validate(function (valid) {
                 if (_self.openState == "查看") {
@@ -705,12 +708,14 @@ new Vue({
                             _self.formValidate.reserveOne = "未执行";
                             //上传时添加一个货物id
 
+                            _self.formValidate.goodsId=_self.goodsList[_self.goodsPosition].id;
+                            console.log(_self.formValidate);
                             _self.formValidate.compayId = JSON.parse(Cookies.get("state")).companyID;
 
                             _self.postData(_self, dataUrl.waybill.insert, _self.formValidate);
                         }
                         else if (_self.openState == "修改") {
-                            console.log(_self.formValidate);
+                            _self.formValidate.goodsId=_self.goodsList[_self.goodsPosition].id;
                             _self.postData(_self, dataUrl.waybill.upDate, _self.formValidate);
                         }
                     } else {
@@ -930,10 +935,13 @@ new Vue({
             }*/
             if(_self.goodsList.length>0){
                 this.formValidate.goodName = this.goodsList[this.goodsPosition].name;
-                _self.formValidate.goodsId=_self.goodsList[0].goodsId;
+                this.formValidate.goodsId=this.goodsList[0].id;
+
                 this.formValidate.code = this.goodsList[this.goodsPosition].reserveTwo;
                 this.formValidate.nationCode = this.goodsList[this.goodsPosition].code;                
             }
+            console.log('******************940行，输出formValidate***********************');
+            console.log(this.formValidate);
 
         },
         handleUpload1: function (file) {
@@ -968,7 +976,7 @@ new Vue({
                 // 初始化货物类型信息
                 if (this.goodsList.length > 0) {
                     this.formValidate.goodName = this.goodsList[0].name;
-                    _self.formValidate.goodsId=_self.goodsList[0].goodsId;
+                    _self.formValidate.goodsId=_self.goodsList[0].id;
                     this.formValidate.nationCode = this.goodsList[0].code;
                     this.formValidate.code = this.goodsList[0].reserveTwo;
                                             //this.goodsChange();//kk
