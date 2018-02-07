@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cm.cn.po.GpsMsg;
+import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.Gpsinfo;
 import cm.cn.service.HlGpsService;
 @Controller
@@ -30,16 +30,12 @@ public class HlGpsController {
 	}
 	@RequestMapping("/selectGpsByPlateNO2")
 	@ResponseBody
-	public GpsMsg selectGpsByPlateNo2(String plateNo,int goods_id){
+	public Gpsinfo selectGpsByPlateNo2(String plateNo,int goods_id){
 	
-		GpsMsg gpsMsg = hlGpsService.selectGpsByPlate(plateNo,goods_id);
-		//Page<Gpsinfo> page = null;
-		if (gpsMsg!=null) {
-			return gpsMsg;
-			//page = new Page<>(current, pageNum, list);
-			//return page;
-		}
-		else {
+		Gpsinfo gpsinfo = hlGpsService.selectGpsByPlate(plateNo);
+		if (gpsinfo!=null) {
+			return gpsinfo;
+		}else {
 			return null;
 		}
 	}

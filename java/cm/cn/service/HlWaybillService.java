@@ -2,6 +2,7 @@ package cm.cn.service;
 
 import java.util.List;
 
+import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.HlWaybill;
 
 public interface HlWaybillService {
@@ -13,6 +14,8 @@ public interface HlWaybillService {
 	public List<HlWaybill> selWaybillByCompanyIdAndShipper(int companyId,String Shipper);
 	//根据托运方查找订单
 	public List<HlWaybill> selWaybillByShipper(String Shipper);
+	//根据车辆信息和货物id对电子运单信息进行整合
+	public HlWaybillDetail selWaybillDetail(String plateNo,int goods_id);
 	//添加订单
 	public int insertWaybill(HlWaybill hlWaybill);
 	//批量删除订单

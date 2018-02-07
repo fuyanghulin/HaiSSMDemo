@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.HlCheckWaybill;
 import cm.cn.po.HlWaybill;
 import cm.cn.po.Page;
@@ -72,6 +73,18 @@ public class HlWaybillController {
 			return null;
 		}
 	}
+	@RequestMapping("/selWaybillDetail")
+	@ResponseBody
+	public HlWaybillDetail selectGpsByPlateNo2(String plateNo,int goods_id){
+		HlWaybillDetail hlWaybillDetail = hlWaybillService.selWaybillDetail(plateNo,goods_id);
+		if (hlWaybillDetail!=null) {
+			return hlWaybillDetail;
+		}
+		else {
+			return null;
+		}
+	}
+
 	@RequestMapping("/getWaybillList")
 	@ResponseBody
 	public List<HlWaybill> getSafeCardsList(){

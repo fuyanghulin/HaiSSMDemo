@@ -7,40 +7,17 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import cm.cn.datasource.CustomerContextHolder;
-import cm.cn.mapper.HlGoodstypeMapper;
-import cm.cn.mapper.HlPeopleMapper;
-import cm.cn.mapper.HlSafecardMapper;
-import cm.cn.mapper.MyCarInfoMapper;
-import cm.cn.mapper.MyGoodsInfoMapper;
 import cm.cn.mapper.MyGpsMapper;
-import cm.cn.po.GpsMsg;
 import cm.cn.po.Gpsinfo;
-import cm.cn.po.HlPeople;
-import cm.cn.po.HlPeopleExample;
 import cm.cn.service.HlGpsService;
-import cm.cn.util.GpsStatus;
 @Service
 public class HlGpsServiceImpl  implements HlGpsService {
     @Autowired
     private MyGpsMapper myGpsMapper;
-    @Autowired 
-    private MyCarInfoMapper myCarInfoMapper;
-    @Autowired
-    private HlPeopleMapper hlPeopleMapper;
-    @Autowired
-    private MyGoodsInfoMapper myGoodsInfoMapper;
-    @Autowired
-    private HlGoodstypeMapper hlGoodstypeMapper;
-    @Autowired
-    private HlSafecardMapper hlSafecardMapper;
 	@Override
 	public Gpsinfo selectGpsByPlateNo(String PlateNo) {
 		//CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GPS);
@@ -107,37 +84,15 @@ public class HlGpsServiceImpl  implements HlGpsService {
 	}
 
 	@Override
-	public GpsMsg selectGpsByPlate(String plateNo,int goods_id) {
+	public Gpsinfo selectGpsByPlate(String plateNo) {
 		Gpsinfo gpsinfo = new Gpsinfo();
-		GpsMsg gpsMsg = new GpsMsg();
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GPS);
 		Date date=new Date();
 		DateFormat format=new SimpleDateFormat("yyyyMMdd");
 		String tableName="gpsinfo"+format.format(date);
-		//System.out.println(myGpsMapper.selectMaxVelocity(plateNo));
-		//System.out.println(myGpsMapper.selectOverSpeedTimes(plateNo));
 		gpsinfo = myGpsMapper.selectGpsByPlateNo(tableName,plateNo);
-		if(gpsinfo!=null){
-		gpsMsg.setMaxVelocity(myGpsMapper.selectMaxVelocity(tableName,plateNo));
-		gpsMsg.setOverSpeedVelocityTimes(myGpsMapper.selectOverSpeedTimes(tableName,plateNo));
-		gpsMsg.setGpsinfo(gpsinfo);
-		Integer status = gpsinfo.getStatus();
-		gpsMsg.setStatus(GpsStatus.statusdeal(status));
-		
-		
-		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
-		int driverId = myCarInfoMapper.selDriver(plateNo);
-		int saferId = myCarInfoMapper.selSafer(plateNo);
-		List<HlPeople> list = new ArrayList<>(2);
-		list.add(hlPeopleMapper.selectByPrimaryKey(driverId));
-		list.add(hlPeopleMapper.selectByPrimaryKey(saferId));
-		gpsMsg.setHlPeople(list);
-		}
-		int goodsTypeId = myGoodsInfoMapper.selGoodsTypeIdByGoodsId(goods_id);
-		int safeCardid = myGoodsInfoMapper.selSafeCardIdByGoodsId(goods_id);
-		gpsMsg.setHlGoodstype(hlGoodstypeMapper.selectByPrimaryKey(goodsTypeId));
-		gpsMsg.setHlSafecard(hlSafecardMapper.selectByPrimaryKey(safeCardid));
-		return gpsMsg;
+
+		return gpsinfo;
 	}
  }
 
