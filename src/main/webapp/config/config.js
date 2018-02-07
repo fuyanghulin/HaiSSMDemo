@@ -92,6 +92,7 @@ var dataUrl = {
         people: baseUrl + '/HaiSSMDemo/selectPeopleByName.action?current=1&pageNum=1&name=',
         del: baseUrl + '/HaiSSMDemo/delWaybillBatch.action?arrays=',
         all: baseUrl + '/HaiSSMDemo/allWaybill.action',
+        dbselect: baseUrl+'/HaiSSMDemo/selWaybillDetail.action'
     },
     trainEdit: {
         del: baseUrl + '/HaiSSMDemo/delPeixu.action?array=',

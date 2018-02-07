@@ -147,7 +147,7 @@ new Vue({
                                                    translateCallback = function (data){
                                                      if(data.status === 0) {
                                                        var marker = new BMap.Marker(data.points[0]);
-                                                       _self.map.addOverlay(marker);
+                                                       _self.map.addOverlay(marker);//需要手动删除标注点2018年2月7日09:25:51
                                                        _self.map.setCenter(data.points[0]);
                                                      }
                                                    }
@@ -429,6 +429,11 @@ new Vue({
                 }
                 
             }
+        },
+        //取消allmap时触发的函数
+        cancel_map:function(){
+            //this.map.removeOverlay();
+            this. map.clearOverlays();
         },
         theDriver: function () {
             

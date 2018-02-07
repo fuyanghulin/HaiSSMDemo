@@ -5,7 +5,7 @@ new Vue({
     el: '#app',
     data: function () {
         return {
-        	searchText:'',
+            searchText:'',
             userType: '',
             totalRecord: 0, /*总页数*/
             page: {
@@ -345,7 +345,43 @@ new Vue({
             theCarChecked: [],
             delone: '',
             onedel: false,
-            modal3:false
+            modal3:false,
+            modalp:false,
+            printInfo:{
+                hlCarinfo:{
+                    companyName:'',
+                    carNum:'',
+                    carType:'',
+                    totalWei:''
+                },
+                gpsinfo:{
+                    createdate:'',
+                    velocity:'',
+                    location:''
+                },
+                status:'',
+                driver:{
+                    name:'',
+                    idNum:'',
+                    phone:'',
+                    drivezigezheng:'',
+                    pictureUrl:''
+                },
+                overSpeedVelocityTimes:'',
+                safer:{
+                    name:'',
+                    idNum:'',
+                    phone:'',
+                    drivezigezheng:'',
+                    pictureUrl:''
+                },
+                hlSafecard:{
+                    safeCardName:''
+                },
+                hlGoodsinfo:{
+                    name:''
+                }
+            }
         }
     },
     created: function () {
@@ -474,7 +510,7 @@ new Vue({
 
     },
     mounted: function () {
-        this.$refs.head.style.display = 'block';
+        this.$refs.headd.style.display = 'block';
     },
     methods: {
         //btnclick函数是在用户点击查看、修改时触发，将点击一行的数据传入，
@@ -829,15 +865,15 @@ new Vue({
             var _self=this;
                 console.log(_self.carList[_self.carPosition])
             
-        	if (num) {
-        		// console.log(num);
-        		for (var i = 0; i < this.carList.length; i++) {
-        			if (this.carList[i].carNum === num) {
-        				this.carPosition = i;
-        				break;
-        			} 
-        		}
-        	}
+            if (num) {
+                // console.log(num);
+                for (var i = 0; i < this.carList.length; i++) {
+                    if (this.carList[i].carNum === num) {
+                        this.carPosition = i;
+                        break;
+                    } 
+                }
+            }
             this.checkCar();
             if(this.carList.length>0){
                 this.carMessage.allowWeight = this.carList[this.carPosition].allowWeight;
@@ -1000,6 +1036,44 @@ new Vue({
             this.modal1 = true;
 
         },
+        print_open:function(ddata){//双击时打开打印预览
+            var _self=this;
+            //alert('您双击了改行');
+            console.log(ddata);
+            var idata={};
+            idata.plateNo=ddata.carNum;
+            idata.goods_id=ddata.goodsId;
+            $.ajax({
+                type:'GET',
+                url: dataUrl.waybill.dbselect,
+                data:idata,
+                cache:false,
+                success:function(data){
+                    //console.log(data);
+                    _self.printInfo=data;
+                    _self.printInfo.driver.pictureName=baseUrl + '/pic/' + data.driver.pictureName;
+                    _self.printInfo.safer.pictureName=baseUrl + '/pic/' + data.safer.pictureName;
+                    _self.printInfo.hlSafecard.safeCardName=baseUrl+ '/SafeCard/' + data.hlSafecard.safeCardName;
+                    console.log(_self.printInfo);
+                }
+            });
+            _self.modal1=true;
+            _self.print_ok();
+
+        },
+        print_ok:function(){
+            //setTimeout(function(){$("#printhere").jqprint();},2000);
+           
+            $("#printhere").jqprint();
+            setTimeout(function(){this.modal1=false;;},400);
+        },
+        print_cancel:function(){
+            console.log('退出');
+            this.modal1=false;
+        },
+        mark_cli:function(){
+            this.modalp=false;
+        },
         getData: function () {
             var _self = this;
             _self.$Loading.start();
@@ -1089,6 +1163,6 @@ new Vue({
 
                 }
             });
-        }
+        },
     }
 });
