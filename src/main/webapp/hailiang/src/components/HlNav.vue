@@ -1,0 +1,86 @@
+<template>
+	<div class="hlnav">
+		<Menu width="auto" style=" height:1000px;" theme="light"><!-- 原来是accordion theme="light" -->
+		    <Menu-Item name="0" class='navindex'><router-link to='/'>首页</router-link></Menu-Item>
+			    <Submenu name="1" v-if="userType===1||userType===2">
+			        <template slot="title">
+			            <Icon type="ios-analytics"></Icon>
+			            基础数据
+			        </template>
+			        <Menu-Item name="1-1"><router-link to='/goodstype'>货物类型信息</router-link></Menu-Item>
+			        <Menu-Item name="1-2"><router-link to='/safecard'>安全卡信息</router-link></Menu-Item>
+			    </Submenu>
+		    <Submenu name="2">
+		        <template slot="title">
+		            <Icon type="ios-analytics"></Icon>
+		            企业管理
+		        </template>
+		        <Menu-Item name="2-1" v-if="userType===1||userType===2"><router-link to='/compinfo'>承运企业信息</router-link></Menu-Item>
+		        <Menu-Item name="2-2"><router-link to='/personinfo'>人员信息</router-link></Menu-Item><!-- <router-link to='/personinfo'>人员信息</router-link> -->
+		        <Menu-Item name="2-3"><router-link to='/carinfo'>车辆信息</router-link></Menu-Item><!-- <router-link to='/carinfo'>车辆信息</router-link> -->
+		    </Submenu>
+		    <Submenu name="4">
+		        <template slot="title">
+		            <Icon type="ios-analytics"></Icon>
+		            货物管理
+		        </template>
+		        <Menu-Item name="4-1"><router-link to='/goodsinfo'>货物信息</router-link></Menu-Item>
+		    </Submenu>
+		    <Submenu name="5">
+		        <template slot="title">
+		            <Icon type="ios-analytics"></Icon>
+		            托运管理
+		        </template>
+		        <Menu-Item name="5-1"><router-link to='/eleorder'>电子运单信息</router-link></Menu-Item><!--  -->
+		    </Submenu>
+		    <Submenu name="6">
+		        <template slot="title">
+		            <Icon type="ios-analytics"></Icon>
+		            动态监控
+		        </template>
+		        <Menu-Item name="6-1"><router-link to='/gpsbreak'>GPS违章</router-link></Menu-Item><!--  -->
+		    </Submenu>
+		    <Submenu name="7">
+		        <template slot="title">
+		            <Icon type="ios-analytics"></Icon>
+		            报警中心
+		        </template>
+		        <Menu-Item name="7-1"><router-link to='/alarmrecord'>报警记录</router-link></Menu-Item><!--  -->
+		    </Submenu>
+		    <Submenu name="9">
+		        <template slot="title">
+		            <Icon type="ios-analytics"></Icon>
+		            培训中心
+		        </template>
+		        <Menu-Item name="9-1"  v-if="userType===1||userType===2"><router-link to='/trainedit'>培训编辑</router-link></Menu-Item><!-- trainedit -->
+		        <Menu-Item name="9-2"><router-link to='/trainlog'>培训状态</router-link></Menu-Item><!--  -->
+		    </Submenu>
+		</Menu>
+	</div>
+</template>
+
+<script>
+	export default{
+		name:'HlNav',
+		data:function(){
+			return {
+				userType:null
+			}
+		},
+		created:function(){
+			this.userType=parseInt(this.$cookies.get("roleID")); 
+		}
+	}
+</script>
+
+<style scoped>
+.hlnav{
+	background-color: green;
+}
+.navindex{
+	text-align: center;
+	font-size: 21px;
+	font-weight: bold;
+	border-bottom: 1px dashed #cfcfcf;
+}
+</style>
