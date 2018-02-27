@@ -13,7 +13,7 @@
         </div>
     </nav>
     <!--数据区块-->
-    <i-Table border :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" ellipsis></i-Table>
+    <i-Table border stripe :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" ></i-Table><!-- 有一个这个属性不知道是用来干嘛的ellipsis -->
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage"
            :page-size="page.pageNum" show-elevator
@@ -93,6 +93,12 @@
 import dataUrl from '../../assets/config.js'
 export default{
 	name: 'GoodsInfo',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
     data:function() {
         return {
             userType: '',
@@ -330,8 +336,15 @@ export default{
     },
     mounted: function () {
         //this.$refs.head.style.display = 'block';
+this.indexloading();
     },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
     methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
         search: function () {
             var _self=this;
             if (this.searchText.replace(/\s/g, '').length < 1) {

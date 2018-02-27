@@ -16,7 +16,7 @@
         </div>
     </nav>
     <!--数据区块-->
-    <i-Table border :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></i-Table>
+    <i-Table border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></i-Table>
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage" :current="page.current" 
           :page-size="page.pageNum" show-total show-elevator></Page>
@@ -327,6 +327,12 @@ import dataUrl from '../../assets/config.js'
 import BMap from 'BMap'
 export default{
 	name: 'CarInfo',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
     data: function () {
         const validatePass = function(rule, value, callback){
             if (value === '') {
@@ -661,7 +667,11 @@ export default{
         this.map = new BMap.Map("allmap");
         this.map.centerAndZoom(new BMap.Point(116.331398,39.897445),16);
         this.map.enableScrollWheelZoom(true);
+this.indexloading();
     },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
     methods: {
         
      	//坐标转换完之后的回调函数
@@ -672,6 +682,9 @@ export default{
            		_self.map.setCenter(data.points[0]);
          	}
        	},
+indexloading: function(){
+    this.$emit('getloading',false);
+},
         search: function () {
             if (this.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');

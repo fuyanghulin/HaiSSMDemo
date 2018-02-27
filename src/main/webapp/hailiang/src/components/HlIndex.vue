@@ -24,7 +24,11 @@
           <Col span="20">
             <div class="layout-content-main" >
               <div id="hlmain" frameborder="0" width="100%"><!-- 这里删除了一个align="right"的属性 -->
-                <keep-alive><router-view></router-view></keep-alive>
+                <keep-alive><router-view :indexloading="indexloading" @getloading="chgloading" /></keep-alive>
+
+                <div id="tloading" v-if="indexloading">
+                  <img src="../assets/Spin-1.6s-200px.gif" alt="loading">
+                </div>
               </div>
               <div class="layout-copy">
                   2016-2017 &copy; Zhejiang HaiLiang Technology Co., Ltd.
@@ -46,7 +50,7 @@ export default {
   name: 'HlIndex',
   data:function(){
     return {
-      
+      indexloading:true
     }
   },
   components:{
@@ -59,6 +63,9 @@ export default {
       this.$cookies.remove("companyName");
       this.$cookies.remove("roleID");
       this.$emit('isState',true);
+    },
+    chgloading:function(msg){
+      this.indexloading=msg;
     }
   }
 }
@@ -109,6 +116,23 @@ export default {
     color: #9ba7b5;
 }
 .router-link-exact-active{
-  color: #2d8cf0;
+  color: #2D8CED;
+  font-weight: bolder;
 }
+
+        /* 加载loading */
+        #tloading{
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            z-index: 999;
+        }
+        #tloading img {
+            position: absolute;
+            top: 300px;
+            left: 38%;
+            width: 100px;
+            height: 100px; 
+        }
+
 </style>

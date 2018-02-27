@@ -14,7 +14,7 @@
             <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table border :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open'></i-Table>
+    <i-Table border stripe :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open'></i-Table>
     <Page :total="totalRecord"  show-total
           show-elevator :current="page.current" @on-change="next" :page-size="page.pageNum"></Page>
 
@@ -329,6 +329,12 @@ import dataUrl from '../../assets/config.js'
 import cityDatas from '../../assets/cityData.json'
 export default{
 	name: 'EleOrder',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
     data: function() {
         return {
             searchText: '',
@@ -847,8 +853,15 @@ export default{
     mounted: function() {
         //this.$refs.headd.style.display = 'block';
         console.log(this.userType);
+this.indexloading();
     },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
     methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
         //btnclick函数是在用户点击查看、修改时触发，将点击一行的数据传入，
         //主要是通过公司id获取数据，当然查看的时候其实不需要做这些处理，这里为了简便就一起处理了
         //企业添加的逻辑还是用原来的，暂时未做修改

@@ -97,6 +97,12 @@
 import dataUrl from '../../assets/config.js'
 	export default{
 		name: 'SafeCard',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
 		data:function(){
 			return {
                 userType:'',
@@ -259,6 +265,9 @@ import dataUrl from '../../assets/config.js'
             }
 		},
         methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
             showOne:function(index) {
                 this.$Modal.success({
                     title: '安全卡信息',
@@ -565,6 +574,13 @@ import dataUrl from '../../assets/config.js'
         created:function(){
         	this.getData();
         	this.userType=parseInt(this.$cookies.get("roleID"));
+        },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
+        mounted: function(){
+            
+this.indexloading();
         }
 	}
 </script>

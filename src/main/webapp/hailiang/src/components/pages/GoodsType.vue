@@ -63,6 +63,12 @@
 import dataUrl from '../../assets/config.js'
 	export default{
 		name:'GoodsType',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
 		data:function(){
 			return {
                 userType: '',
@@ -187,6 +193,9 @@ import dataUrl from '../../assets/config.js'
             }
 		},
         methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
             show:function(index) {
                 this.$Modal.success({
                     title: '货物类型信息',
@@ -405,6 +414,13 @@ import dataUrl from '../../assets/config.js'
             //不知道是否得未登录的用户，先放置着吧
             _self.userType=parseInt(this.$cookies.get("roleID"));
             _self.getData();
+        },
+        mounted: function(){
+
+this.indexloading();
+        },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
         }
 	}
 </script>

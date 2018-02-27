@@ -172,6 +172,12 @@
 import dataUrl from '../../assets/config.js'
 export default{
 	naem: 'PersonInfo',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
     data:function() {
         var checkidNum=function(rule, value, callback){
             if(value.length!=18){
@@ -457,6 +463,9 @@ export default{
         }
     },
     methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
         search:function() {
             var _self = this;
             if (_self.searchText.replace(/\s/g, '').length < 1) {
@@ -906,8 +915,12 @@ export default{
         }
         _self.getData();
     },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
     mounted: function () {
         //this.$refs.head.style.display = 'block';
+this.indexloading();
     }
 }
 </script>

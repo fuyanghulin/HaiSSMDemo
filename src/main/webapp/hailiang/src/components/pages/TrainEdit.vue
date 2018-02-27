@@ -10,7 +10,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
         </div>
     </nav>
-    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe></i-Table>
     <Page :total="totalRecord"  show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
@@ -51,6 +51,12 @@
 import dataUrl from '../../assets/config.js'
 export default{
 	name: 'TrainEdit',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
         data: function () {
             return {
             	searchText:'',
@@ -171,6 +177,9 @@ export default{
 
         },
         methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
         	search: function () {
                 if (this.searchText.replace(/\s/g, '').length < 1) {
                     alert('搜索内容不可为空');
@@ -326,8 +335,12 @@ export default{
                 }
             }
         },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
         mounted: function () {
             //this.$refs.head.style.display = 'block';
+this.indexloading();
         }
 }
 </script>

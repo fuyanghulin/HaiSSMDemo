@@ -9,7 +9,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search"></i-Button>
         </div>
     </nav>
-    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
     <Page :total="totalRecord"
           show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
@@ -20,6 +20,12 @@
 import dataUrl from '../../assets/config.js'
 export default{
 	name: 'AlarmRecord',
+    props:{
+        indexloading: {
+            type: Boolean,
+            default: true
+        }
+    },
         data: function () {
             return {
                 userType: '',
@@ -56,8 +62,16 @@ export default{
         },
         mounted: function () {
             //this.$refs.head.style.display = 'block';
+            this.indexloading();
+
+        },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
         },
         methods: {
+            indexloading: function(){
+                this.$emit('getloading',false);
+            },
             del: function () {
                 var _self = this;
                 $.ajax({

@@ -9,7 +9,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search"></i-Button>
         </div>
     </nav>
-    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe></i-Table>
     <Page :total="totalPage"  show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
@@ -19,6 +19,12 @@
 <script>
 export default{
 	name: 'GoodsInfo',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
         data:function() {
             return {
                 totalPage: 0, /*总页数*/
@@ -91,6 +97,9 @@ export default{
             }
         },
         methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
             del:function() {
                 var _self = this;
                 $.get('http://localhost:8080/HaiSSMDemo2/delPeopleBatch.action?arrays=' + _self.delArr,
@@ -158,6 +167,10 @@ export default{
         },
         mounted: function () {
             //this.$refs.head.style.display = 'block';
+this.indexloading();
+        },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
         },
         created:function() {
             //document.body.removeChild(document.getElementById('tloading'));

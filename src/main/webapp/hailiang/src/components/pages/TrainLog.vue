@@ -6,7 +6,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search"></i-Button>
         </div>-->
     </nav>
-    <i-Table :columns="columns" :data="data"></i-Table>
+    <i-Table :columns="columns" :data="data" border stripe></i-Table>
     <Page :total="totalRecord" show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
@@ -17,6 +17,13 @@
 import dataUrl from '../../assets/config.js'
 export default{
 	name: 'TrainLog',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
+
         data:function() {
             return {
                 userType: '',
@@ -73,6 +80,9 @@ export default{
             }
         },
         methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
             show:function(index) {
                 this.$Modal.info({
                     title: '培训信息',
@@ -147,8 +157,12 @@ export default{
                 }
             }
         },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
         mounted: function () {
             //this.$refs.head.style.display = 'block';
+this.indexloading();
         }
 }
 </script>

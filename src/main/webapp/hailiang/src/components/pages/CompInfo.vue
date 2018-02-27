@@ -15,7 +15,7 @@
 	        </div>
 	    </nav>
 	    <!--数据区块-->
-	    <Table border :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" ellipsis></Table>
+	    <Table border stripe :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" ellipsis></Table>
 	    <!--\总页数-->
 	    <Page :total="totalRecord" @on-change="changePage"
 	          :page-size="page.pageNum" show-total show-elevator></Page>
@@ -165,6 +165,12 @@ import dataUrl from '../../assets/config.js'
 import cityDatas from '../../assets/cityData.json'
 export default{
 	name: 'CompInfo',
+props:{
+    indexloading: {
+        type: Boolean,
+        default: true
+    }
+},
     data:function() {
         var validatePass = function(rule, value, callback){
         	if (value === '') {
@@ -474,8 +480,15 @@ export default{
         //console.log(this.$refs.company);
         //console.log(this.company);
         //console.log(this.ruleValidate);
+this.indexloading();
     },
+        beforeDestroy: function(){
+            this.$emit('getloading',true);
+        },
     methods: {
+indexloading: function(){
+    this.$emit('getloading',false);
+},
         submit: function (name) {
             var _self=this;
             _self.$refs[name].validate(function (valid) {
