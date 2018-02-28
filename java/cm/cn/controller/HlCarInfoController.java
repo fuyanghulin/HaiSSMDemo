@@ -1,14 +1,24 @@
 package cm.cn.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import cm.cn.po.HlCarAttach;
 import cm.cn.po.HlCarinfo;
+import cm.cn.po.HlPeople;
 import cm.cn.po.Page;
 import cm.cn.service.HlCarInfoService;
 
@@ -107,5 +117,60 @@ public class HlCarInfoController {
 	@ResponseBody
 	public int delCarInfoBatch(int[] arrays){
 		return HlCarinfoService.delCarBatch(arrays);
+	}
+	@RequestMapping("/upCarAttach")
+	@ResponseBody
+	public List<String> upCarAttach(MultipartFile file){
+		List<String> list = new ArrayList<>();
+		//根据日期新建文件夹
+		Calendar date=Calendar.getInstance();	
+		SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd");
+		String timeName=format.format(date.getTime());
+		File directory=new File("D:/CarAttach/"+timeName);
+		directory.mkdir();
+		String originFileName = file.getOriginalFilename();
+		String newFileName = "CarAttach"+UUID.randomUUID()+originFileName.substring(originFileName.lastIndexOf("."));
+		String parentsPath = "D:\\CarAttach\\"+timeName+"\\";
+		File photo = new File(parentsPath+newFileName);
+		try {
+			file.transferTo(photo);
+			list.add(timeName+"/"+newFileName);
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	@RequestMapping(value="/insertCarAttach",method=RequestMethod.POST)
+	@ResponseBody
+	public int insertCarAttach(HlCarAttach hlCarAttach){
+		Date date=new Date();    
+		hlCarAttach.setCreateTime(date);
+		hlCarAttach.setUpdateTime(date);
+		return HlCarinfoService.insertCarAttach(hlCarAttach);
+	}
+	@RequestMapping(value="/selectCarAttach",method=RequestMethod.POST)
+	@ResponseBody
+	public Page<HlCarAttach> selectCarAttach(int current,int pageNum,String carNum){
+		List<HlCarAttach> list = HlCarinfoService.selectCarAttach(carNum);
+		Page<HlCarAttach> page = null;
+		if (list.size()>0) {
+			page = new Page<>(current, pageNum,  list);
+			return page;
+		}
+		else {
+			return null;
+		}
+	}
+	@RequestMapping(value="/delCarAttach",method=RequestMethod.POST)
+	@ResponseBody
+	public int delCarAttach(int[] arrays){
+		return HlCarinfoService.delCarAttachBatch(arrays);
+	}
+	@RequestMapping(value="/updateCarAttach",method=RequestMethod.POST)
+	@ResponseBody
+	public int updateCarAttacBatch(HlCarAttach hlCarAttach){
+		Date date=new Date();    
+		hlCarAttach.setUpdateTime(date);
+		return HlCarinfoService.updateCarAttach(hlCarAttach);
 	}
 }
