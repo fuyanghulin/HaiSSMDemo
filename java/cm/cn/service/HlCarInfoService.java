@@ -2,6 +2,7 @@ package cm.cn.service;
 
 import java.util.List;
 
+import cm.cn.po.HlCarAttach;
 import cm.cn.po.HlCarinfo;
 
 public interface HlCarInfoService {
@@ -21,4 +22,12 @@ public interface HlCarInfoService {
 	public List<HlCarinfo> selectByCompanyId(int id);
 	//根据公司id,对车牌进行模糊查询
 	public List<HlCarinfo> selectCarInfoByCompanyIdAndCarNum(int companyId,String carNum);
+	//增加车辆车档附件信息
+	public int insertCarAttach(HlCarAttach hlCarAttach);
+	//根据车牌查询车档附件信息
+	public List<HlCarAttach>  selectCarAttach(String carNum);
+	//批量删除车档附件信息
+	public int delCarAttachBatch(int[] arrays);
+	//更新车档信息
+	public int updateCarAttach(HlCarAttach hlCarAttach);
 }
