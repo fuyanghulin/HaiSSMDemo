@@ -24,7 +24,7 @@
           <Col span="20">
             <div class="layout-content-main" >
               <div id="hlmain" frameborder="0" width="100%"><!-- 这里删除了一个align="right"的属性 -->
-                <keep-alive><router-view :indexloading="indexloading" @getloading="chgloading" /></keep-alive>
+                <keep-alive><router-view :indexloading="indexloading" @getloading="chgloading" /></keep-alive><!-- </keep-alive> -->
 
                 <div id="tloading" v-if="indexloading">
                   <img src="../assets/Spin-1.6s-200px.gif" alt="loading">

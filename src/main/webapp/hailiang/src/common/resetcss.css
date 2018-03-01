@@ -65,3 +65,7 @@ a:hover, a:visited, a:link, a:active {
 body .ivu-modal .ivu-select-dropdown{
     position: fixed !important;
 } 
+
+.ivu-modal-wrap>.ivu-modal{
+	top: 60px;
+}

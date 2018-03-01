@@ -1,19 +1,19 @@
 <template>
 	<div class="safecard" ref="head">
-		    <nav>
-        <div>
-            <Button type="primary" @click="open($event)" v-if="userType===1">添加</Button>
-            
-            <Tooltip content="删除所选安全卡" placement="bottom-start">
-                <Button type="error" @click="del" v-if="userType===1">删除</Button>
-            </Tooltip>
-        </div>
-        <div>
-            <Input placeholder="请输入安全卡名称..." style="width: 300px" v-model="searchText" @keyup.native.enter="search"></Input>
-            <Button type="primary" shape="circle" icon="ios-search" @click="search"></Button>
-            <Button type="primary" @click="refresh" style="margin-left:20px;">刷新</Button>
-        </div>
-    </nav>
+	    <nav>
+            <div>
+                <Button type="primary" @click="open($event)" v-if="userType===1">添加</Button>
+                
+                <Tooltip content="删除所选安全卡" placement="bottom-start">
+                    <Button type="error" @click="del" v-if="userType===1">删除</Button>
+                </Tooltip>
+            </div>
+            <div>
+                <Input placeholder="请输入安全卡名称..." style="width: 300px" v-model="searchText" @keyup.native.enter="search"></Input>
+                <Button type="primary" shape="circle" icon="ios-search" @click="search"></Button>
+                <Button type="primary" @click="refresh" style="margin-left:20px;">刷新</Button>
+            </div>
+        </nav>
     <Table border stripe :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change"></Table>
     <Page :total="totalRecord" show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
@@ -162,6 +162,8 @@ props:{
                                         	this.show=false;
                                         	this.showImg=dataUrl.dataUrl.safeCard.pdf + this.data[params.index].safeCardName+'?time='+Date.parse(new Date());
                                         	this.modal2 = true;
+                                            console.log("执行click函数");
+                                            
                                         	
                                         	
                                             
@@ -362,6 +364,7 @@ indexloading: function(){
                 }
             }*/
             cancel_del:function(){
+                console.log("执行cancel_del函数");
                 this.modal2=false;
                 this.delone='';
                 this.onedel=false;
@@ -403,6 +406,7 @@ indexloading: function(){
                 
             },
             handleUpload1:function(file) {
+                console.log("执行handleUpload1事件");
                 this.formValidate.safeCardFile = file;
                 return false;
             },
@@ -411,6 +415,7 @@ indexloading: function(){
                 return false;
             },
             upload:function() {
+                console.log("执行Upload事件");
                 var _self = this;
                 var formData = new FormData();
                 formData.append('file', _self.formValidate.safeCardFile);
@@ -500,6 +505,7 @@ indexloading: function(){
                 });
             },
             upMessage:function() {
+                console.log("执行upMessage事件");
                 var _self = this;
                 _self.loading = true;
                 _self.$refs.formValidate.validate(function (valid) {
@@ -534,6 +540,7 @@ indexloading: function(){
                 });
             },
             postData:function(_self, url, data) {
+                console.log("执行postData事件");
                 $.ajax(url,{
                     dataType: "json",
                     type: 'post',

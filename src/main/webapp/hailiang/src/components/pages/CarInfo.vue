@@ -1,22 +1,26 @@
+
 <template>
 <div class="carinfo">
     <!--頭部區塊-->
     <nav>
         <div>
-            <i-button type="primary" @click="open('1','2',$event)" v-if="userType==3">添加</i-button>
+            <Button type="primary" @click="open('1','2',$event)" v-if="userType==3">添加</Button>
             
             <Tooltip content="删除所选车辆信息" placement="bottom-start">
-                <i-button type="error" style="margin-left: 20px;" @click.stop="del" v-if="userType==3">删除</i-button>
+                <Button type="error" style="margin-left: 20px;" @click.stop="del" v-if="userType==3">删除</Button>
             </Tooltip><!-- 原来是moredelete函数 -->
+            <Button type="primary" v-if="userType==3" disabled>修改</Button>
+            <Button type="primary" @click="carDetail">车档信息</Button>
+
         </div>
         <div>
-            <i-input placeholder="请输入车牌号" style="width: 200px;" v-model="searchText" @keyup.native.enter="search"></i-input>
-            <i-button type="primary" shape="circle" icon="ios-search" @click="search"></i-button>
-            <i-Button type="primary" @click="getAll" style="margin-left:20px;">刷新</i-Button>
+            <Input placeholder="请输入车牌号" style="width: 200px;" v-model="searchText" @keyup.native.enter="search"></Input>
+            <button type="primary" shape="circle" icon="ios-search" @click="search"></button>
+            <Button type="primary" @click="getAll" style="margin-left:20px;">刷新</Button>
         </div>
     </nav>
     <!--数据区块-->
-    <i-Table border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></i-Table>
+    <Table border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></Table>
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage" :current="page.current" 
           :page-size="page.pageNum" show-total show-elevator></Page>
@@ -24,7 +28,7 @@
             v-model="model1"
             width="65%"
             :closable="false"
-            :scrollable="true"
+            :scrollable='false'
             @on-cancel="cancel"
     >
         <i-form :model="formValidate" :rules="ruleValidate" ref="formValidate">
@@ -302,7 +306,9 @@
     <Modal
             v-model="model2"
             width="65%"
+            :scrollable='true'
             @on-cancel='cancel_map'
+
     >
     	<p slot="header">
         </p>
@@ -314,11 +320,122 @@
         v-model="modal2"
         title="删除提示"
         :del_arr='delArr'
+        :scrollable='true'
         @on-ok="ok_del"
         @on-cancel="cancel_del">
         <p v-if="onedel">是否删除该条数据</p>
-        <p v-else>是否确认删除{{delArr.length}}条数据</p>
-    </Modal>	
+        <p v-else>是否确认删除这{{delArr.length}}条数据</p>
+    </Modal>
+
+
+
+    <Modal
+        v-model='model3'
+        width="80%"
+        :title="detailArr"
+        :scrollable='true'
+       style="z-index:800;"
+        @on-cancel="model3=false"
+        >
+        <nav>
+            <div>
+                <Button type="primary" @click="addDetail($event)">添加</Button><!-- 展开model4 -->
+                <Button type="primary" @click="addDetail($event)">修改</Button><!-- 展开model4 -->
+                <Tooltip content="删除所选车辆信息" placement="bottom-start">
+                    <Button type="error" style="margin-left: 20px;" @click="delDetail">删除</Button>
+                </Tooltip>
+            </div>
+            <div>
+                <!-- <Input placeholder="请输入车档信息" style="width: 200px;" v-model="searchDtext" @keyup.native.enter="searchDetail"></Input>
+                <Button type="primary" shape="circle" icon="ios-search" @click="searchDetail"></Button> -->
+                <Button type="primary" @click="carDetail" style="margin-left:20px;">刷新</Button>
+            </div>
+        </nav>
+        <Table border stripe :columns="detailcolumns" :data="detaildata" ellipsis width="100%"  @on-selection-change="chgdArr"></Table>
+    <!--\总页数-->
+        <!-- <Page :total="1" @on-change="" :current="1" 
+          :page-size="15" show-total show-elevator></Page> --><!-- 暂时放置 -->
+        <div slot="footer">
+            <!-- <i-button type="text" style="width: 100px;" @click="">取消</i-button> -->
+            <i-button type="primary" @click="model3=false;" style="width: 100px;">确定</i-button>
+        </div>
+    </Modal>
+    <Modal
+        v-model='model4'
+        width='80%'
+        :title='添加车档信息'
+        :closable="false"
+        :scrollable='true'
+        @on-cancel="clsfour"
+        @on-ok='upload'
+        style="z-index:900;"
+        :styles="{top: '110px'}"
+        >
+        <template v-if="dstatus==1">
+            请选择要信息：
+            <Select style="width:200px" @on-change="chgFileName" v-bind:disabled="dstatus===0" :v-model="upitem.fileName">
+                <Option v-for="fitem in fileName" :value="fitem.value" :key="fitem.label">{{ fitem.value }}</Option>
+            </Select>            
+        </template>
+        <template v-else>
+            {{upitem.fileName}}
+        </template>
+
+
+        请选择上传图片：
+        <Upload
+            ref = "upload"
+            :before-upload="handleUpload"
+            :show-upload-list = "false"
+            :format = "['jpg','jpeg','png']"
+            :max-size = "2048"
+            :on-format-error = "handleFormatError"
+            :on-exceeded-size = "handleMaxSize"
+            action=""
+            style="display: inline-block;"><!-- http://localhost:8080/HaiSSMDemo/upCarAttach.action -->
+            <Button type = "ghost" icon="ios-cloud-upload-outline" >上传图片</Button>
+        </Upload>
+        <span v-if="upitem.filePath !== ''">
+            图片可上传
+        </span>
+        <div slot="footer">
+            <i-button type="text" style="width: 100px;" @click="clsfour">取消</i-button>
+            <i-button type="primary" @click="upload" style="width: 100px;">确定</i-button>
+        </div>
+    </Modal>
+    <modal
+        v-model="model5"
+        width="80%"
+        :closable="false"
+        :scrollable='true'
+        @on-cancel="clsfive"
+        @on-ok="clsfive"
+        style="z-index:1000;"
+    >
+        <!-- <iframe  :src="showImg" align="center" frameborder="0" width="100%" style="border-top: 1px solid #ddd;height: 700px;">
+            <p>您的浏览器不支持 iframe 标签。</p>
+        </iframe> -->
+        <img :src="showImg" style=" height: auto;width:100%;background-size:100% 100%">
+        <div slot="footer">
+            <i-button type="text" style="width: 100px;" @click="clsfive">取消</i-button>
+            <i-button type="primary" @click="clsfive" style="width: 100px;">确定</i-button>
+        </div>
+    </modal>
+    <Modal
+        v-model="model6"
+        title="删除提示"
+        width="80%"
+        :closable="false"
+        :scrollable='true'
+        @on-ok="ok_deld"
+        @on-cancel=""
+        style="z-index:1000;"
+       >
+        <p>是否确认删除这{{deldArr.length}}条数据</p>
+    </Modal>
+
+
+	
 </div>
 </template>
 
@@ -342,15 +459,217 @@ props:{
             }
         };
         return {
+            index: 1,
+            showImg: null,
+            formDynamic: {
+                items: [
+                    {
+                        value: '',
+                        index: 1,
+                        status: 1,
+                        //fileName: null,
+                        filePath: '',
+                        timeS: null,
+                        timeE: null,
+                        fileName: [
+                            {
+                                value: '车辆行驶证',
+                                label: 'clxsz'
+                            },
+                            {
+                                value: '道路运输证',
+                                label: 'dlysz'
+                            },
+                            {
+                                value: '车辆登记证',
+                                label: 'cldjz'
+                            },
+                            {
+                                value: '承运人责任险',
+                                label: 'cyrzrx'
+                            },
+                            {
+                                value: '车辆维修备案记录',
+                                label: 'clwxbajl'
+                            },
+                            {
+                                value: '罐体检测合格证或检测报告',
+                                label: 'gtjchgz'
+                            },
+                            {
+                                value: '驾驶员身份证',
+                                label: 'jsysfz'
+                            },
+                            {
+                                value: '驾驶员从业资格证',
+                                label: 'jsycyzgz'
+                            },
+                            {
+                                value: '押运员身份证',
+                                label: 'yyysfz'
+                            },
+                            {
+                                value: '押运员从业资格证',
+                                label: 'yyycyzgz'
+                            },
+                            {
+                                value: '安全责任书',
+                                label: 'aqzrs'
+                            },
+                            {
+                                value: '应急救援器材和个人防护用品配置',
+                                label: 'yjjyqc'
+                            },
+                            {
+                                value: '卫星定位装置使用证明',
+                                label: 'wxdwzzsyzm'
+                            }
+                        ]
+                        
+                    }
+                ]
+            },
+            upitem:{
+                //fileName: null,
+                filePath: '',
+                fileName: '未知',
+                carNum:''
+            },
+
+            fileName: [
+                {
+                    value: '车辆行驶证',
+                    label: 'clxsz'
+                },
+                {
+                    value: '道路运输证',
+                    label: 'dlysz'
+                },
+                {
+                    value: '车辆登记证',
+                    label: 'cldjz'
+                },
+                {
+                    value: '承运人责任险',
+                    label: 'cyrzrx'
+                },
+                {
+                    value: '车辆维修备案记录',
+                    label: 'clwxbajl'
+                },
+                {
+                    value: '罐体检测合格证或检测报告',
+                    label: 'gtjchgz'
+                },
+                {
+                    value: '驾驶员身份证',
+                    label: 'jsysfz'
+                },
+                {
+                    value: '驾驶员从业资格证',
+                    label: 'jsycyzgz'
+                },
+                {
+                    value: '押运员身份证',
+                    label: 'yyysfz'
+                },
+                {
+                    value: '押运员从业资格证',
+                    label: 'yyycyzgz'
+                },
+                {
+                    value: '安全责任书',
+                    label: 'aqzrs'
+                },
+                {
+                    value: '应急救援器材和个人防护用品配置',
+                    label: 'yjjyqc'
+                },
+                {
+                    value: '卫星定位装置使用证明',
+                    label: 'wxdwzzsyzm'
+                }
+            ],
             userType: '',
             openState: '',
             map:null,
             marker:null,
             new_point:null,
+            detailcolumns:[
+                {
+                    type: 'selection',
+                    align: 'center',
+                    //width: 120,
+                    fixed: 'left'
+                },
+                {
+                    title: '车牌号',
+                    key: 'carNum',
+                    align: 'center',
+                    //width: 120,
+                    fixed: 'left'
+                },
+                {
+                    title: '车档信息名称',
+                    key: 'fileName',
+                    align: 'center',
+                    //width: 200,
+                    fixed: 'left'
+                },
+                /*{
+                    title: '图片路径',
+                    key: 'filePath',
+                    align: 'center',
+                    width: 200,
+                    fixed: 'left'
+                },*/
+                {
+                    title: '创建时间',
+                    key: 'createTime',
+                    align: 'center',
+                    //width: 120,
+                    fixed: 'left'
+                },
+                {
+                    title: '修改时间',
+                    key: 'updateTime',
+                    align: 'center',
+                    //width: 120,
+                    fixed: 'left'
+                },
+                {
+                    title: '车档信息图片',
+                    align: 'center',
+                    key: 'filePath',
+                    render: function (h, params) {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'text',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: function () {
+                                        //this.show=false;
+                                        console.log(params.row.filePath);
+                                        this.showImg=params.row.filePath;
+                                        console.log("执行click，model5将改变")
+                                        this.model5 = true;
+                                        console.log(this.model5);
+                                        
+                                        
+                                        /* new PDFObject({ url: dataUrl.dataUrl.safeCard.pdf + this.data[params.index].safeCardName+'?time='+Date.parse(new Date()) }).embed('showPDF'); */
+                                    }.bind(this)
+                                }
+                            },'查看')
+                        ]);
+                    }.bind(this)
+                }
+            ],
+            detaildata:[],//用来渲染车档信息的数据
             columns: [
                 {
                     type: 'selection',
-                    width: 60,
                     align: 'center',
                     width: 120,
                     fixed: 'left'
@@ -559,6 +878,8 @@ props:{
                     }.bind(this)
                 }],
             data1: [],//this.columns[this.columns.length-1].width===>尝试通过将这个值修改为0来隐藏不需要显示的td
+
+            //detailData: [],
             showModal: false,
             allChecked: '',
             theChecked: [],
@@ -573,6 +894,10 @@ props:{
             title: '',
             model1: false,
             model2:false,
+            model3: false,
+            model4: false,
+            model6: false,
+            modal2:false,
             position: 0,
             formValidate: {
                 carNum: '',
@@ -635,9 +960,11 @@ props:{
             searchText: '',
             onedel:false,
             delone:'',
-            modal2:false,
-            delArr:[],
-            textState:{}
+            delArr:[],//选择的车辆信息
+            textState:{},
+            seldArr: null,//选择的文档信息
+            deldArr: [],
+            dstatus: 1
         }
     },
     created: function () {
@@ -667,12 +994,243 @@ props:{
         this.map = new BMap.Map("allmap");
         this.map.centerAndZoom(new BMap.Point(116.331398,39.897445),16);
         this.map.enableScrollWheelZoom(true);
-this.indexloading();
+        this.indexloading();
+
     },
-        beforeDestroy: function(){
-            this.$emit('getloading',true);
-        },
+    beforeDestroy: function(){
+        this.$emit('getloading',true);//这个以后换掉
+    },
     methods: {
+
+            handleUpload:function(file) {//选择完图片文件后，将图片信息保存在this.upitem.filePath
+                console.log("发生handleUpload事件");
+                this.upitem.filePath = file;
+                console.log(this.upitem.filePath);
+                return false;
+            },
+            upload:function() {
+                // 这里需要添加检测，1.提骄的数据是否完整；2.提交的车档信息是否重复
+                console.log("发送upload请求upCarAttach.action");
+                var _self = this;
+
+                var formData = new FormData();
+                formData.append('file', this.upitem.filePath);
+                var idata={};
+                idata.carNum=this.detailArr;
+                idata.fileName=this.upitem.fileName;
+                //idata.filePath=this.upitem.filePath;
+                console.log("输出看下要上传的idata原始样子");
+                console.log(idata);
+                $.ajax({
+                    url:  'http://localhost:8080/HaiSSMDemo/upCarAttach.action',
+                    type: 'post',
+                    processData: false, //不对表单处理
+                    contentType: false, //
+                    data: formData,
+                    cache:false,
+                    success:function(data) {
+                        console.log(data);
+                        //item.filePath = data[0];
+                        idata.filePath=data[0];
+                        if(_self.dstatus==1){
+                            console.log("即将执行postData")
+                            _self.postData(_self, 'http://localhost:8080/HaiSSMDemo/insertCarAttach.action', idata);
+                        }else{
+                            var udata={};
+                            udata.id=_self.upitem.id;
+                            udata.filePath=data[0];
+                            console.log(udata);
+                            _self.upData(udata);
+                        }
+                        
+            
+                    },
+                    error:function() {
+                        _self.$Message.error('上传失败')
+                        //_self.model4=false;
+                    }
+                });
+            },
+            handleFormatError:function(file) {
+                this.$Notice.warning({
+                    title: '文件格式不正确',
+                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+                });
+            },
+            handleMaxSize:function(file) {
+                this.$Notice.warning({
+                    title: '超出文件大小限制',
+                    desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+                });
+            },
+            upData: function(idata){
+                console.log("进入upData函数");
+                var _self=this;
+                
+                console.log(idata)
+                $.ajax({
+                    url: 'http://localhost:8080/HaiSSMDemo/updateCarAttach.action',
+                    type: 'post',
+                    data: idata,
+                    cache: false,
+                    success: function(){
+                        _self.$Message.info('上传成功');
+
+                        _self.carDetail();
+                        _self.upitem.filePath='';
+                        _self.upitem.fileName='未知';
+                        _self.model4=false;
+                        _self.seldArr=null;
+                    },
+                    error: function(){
+                        _self.$Message.info('上传失败');
+                    }
+                });
+            },
+            postData:function(_self, url, data) {
+                console.log("发送postData请求");
+                console.log(data);
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: data,
+                    cache: false,
+                    success: function(){
+                        _self.$Message.info('上传成功');
+
+                        _self.carDetail();
+                        _self.upitem.filePath='';
+                        _self.upitem.fileName='未知';
+                        _self.model4=false;
+                    },
+                    error: function(){
+                        _self.$Message.info('上传失败');
+                    }
+                });
+            },
+            upMessage:function(item) {
+                console.log("执行upMessage以及upitem是什么")
+                console.log(this.upitem);
+                var _self = this;
+                _self.$refs.formDynamic.validate(function (valid) {
+                    if (valid) {
+                        if (this.upitem.filePath == '') {
+                            _self.$Message.error('文件不可为空');
+                        } else {
+                            console.log("即将执行upload");
+                            _self.upload(item);
+                        }
+                    } else {
+                    }
+                });
+            },
+            chgFileName:function(value){
+                console.log("执行chgfilename");
+                this.upitem.fileName=value;
+                console.log(this.upitem.fileName);
+            },
+            handleRemove (index) {
+                this.formDynamic.items[index].status = 0;
+            },
+            carDetail:function(){
+                var _self=this;
+                if(_self.detailArr){
+                    var idata={};
+                    idata.current=1;
+                    idata.pageNum=15;
+                    idata.carNum=_self.detailArr;
+                    $.ajax({
+                        url: 'http://localhost:8080/HaiSSMDemo/selectCarAttach.action',
+                        type: 'post',
+                        cache: false,
+                        data: idata,
+                        success: function(data){
+
+                            _self.detaildata=data.dataList;
+                            for (var i in data.dataList) {
+                                data.dataList[i].filePath = "http://localhost:8080" + '/CarAttach/' + data.dataList[i].filePath;
+                                data.dataList[i].createTime = _self.format(data.dataList[i].createTime);
+                                data.dataList[i].updateTime = _self.format(data.dataList[i].updateTime);
+                            }
+                            console.log(_self.detaildata);
+                            _self.model3=true;
+                        },
+                        error: function(){
+                            _self.$Message.info('获取信息失败');
+                        }
+                    });
+                    
+                    console.log(_self.detailArr);
+                }else{
+                    alert("请选择一辆车的车档信息？？？");
+                    console.log(_self.detailArr);
+                }
+            },
+            addDetail:function(event){
+                var _self=this;
+                if(event.currentTarget.innerText=="添加"){
+                    _self.dstatus=1;
+                    _self.model4=true;
+                    return ;
+                }else if(event.currentTarget.innerText=="修改"){
+                    if(_self.seldArr){
+                        _self.dstatus=0;
+                        _self.model4=true;
+                        _self.upitem.fileName=_self.seldArr.fileName;
+                        _self.upitem.id=_self.seldArr.id;
+                        _self.upitem.filePath='';
+
+                    }else{
+                        alert("只能同时修改一条车档信息");
+                    }
+                    
+
+
+                }
+                //this.model4=true;
+            },
+            clsfour: function(){
+                this.model4=false;
+                this.upitem.fileName='';
+                this.upitem.filePath='';
+                this.upitem.id=null;
+                this.upitem.carNum='';
+
+            },
+            clsfive:function(){
+                this.model5=false;
+                console.log("执行了clsM5,关闭图片的预览");
+                console.log(this.model5)
+                this.showImg=null;//不想说什么，不知道为什这行代码没有就会有错，明明点击新的按钮会把showImg重置的。。。改了半天，心累
+            },
+            chgdArr: function(data){
+                var _self = this;
+                //console.log(this.data.selection);
+                _self.seldArr=null;//选中修改的那条车档信息
+                _self.deldArr=[];//删除的车档信息数组
+                console.log("看一下选中一行的数据")
+                console.log(data);
+                if(data.length){
+                    for (var i in data) {
+                        _self.deldArr.push(data[i].id);
+                        
+                    }
+                }
+                if(data.length==1){
+
+                    _self.seldArr=data[0];
+                    console.log(_self.seldArr);
+                }
+            },
+            // searchDetail:function(){
+            //     if(this.searchDtext.replace(/\s/g, '').length < 1){
+            //         alert('搜索内容不可为空');
+            //     }else{
+            //         var idata={};
+            //         idata.current=1;
+            //         idata.
+            //     }
+            // }
         
      	//坐标转换完之后的回调函数
        	translateCallback: function (data){
@@ -682,9 +1240,9 @@ this.indexloading();
            		_self.map.setCenter(data.points[0]);
          	}
        	},
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+        indexloading: function(){
+            this.$emit('getloading',false);
+        },
         search: function () {
             if (this.searchText.replace(/\s/g, '').length < 1) {
                 alert('搜索内容不可为空');
@@ -832,12 +1390,16 @@ indexloading: function(){
                 '备注：' + this.data1[index].remark
             });
         },
-        chooseAll: function (selection) { // 全选
+        /*chooseAll: function (selection) { // 全选
             this.theChecked = [];
             for (var i = 0; i < selection.length; i++) {
                 this.theChecked.push(selection[i].id);
             }
-        },
+            console.log("输出selection参数");
+            console.log(selection);
+            console.log("输出this.theChecked");
+            console.log(this.theChecked);
+        },*/
         change: function (index) {
             this.title = '修改货运信息';
             this.formValidate = JSON.parse(JSON.stringify(this.data1[index]));
@@ -859,12 +1421,12 @@ indexloading: function(){
         },
         format:function(nS) {
             if(typeof nS=="object"&&nS!==null||typeof nS=="number"){
-                console.log(nS)
+                //console.log(nS)
                 var time = new Date(nS);
                 var y = time.getFullYear();
                 var m = time.getMonth() + 1;
                 var d = time.getDate();
-                console.log(y + '-' + this.add0(m) + '-' + this.add0(d));
+                //console.log(y + '-' + this.add0(m) + '-' + this.add0(d));
                 return y + '-' + this.add0(m) + '-' + this.add0(d);
             }else{
                 return null;
@@ -989,6 +1551,37 @@ indexloading: function(){
                 }
                 
             },
+            delDetail:function(){//点击删除按钮
+                var _self=this;
+                console.log("点击删除按钮,console一下deldArr");
+                console.log(_self.deldArr);
+                if(_self.deldArr.length>0){
+                    _self.model6=true;
+                }
+            },
+            ok_deld: function(){//model6后面的“确认”按钮触发，删除车档信息
+                var _self=this;
+                var idata=[];
+                console.log(_self.deldArr)
+                for(let i in _self.deldArr){
+                    idata[i]=_self.deldArr[i].id;
+                }
+                console.log('http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr);
+                $.ajax({
+                    url: 'http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr,
+                    cache: false,
+                    type: 'post',
+                    //data: idata,
+                    success: function(data){
+                        _self.carDetail();
+                        _self.$Message.info("删除成功");
+                        _self.carDetail();
+                        _self.deldArr=[];
+                        _self.seldArr=null;
+                        _self.model6=false;
+                    }
+                });
+            },
             del_index:function(n){
                 var _self=this;
                 _self.modal2=true;
@@ -1009,6 +1602,8 @@ indexloading: function(){
                     _self.delone='';
                     _self.onedel=false;
                 }else{
+                    console.log(_self.delArr);
+                    console.log(dataUrl.dataUrl.carInfo.del+_self.delArr,);
                     $.ajax({
                         type: 'GET',
                         url: dataUrl.dataUrl.carInfo.del+_self.delArr,
@@ -1033,10 +1628,15 @@ indexloading: function(){
                 var _self = this;
                 //console.log(this.data.selection);
                 _self.delArr=[];
+                _self.detailArr=null;
                 if(data.length){
                     for (var i in data) {
                         _self.delArr.push(data[i].id);
+                        
                     }
+                }
+                if(data.length==1){
+                    _self.detailArr=data[i].carNum;
                 }
                 
             },
@@ -1071,10 +1671,10 @@ indexloading: function(){
                     cache: false,
                     success: function (data) {
                         if (data != null) {
-                        	console.log(data);
+                        	/*console.log(data);
                             console.log('输出得到的公司信息');
                             console.log(data);
-                            console.log(data.dataList);
+                            console.log(data.dataList);*/
                             _self.data1 = data.dataList;
                             _self.totalRecord = data.totalRecord;
                             _self.current = data.currentPage;
@@ -1112,7 +1712,7 @@ indexloading: function(){
 <style scoped>
 /*@import '../../common/someinfo.css'*/
         nav {
-            padding: 10px 50px;
+            padding: 10px 34px 10px 16px;
             display: flex;
             justify-content: space-between;
             justify-items: center;
@@ -1121,7 +1721,7 @@ indexloading: function(){
         nav div:first-child button {
             margin: 0 10px;
         }
-    .ivu-form-item-content {
+    .ivu-formitem-content {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1144,7 +1744,7 @@ indexloading: function(){
 /*     .ivu-table-cell{
     padding: 0;
 } */
-/*去掉option定位问题*/
+/*去掉Option定位问题*/
   	body .ivu-modal .ivu-select-dropdown{
 		position: fixed !important;
      }
