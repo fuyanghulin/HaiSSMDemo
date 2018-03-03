@@ -24,8 +24,9 @@
           <Col span="20">
             <div class="layout-content-main" >
               <div id="hlmain" frameborder="0" width="100%"><!-- 这里删除了一个align="right"的属性 -->
-                <keep-alive><router-view :indexloading="indexloading" @getloading="chgloading" /></keep-alive><!-- </keep-alive> -->
-
+                <transition :name='transitionName'>
+                  <keep-alive><router-view :indexloading="indexloading" @getloading="chgloading" class="child-view" /></keep-alive><!-- </keep-alive> -->
+                </transition>
                 <div id="tloading" v-if="indexloading">
                   <img src="../assets/Spin-1.6s-200px.gif" alt="loading">
                 </div>
@@ -67,7 +68,16 @@ export default {
     chgloading:function(msg){
       this.indexloading=msg;
     }
-  }
+  },  
+  watch: {  
+    '$route' (to, from) {  
+      if(to.path == '/'){  
+        this.transitionName = 'slide-right';  
+      }else{  
+        this.transitionName = 'slide-left';  
+      }  
+    }  
+  }  
 }
 </script>
 
@@ -134,5 +144,26 @@ export default {
             width: 100px;
             height: 100px; 
         }
+
+/*路由动画*/
+  
+.child-view {  
+  position: absolute;  
+  left: 0;  
+  top: 0;  
+  width: 100%;  
+  height: 100%;  
+  transition: all .5s cubic-bezier(.55,0,.1,1);  
+}  
+.slide-left-enter, .slide-right-leave-active {  
+  opacity: 0;  
+  /*-webkit-transform: translate(30px, 0);*/
+  transform: translate(30px, 0);  
+}  
+.slide-left-leave-active, .slide-right-enter {  
+  opacity: 0;  
+  /*-webkit-transform: translate(-30px, 0);*/
+  transform: translate(-30px, 0);  
+} 
 
 </style>

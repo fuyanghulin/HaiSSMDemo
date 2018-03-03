@@ -853,15 +853,15 @@ props:{
     mounted: function() {
         //this.$refs.headd.style.display = 'block';
         console.log(this.userType);
-this.indexloading();
+        this.indexloading();
     },
         beforeDestroy: function(){
             this.$emit('getloading',true);
         },
     methods: {
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+        indexloading: function(){
+            this.$emit('getloading',false);
+        },
         //btnclick函数是在用户点击查看、修改时触发，将点击一行的数据传入，
         //主要是通过公司id获取数据，当然查看的时候其实不需要做这些处理，这里为了简便就一起处理了
         //企业添加的逻辑还是用原来的，暂时未做修改
@@ -1500,6 +1500,7 @@ indexloading: function(){
             _self.searchText = '';
         },
         postData: function(_self, url, data) {
+            console.log(data);
             $.ajax({
                 type: 'POST',
                 url: url,

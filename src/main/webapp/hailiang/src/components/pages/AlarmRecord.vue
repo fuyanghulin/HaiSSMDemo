@@ -139,7 +139,7 @@ export default{
                 }
             }
         },
-        activated: function () {
+        activated: function () {//created:
         	var _self = this;
         
 			if (_self.$cookies.get("ID") == 1) {

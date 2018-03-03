@@ -339,8 +339,8 @@
         >
         <nav>
             <div>
-                <Button type="primary" @click="addDetail($event)">添加</Button><!-- 展开model4 -->
-                <Button type="primary" @click="addDetail($event)">修改</Button><!-- 展开model4 -->
+                <Button type="primary" @click="addDetail($event)" v-if="userType==3">添加</Button><!-- 展开model4 -->
+                <Button type="primary" @click="addDetail($event)" v-if="userType==3">修改</Button><!-- 展开model4 -->
                 <Tooltip content="删除所选车辆信息" placement="bottom-start">
                     <Button type="error" style="margin-left: 20px;" @click="delDetail">删除</Button>
                 </Tooltip>
@@ -888,7 +888,7 @@ props:{
             content: {},
             page: {
                 current: 1,
-                pageNum: 20
+                pageNum: 15
             },
             op: 0,
             title: '',
@@ -967,7 +967,7 @@ props:{
             dstatus: 1
         }
     },
-    activated: function () {
+    activated: function () {//created:
         //document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
 
@@ -1640,7 +1640,7 @@ props:{
                 }
                 
             },
-            sel_change:function(data){
+           /* sel_change:function(data){
                 var _self = this;
                 //console.log(data);
                 _self.delArr=[];
@@ -1651,7 +1651,7 @@ props:{
                     }
                 }
                 
-            },
+            },*/
         changePage: function (cur) {
             // 分页跳转
             this.page.current = cur;

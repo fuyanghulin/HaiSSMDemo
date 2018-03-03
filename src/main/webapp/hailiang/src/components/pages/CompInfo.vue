@@ -448,7 +448,7 @@ props:{
             openmodal2:'下一步'
         }
     },
-    activated: function () {
+    activated: function () {//created:
         //document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
         _self.getAll();

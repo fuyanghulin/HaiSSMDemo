@@ -12,6 +12,7 @@ import GpsBreak from '@/components/pages/GpsBreak'
 import AlarmRecord from '@/components/pages/AlarmRecord'
 import TrainEdit from '@/components/pages/TrainEdit'
 import TrainLog from '@/components/pages/TrainLog'
+import ShipperInfo from '@/components/pages/ShipperInfo'
 
 Vue.use(Router)
 
@@ -73,9 +74,14 @@ export default new Router({
     	component: TrainEdit
     },
     {
-    	path: '/trainlog',
-    	name: 'TrainLog',
-    	component: TrainLog
+        path: '/trainlog',
+        name: 'TrainLog',
+        component: TrainLog
+    },
+    {
+        path: '/shipperinfo',
+        name: 'ShipperInfo',
+        component: ShipperInfo
     }
   ]
 })
