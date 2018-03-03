@@ -73,7 +73,18 @@ body .ivu-modal .ivu-select-dropdown{
 
 
 /*改变表格padding上下值，使数据能较好显示*/
-.ivu-table-row>.ivu-table-column-center{
+/*没有效果的，设置Table的size为small*/
+/* .ivu-table-row>.ivu-table-column-center{
 	padding-top: 4px;
 	padding-bottom: 4px;
+} */
+.ivu-table td, .ivu-table th{
+	font-size: 14px;
 }
+
+/*去掉表格的左右padding*/
+.ivu-table-cell{
+	padding-left: 0;
+	padding-right: 0;
+}
+

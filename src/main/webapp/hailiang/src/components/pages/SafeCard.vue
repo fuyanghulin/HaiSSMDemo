@@ -14,7 +14,7 @@
                 <Button type="primary" @click="refresh" style="margin-left:20px;">刷新</Button>
             </div>
         </nav>
-    <Table border stripe :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change"></Table>
+    <Table border stripe size="small" :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change"></Table>
     <Page :total="totalRecord" show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum"></Page>
     <Modal
@@ -155,7 +155,7 @@ props:{
                                 h('Button', {
                                     props: {
                                         type: 'text',
-                                        size: 'small'
+                                        //size: 'small'
                                     },
                                     on: {
                                         click: function () {
@@ -189,7 +189,7 @@ props:{
                                 h('Button', {
                                     props: {
                                         type: 'text',
-                                        size: 'small'
+                                        //size: 'small'
                                     },
                                     on: {
                                         click: function () {

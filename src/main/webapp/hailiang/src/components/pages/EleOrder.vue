@@ -14,7 +14,7 @@
             <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table border stripe :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open'></i-Table>
+    <i-Table border stripe size='small' :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open'></i-Table>
     <Page :total="totalRecord"  show-total
           show-elevator :current="page.current" @on-change="next" :page-size="page.pageNum"></Page>
 
@@ -503,7 +503,7 @@ props:{
                         h('Button', {
                             props: {
                                 type: 'text',
-                                size: 'small'
+                                //size: 'small'
                             },
                             on: {
                                 click: function() {
