@@ -82,7 +82,7 @@ export default {
 }
 #hlmain{
   border-top: 1px solid #ddd;
-  height: 1000px;
+  height: 850px;
 }
 
 .layout-copy {

@@ -69,3 +69,11 @@ body .ivu-modal .ivu-select-dropdown{
 .ivu-modal-wrap>.ivu-modal{
 	top: 60px;
 }
+
+
+
+/*改变表格padding上下值，使数据能较好显示*/
+.ivu-table-row>.ivu-table-column-center{
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
