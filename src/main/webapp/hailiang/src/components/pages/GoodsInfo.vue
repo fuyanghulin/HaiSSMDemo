@@ -17,7 +17,7 @@
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage"
            :page-size="page.pageNum" show-elevator
-          show-total :current="page.current"></Page>
+          show-total :current="page.current" size='small'></Page>
     <!--弹出组件-->
     <modal
             v-model="modal1"
@@ -297,7 +297,7 @@ props:{
             textState:{}
         }
     },
-    created: function () {
+    activated: function () {//created:
         //document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
 

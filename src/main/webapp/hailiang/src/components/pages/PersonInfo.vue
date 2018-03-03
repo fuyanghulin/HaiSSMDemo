@@ -17,7 +17,7 @@
     <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
     <Page :total="totalRecord" show-total
           show-elevator :current="page.current" @on-change="next"
-          :page-size="page.pageNum"></Page>
+          :page-size="page.pageNum" size='small'></Page>
     <Modal
             v-model="modal1"
             width="50%"
@@ -874,7 +874,7 @@ indexloading: function(){
             });
         }
     },
-    created:function() {
+    activated: function() {//created:
         var _self = this;
         _self.userType=parseInt(_self.$cookies.get("roleID"));//parseInt(this.$cookies.get("roleID"));
         //this.columns.splice(1,1);

@@ -82,7 +82,7 @@ export default {
 }
 #hlmain{
   border-top: 1px solid #ddd;
-  height: 850px;
+  height: 820px;
 }
 
 .layout-copy {
@@ -105,7 +105,7 @@ export default {
     position: relative;
     top: 8px;
     left: 20px;
-    background-image: url('../assets/logo_left.png');
+    /* background-image: url('../assets/logo_left.png'); */
 }
 .layout-ceiling-main {
     float: right;

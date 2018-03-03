@@ -9,7 +9,7 @@
     <i-Table :columns="columns" :data="data" border stripe></i-Table>
     <Page :total="totalRecord" show-total
           show-elevator :current="page.current" @on-change="next"
-          :page-size="page.pageNum"></Page>
+          :page-size="page.pageNum" size='small'></Page>
 </div>
 </template>
 
@@ -141,7 +141,7 @@ indexloading: function(){
                 }
             }
         },
-        created:function() {
+        activated: function() {//created:
         	var _self = this;
         
             if (_self.$cookies.get("ID") == 1) {

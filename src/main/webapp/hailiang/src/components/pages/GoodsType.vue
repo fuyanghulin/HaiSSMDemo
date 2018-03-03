@@ -20,8 +20,9 @@
 	        show-total 
 	        show-elevator 
 	        :current="page.current"
-	         @on-change="next"
-	          :page-size="page.pageNum"
+	        @on-change="next"
+	        :page-size="page.pageNum"
+            size='small'
 	          ></Page>
 	    <Modal
 	            v-model="modal1"
@@ -408,7 +409,7 @@ indexloading: function(){
                 }*/
             }
         },
-        created:function() {
+        activated:function() {//created:
             var _self = this;
             //var textState = this.$cookies.get("roleID");
             //不知道是否得未登录的用户，先放置着吧

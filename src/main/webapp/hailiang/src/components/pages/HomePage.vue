@@ -139,9 +139,9 @@ props:{
             }
         },
         methods:{
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+            indexloading: function(){
+                this.$emit('getloading',false);
+            },
             search:function() {
                 if (this.searchText.replace(/\s/g, '').length < 1) {
                     alert('搜索内容不可为空');
@@ -155,7 +155,7 @@ indexloading: function(){
         },
         mounted: function(){
             
-this.indexloading();
+            this.indexloading();
         }
 	}
 </script>

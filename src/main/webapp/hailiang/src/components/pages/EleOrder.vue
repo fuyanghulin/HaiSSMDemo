@@ -15,7 +15,7 @@
         </div>
     </nav>
     <i-Table border stripe size='small' :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open'></i-Table>
-    <Page :total="totalRecord"  show-total
+    <Page :total="totalRecord" size='small' show-total
           show-elevator :current="page.current" @on-change="next" :page-size="page.pageNum"></Page>
 
     <Modal
@@ -738,7 +738,7 @@ props:{
             }
         }
     },
-    created: function() {
+    activated: function() {//created:
         var _self = this;
         
              if (_self.$cookies.get("ID") == 1) {

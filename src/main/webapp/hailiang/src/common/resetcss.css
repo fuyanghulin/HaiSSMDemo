@@ -88,3 +88,7 @@ body .ivu-modal .ivu-select-dropdown{
 	padding-right: 0;
 }
 
+/*去掉iview自带的nav那里的颜色样式*/
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
+	color: inherit;
+}

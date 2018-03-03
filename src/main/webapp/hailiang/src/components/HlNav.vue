@@ -1,6 +1,6 @@
 <template>
 	<div class="hlnav">
-		<Menu width="auto" style=" height:850px;" theme="light" accordion><!-- 原来是accordion theme="light" -->
+		<Menu width="auto" style=" height:820px;" theme="light" accordion><!-- 原来是accordion theme="light" -->
 		    <MenuItem name="0" class='navindex'><router-link tag="div" class="link_div" to='/'>首页</router-link></MenuItem>
 			    <Submenu name="1" v-if="userType===1||userType===2">
 			        <template slot="title">

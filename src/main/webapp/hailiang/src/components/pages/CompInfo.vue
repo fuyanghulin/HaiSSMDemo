@@ -17,7 +17,7 @@
 	    <!--数据区块-->
 	    <Table border stripe :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" ellipsis></Table>
 	    <!--\总页数-->
-	    <Page :total="totalRecord" @on-change="changePage"
+	    <Page :total="totalRecord" size='small' @on-change="changePage"
 	          :page-size="page.pageNum" show-total show-elevator></Page>
 	    <!-- 弹出层 --><!-- 有一点问题，之前这个50%是相对于自己页面的，现在变成整个窗口页面了 -->
     <Modal
@@ -448,7 +448,7 @@ props:{
             openmodal2:'下一步'
         }
     },
-    created: function () {
+    activated: function () {
         //document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
         _self.getAll();

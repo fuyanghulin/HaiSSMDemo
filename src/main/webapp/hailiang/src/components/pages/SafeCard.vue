@@ -15,8 +15,8 @@
             </div>
         </nav>
     <Table border stripe size="small" :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change"></Table>
-    <Page :total="totalRecord" show-total show-elevator :current="page.current" @on-change="next"
-          :page-size="page.pageNum"></Page>
+    <Page :total="totalRecord" show-total show-elevator :current="page.current" size='small' @on-change="next"
+          :page-size="page.pageNum" size='small'></Page>
     <Modal
        v-model="modal1"
        :closable="false"
@@ -578,7 +578,7 @@ indexloading: function(){
                 // }
             }
         },
-        created:function(){
+        activated:function(){//created:
         	this.getData();
         	this.userType=parseInt(this.$cookies.get("roleID"));
         },

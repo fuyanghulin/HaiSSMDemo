@@ -23,7 +23,7 @@
     <Table border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></Table>
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage" :current="page.current" 
-          :page-size="page.pageNum" show-total show-elevator></Page>
+          :page-size="page.pageNum" show-total show-elevator size='small'></Page>
     <Modal
             v-model="model1"
             width="65%"
@@ -967,7 +967,7 @@ props:{
             dstatus: 1
         }
     },
-    created: function () {
+    activated: function () {
         //document.body.removeChild(document.getElementById('tloading'));
         var _self = this;
 

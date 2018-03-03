@@ -12,7 +12,7 @@
     <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe></i-Table>
     <Page :total="totalPage"  show-total
           show-elevator :current="page.current" @on-change="next"
-          :page-size="page.pageNum"></Page>
+          :page-size="page.pageNum" size='small'></Page>
 </div>
 </template>
 
@@ -172,7 +172,7 @@ this.indexloading();
         beforeDestroy: function(){
             this.$emit('getloading',true);
         },
-        created:function() {
+        activated: function() {//created:
             //document.body.removeChild(document.getElementById('tloading'));
             //this.getData();
         	var _self = this;
