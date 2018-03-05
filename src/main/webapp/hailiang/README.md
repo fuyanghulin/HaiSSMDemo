@@ -75,6 +75,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 		5.添加、修改等功能按钮统一放置在上部nav处
 		6.每个路由组件中的userType可以修改为从父组件中传入
 		7.当失去cookies的时候，页面刷新需要让它转到'/'路由，而不是失去cookies时候的路由
+		8.路由重定向
+		9.更改登录的设置，使得普通用户可以浏览基本信息
 ***
 
 

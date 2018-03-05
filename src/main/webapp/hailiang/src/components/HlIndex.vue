@@ -27,7 +27,7 @@
                 <transition :name='transitionName'>
                   <keep-alive><router-view :indexloading="indexloading" @getloading="chgloading" class="child-view" /></keep-alive><!-- </keep-alive> -->
                 </transition>
-                <div id="tloading" v-if="indexloading">
+                <div id="tloading" v-if="false">
                   <img src="../assets/Spin-1.6s-200px.gif" alt="loading">
                 </div>
               </div>

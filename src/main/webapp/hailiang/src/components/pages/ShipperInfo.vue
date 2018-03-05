@@ -2,18 +2,16 @@
 <div class="shipperinfo">
     <nav>
         <div>
-            <Button type="primary" @click="open">添加</Button>
-            <Button type="primary" @click="">修改</Button>
-            <Button type="primary" @click="">查看</Button>
+            <Button type="primary" @click="open($event)">添加</Button>
+            <Button type="primary" @click="open($event)">修改</Button>
+            <Button type="primary" @click="open($event)">查看</Button>
             <Button type="primary" @click="">打印</Button>
             <Tooltip content="删除所选托运方信息" placement="bottom-start">
-                <Button type="error" style="margin-left: 20px;" @click="">删除</Button>
+                <Button type="error" style="margin-left: 20px;" @click="delSiteBatch">删除</Button>
             </Tooltip><!-- 原来是moredelete函数 -->
         </div>
         <div>
-            <Input placeholder="请输入车牌号" style="width: 200px;" v-model="searchText" @keyup.native.enter=""></Input>
-            <button type="primary" shape="circle" icon="ios-search" @click=""></button>
-            <Button type="primary" @click="" style="margin-left:20px;">刷新</Button>
+            <Button type="primary" @click="getAll" style="margin-left:20px;">刷新</Button>
         </div>
     </nav>
     <!--数据区块-->
@@ -23,7 +21,7 @@
           :page-size="page.pageNum" show-total show-elevator size='small'></Page>
     <Modal
     	v-model="model1"
-        width="65%"
+        width="50%"
         :closable="false"
         :scrollable='false'
         @on-ok='open_ok'
@@ -32,17 +30,17 @@
 		<Form :model="formValidate" :rules="ruleValidate" ref="formValidate">
 			<Row>
 				<Col span="11">
-					<FormItem label="托运方" prop="site_name">
-						<Input placeholder="请输入托运方" v-model='formValidate.site_name'></Input>
+					<FormItem label="托运方" prop="siteName">
+						<Input placeholder="请输入托运方" v-model='formValidate.siteName' v-bind:disabled="openState==='查看'"></Input>
 					</FormItem>
-					<FormItem label="企业联系人" prop="site_name">
-						<Input placeholder="请输入企业联系人" v-model='formValidate.linkman'></Input>
+					<FormItem label="企业联系人" prop="linkman">
+						<Input placeholder="请输入企业联系人" v-model='formValidate.linkman' v-bind:disabled="openState==='查看'"></Input>
 					</FormItem>
-					<FormItem label="联系人电话" prop="site_name">
-						<Input placeholder="请输入联系人电话" v-model='formValidate.linkman_phone'></Input>
+					<FormItem label="联系人电话" prop="linkmanPhone">
+						<Input placeholder="请输入联系人电话" v-model='formValidate.linkmanPhone' v-bind:disabled="openState==='查看'"></Input>
 					</FormItem>
 					<FormItem label="地址">
-						<Cascader :data="cityData" v-model="theCity" style="width: 100%" ></Cascader>
+						<Cascader :data="cityData" v-model="theCity" style="width: 100%" v-bind:disabled="openState==='查看'"></Cascader>
 					</FormItem>
 				</Col>
 				<Col span="2"></Col>
@@ -60,31 +58,32 @@
                             :on-error="error"
                             :action='up_photo'
                             style="width:200px;"
-                            v-if="openState=='添加'">
+                            v-if="openState=='添加'||openState=='修改'">
                         <div style="width: 200px;height:230px;">
-                            <img :src="formValidate.linkman_photo_path" v-show="formValidate.linkman_photo_path"
+                            <img :src="formValidate.linkmanPhotoPath" v-show="formValidate.linkmanPhotoPath"
                                  style="background-position: 100%;height: 100%;width: 100%;" v-bind:disabled="openState==='查看'" />
                             <Icon type="ios-cloud-upload" size="52" style="color: #3399ff;padding-top: 80px"
-                                  v-if="!formValidate.linkman_photo_path"></Icon>
+                                  v-if="!formValidate.linkmanPhotoPath"></Icon>
                         </div>
                     </Upload>
                     <div v-else style="width: 200px;height:230px;">
-                        <img :src="formValidate.linkman_photo_path" v-show="formValidate.linkman_photo_path"
+                        <img :src="formValidate.linkmanPhotoPath" v-show="formValidate.linkmanPhotoPath"
                                  style="background-position: 100%;height: 100%;width: 100%;" />
                     </div>
                 </Col>
             </Row>
+            <Row><Col span='24' style="height:6px;"></Col></Row>
             <Row>
             	<Col span="24">
 					<FormItem label="详细地址" prop="address">
-						<Input placeholder="请输入托运方详细地址" v-model='formValidate.address'></Input>
+						<Input placeholder="请输入托运方详细地址" v-model='formValidate.address' v-bind:disabled="openState==='查看'"></Input>
 					</FormItem>
             	</Col>
             </Row>
 			<Row>
             	<Col span="24">
-					<FormItem label="备注" prop="remark">
-						<Input v-model="formValidate.remark" placeholder="请输入备注" type="textarea" :rows="4"></Input>
+					<FormItem label="备注">
+						<Input v-model="formValidate.remark" placeholder="请输入备注" type="textarea" :rows="4" v-bind:disabled="openState==='查看'"></Input>
 					</FormItem>
             	</Col>
             </Row>
@@ -116,83 +115,91 @@ export default{
 	                {
 	                    type: 'selection',
 	                    align: 'center',
-	                    width: 120,
+	                    width: 60,
 	                    fixed: 'left'
 	                },
 	                {
 	                    title: '托运方',
-	                    key: 'site_name',
+	                    key: 'siteName',
 	                    align: 'center',
-	                    width: 120,
-	                    fixed: 'left'
+	                    //width: 120,
 	                },
 	                {
 	                    title: '省',
 	                    key: 'province',
 	                    align: 'center',
-	                    width: 120,
+	                    //width: 120,
 	                    ellipsis: true
 	                },
 	                {
 	                    title: '市',
 	                    key: 'city',
 	                    align: 'center',
-	                    width: 120,
+	                    //width: 120,
 	                    ellipsis: true
 	                },
 	                {
 	                    title: '区',
 	                    key: 'district',
 	                    align: 'center',
-	                    width: 150,
+	                    //width: 150,
 	                    ellipsis: true
 	                },
 	                {
 	                    title: '详细地址',
 	                    key: 'address',
 	                    align: 'center',
-	                    width: 120,
+	                    //width: 120,
 	                    ellipsis: true
 	                },
 	                {
 	                    title: '企业联系人',
 	                    key: 'linkman',
 	                    align: 'center',
-	                    width: 120,
+	                    //width: 120,
 	                    ellipsis: true
 	                },
 	                {
 	                    title: '联系人电话',
-	                    key: 'linkman_phone',
+	                    key: 'linkmanPhone',
 	                    align: 'center',
-	                    width: 130,
+	                    //width: 130,
 	                    ellipsis: true
-	                }],
+	                },
+	                {///留一个一个查看按钮，其余全部在上方nav处显示
+
+	                } ],
 	        data1: [],
 	        formValidate: {
-                site_name: '',
+                siteName: '',
                 // province: '',
                 // city: '',
                 // district: '',
                 address: '',
                 linkman: '',
-                linkman_phone: '',
-                linkman_photo_path: '',
-                company_id: null,
-                remark: ''
+                linkmanPhone: '',
+                linkmanPhotoPath: '',
+                id: null,
+                remark: null,
+                companyId: null,
+                type: '',
+
             },
             ruleValidate: {
-                site_name: [{required: true, message: '托运方名称不能为空', trigger: 'blur'}],
+                //siteName: [{required: true, message: '托运方名称不能为空', trigger: 'blur'}],
                 // province: [{required: true, message: '地址不能为空', trigger: 'blur'}],
                 // city: [{required: true, validator: "地址不能为空", trigger: 'blur' }],
-                district: [{required: true, validator: "地址不能为空", trigger: 'blur' }],
-                address: [{required: true, validator: "详细地址不能为空", trigger: 'blur' }],
+                //district: [{required: true, validator: "地址不能为空", trigger: 'blur' }],
+                address: [{required: true, message: "详细地址不能为空", trigger: 'blur' }],
                 linkman: [{required: true, message: '企业联系人不能为空', trigger: 'blur'}],
-                linkman_phone: [{required: true, message: '联系人电话不能为空', trigger: 'blur'}],
-                linkman_photo_path: [{required: true, message: '图片不能为空', trigger: 'blur'}]
+                linkmanPhone: [{required: true, message: '联系人电话不能为空', trigger: 'blur'}],
+                siteName: [{required: true, message: '托运方名称不能为空', trigger: 'blur'}]
+                //linkmanPhone: [{required: true, message: '联系人电话不能为空', trigger: 'blur'}],
+                //linkmanPhotoPath: [{required: true, message: '图片不能为空', trigger: 'blur'}]
             },
 	        model1: false,
 	        theCity: ['浙江','宁波市','余姚市'],
+	        cityData: [],
 	        openState: '添加',
             pictureName: '',
             pictureUrl: '',
@@ -213,16 +220,16 @@ export default{
 		// table选择发生变化
         chooseAll:function(data) {
             var _self = this;
-            //console.log(this.data.selection);
-            _self.delArr=[];
-            _self.oneArr=null;
+            console.log(data);
+            _self.delArr=[];//放置所以被选择行的id
+            _self.oneArr=null;//放置单独的一行的所有信息
             if(data.length){
                 for (var i in data) {
                     _self.delArr.push(data[i].id); 
                 }
             }
             if(data.length==1){
-                _self.oneArr=data[i].id;
+                _self.oneArr=data[0];
             }
         },
         changePage: function (cur) {
@@ -244,20 +251,8 @@ export default{
                 idata.pageNum=_self.page.pageNum;
                 idata.companyId=parseInt(_self.$cookies.get("companyID"));//Cookies.get("state")).companyName;
                 idata.type='0';
+                console.log("输出传入的参数");
                 console.log(idata);
-                console.log(typeof idata.current);
-                console.log(typeof idata.pageNum);
-                console.log(typeof idata.companyId);
-                console.log(typeof idata.type);
-                // $.ajax({
-                // 	url: 'http://localhost:8080/HaiSSMDemo/selSiteByCompanyIdAndType.action',
-                // 	data: "current=" + idata.current + "&pageNum=" + idata.pageNum+ "&companyId=" + idata.companyId+ "&type=" + idata.type,
-                // 	type: 'post',
-                // 	success: function(data){
-                // 		console.log("输出data");
-                // 		console.log(data);
-                // 	}
-                // });
                 $.ajax({
                     type: 'POST',
                     url: 'http://localhost:8080/HaiSSMDemo/selSiteByCompanyIdAndType.action',
@@ -268,9 +263,9 @@ export default{
                     	console.log(data);
                         _self.totalRecord = data.totalRecord;
                         _self.current = data.currentPage;
-                        for (var i in data.dataList) {
-                            data.dataList[i].linkman_photo_path = "http://localhost:8080" + '/SitePhoto/' + data.dataList[i].linkman_photo_path;
-                        }
+                        /*for (var i in data.dataList) {
+                            data.dataList[i].linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data.dataList[i].linkmanPhotoPath;
+                        }*/
                         _self.data1 = data.dataList;
                         console.log(_self.data1);
                         
@@ -280,11 +275,60 @@ export default{
             _self.searchText='';
 		},
 		// 展开一个托运方信息
-		open: function(){
+		open: function(event){
+			var iText=null;
 			var _self=this;
-			_self.model1=true;
+			console.log(_self.oneArr);
+			console.log(_self.delArr);
 			//先默认添加，打开图片上传
-			_self.openState='添加'
+			iText=event.currentTarget.innerText;
+			console.log(iText);
+			//添加
+			if(iText=="添加"){
+				_self.openState='添加';
+			//查看
+			}else if(iText=="查看"){
+				if(!_self.oneArr){
+					window.alert("请选择要查看的数据");
+					return ;	
+				}
+				_self.openState="查看";
+				_self.theCity[0]=_self.oneArr.province;
+				_self.theCity[1]=_self.oneArr.city;
+				_self.theCity[2]=_self.oneArr.district;//theCity: ['浙江','宁波市','余姚市'],
+				for(let key in _self.oneArr){
+					//if(_self.hasOwnProperty(key)){
+						_self.formValidate[key]=_self.oneArr[key];
+					//}
+				}
+				console.log(_self.formValidate===_self.oneArr)
+				console.log("将oneArr赋值给formValidate");
+				console.log(_self.formValidate)
+				//_self.formValidate.linkmanPhotoPath="http://localhost:8080" + '/SitePhoto/' +
+				console.log("地址")
+				console.log(_self.theCity)
+			//修改
+			}else if(iText=="修改"){
+				if(!_self.oneArr){
+					window.alert("请选择要修改的数据");
+					return ;
+				}
+				_self.openState="修改";
+				_self.theCity[0]=_self.oneArr.province;
+				_self.theCity[1]=_self.oneArr.city;
+				_self.theCity[2]=_self.oneArr.district;
+				for(let key in _self.oneArr){
+					//if(_self.hasOwnProperty(key)){
+						_self.formValidate[key]=_self.oneArr[key];
+					//}
+				}
+				console.log("将oneArr赋值给formValidate");
+				console.log(_self.formValidate===_self.oneArr)
+				console.log(_self.formValidate)
+				//_self.formValidate.linkmanPhotoPath="http://localhost:8080" + '/SitePhoto/' +
+			}
+			//event.currentTarget.innerText
+			_self.model1=true;
 		},
         handleFormatError:function(file) {
             this.$Notice.warning({
@@ -299,10 +343,10 @@ export default{
             });
         },
         success:function(data) {
-            this.formValidate.pictureName = data[0];
-            this.formValidate.pictureUrl = data[1];
+            //this.formValidate.pictureName = data[0];
+            //this.formValidate.pictureUrl = data[1];
             this.loadingStatus = false;
-            this.formValidate.linkman_photo_path = "http://localhost:8080" + '/SitePhoto/' + this.formValidate.pictureName;
+            this.formValidate.linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data[0];
             this.$Message.success('上传成功');
         },
         error:function() {
@@ -311,8 +355,17 @@ export default{
         cancel:function(){
         	var _self=this;
             _self.model1=false;
-            _self.$refs['formValidate'].resetFields();
+            //if(_self.openState=="修改"||_self.openState=="添加"){
+	            _self.$refs['formValidate'].resetFields();
+	            //this.$refs['formValidate'].resetFields();
+	    		_self.formValidate.linkmanPhotoPath=null;
+	    		_self.formValidate.remark=null;
+	    		//_self.theCity=['浙江','宁波市','余姚市'];
+            //}
+            
             console.log("在cancel函数中")
+            // _self.oneArr=null;
+            // _self.delArr=[];
         },
         open_ok: function(){
             var _self = this;
@@ -321,36 +374,114 @@ export default{
             _self.$refs.formValidate.validate(function (valid) {
                 if (_self.openState == "查看") {
                     //_self.loading = false;
-                    _self.model1 = false;
-                } else {
+                    //_self.model1 = false;
+	        		//_self.$refs['formValidate'].resetFields();
+	        		//_self.formValidate.linkmanPhotoPath=null;
+	        		//_self.formValidate.remark=null;
+                    //return ;
+                } else if (_self.openState == "添加") {
                     if (valid) {
-                        console.log(_self.formValidate);
-                        if(_self.openState=="添加"){
-                        	_self.formValidate.id=parseInt(_self.$cookies.get("companyID"));
-	                        _self.formValidate.province = _self.theCity[0];
-	                        _self.formValidate.city = _self.theCity[1];
-	                        _self.formValidate.county = _self.theCity[2];
-	                        console.log("即将进入postData");
-	                        console.log(_self.formValidate);
-                        	_self.postData(_self.formValidate);
-                        }
+                    	_self.insertSite();
                     }
+                } else{// if (_self.openState == "修改")
+                	if(valid){
+                		_self.updateSite();
+                	}
                 }
+        		// _self.oneArr=null;
+        		// _self.delArr=[];
+        		_self.$refs['formValidate'].resetFields();
+        		_self.formValidate.linkmanPhotoPath=null;
+        		_self.formValidate.remark=null;
+        		_self.model1=false;
+        		//_self.theCity=['浙江','宁波市','余姚市'];
             });
         },
-        postData: function(data){
+        insertSite: function(){//添加逻辑
         	var _self=this;
+        	console.log(_self.formValidate);
+        	_self.formValidate.companyId=parseInt(_self.$cookies.get("companyID"));
+            _self.formValidate.province = _self.theCity[0];
+            _self.formValidate.city = _self.theCity[1];
+            _self.formValidate.district = _self.theCity[2];
+            _self.formValidate.type='0';
+            console.log(_self.formValidate);
+            _self.formValidate.id=null;
+            $.ajax({
+            	url: 'http://localhost:8080/HaiSSMDemo/insertSite.action',
+            	data: _self.formValidate,
+            	type: 'POST',
+            	cache: false,
+            	success: function(){
+            		// _self.$refs['formValidate'].resetFields();
+            		// _self.formValidate.linkmanPhotoPath=null;
+            		// _self.formValidate.remark=null;
+        			_self.$Message.info("完成添加");
+        			_self.getAll();
+        			_self.model1=false;
+            	}
+            });
+        },
+        updateSite: function(){//更新逻辑
+        	var _self=this;
+        	_self.formValidate.companyId=parseInt(_self.$cookies.get("companyID"));
+            _self.formValidate.province = _self.theCity[0];
+            _self.formValidate.city = _self.theCity[1];
+            _self.formValidate.district = _self.theCity[2];
+            _self.formValidate.type='0';
+        	$.ajax({
+        		url: 'http://localhost:8080/HaiSSMDemo/updateSite.action',
+        		data: _self.formValidate,
+        		type: 'POST',
+        		cache: false,
+        		success: function(){
+            		// _self.$refs['formValidate'].resetFields();
+            		// _self.formValidate.linkmanPhotoPath=null;
+            		// _self.formValidate.remark=null;
+        			_self.$Message.info("完成修改");
+        			_self.getAll();
+        			_self.model1=false;
+        		}
+        	});
+        },
+        delSiteBatch: function(){//删除逻辑
+        	var _self=this;
+        	console.log("进入删除逻辑");
+        	console.log(_self.delArr);
+
+        	if(_self.delArr.length>0){
+        		$.ajax({
+        			url: 'http://localhost:8080/HaiSSMDemo/delSiteBatch.action',
+        			traditional:true,
+        			data: {arrays:_self.delArr},
+        			type: 'POST',
+        			cache: false,
+        			success: function(){
+        				_self.$Message.info("删除成功");
+        				_self.delArr=[];
+        				_self.getAll();
+        			}
+        		});
+        	}else{
+        		alert("请选择要删除的数据")
+        	}
+        }
+        /*postData: function(idata){
+        	var _self=this;
+        	consoel.log("在postData函数中");
         	$.ajax({
         		url: 'http://localhost:8080/HaiSSMDemo/insertSite.action',
-        		data: data,
+        		data: idata,
         		type: 'post',
         		cache: false,
         		success: function(data){
+        			 _self.$refs['formValidate'].resetFields();
         			_self.$Message.info("完成添加");
+        			_self.model1=false;
         		}
         	});
-        }
-	}
+        }*/
+	}//methods结束
 }
 </script>
 

@@ -13,6 +13,7 @@ import AlarmRecord from '@/components/pages/AlarmRecord'
 import TrainEdit from '@/components/pages/TrainEdit'
 import TrainLog from '@/components/pages/TrainLog'
 import ShipperInfo from '@/components/pages/ShipperInfo'
+import RecAddress from '@/components/pages/RecAddress'
 
 Vue.use(Router)
 
@@ -82,6 +83,11 @@ export default new Router({
         path: '/shipperinfo',
         name: 'ShipperInfo',
         component: ShipperInfo
+    },
+    {
+        path: '/recaddress',
+        name: 'RecAddress',
+        component: RecAddress//RecAddress
     }
   ]
 })

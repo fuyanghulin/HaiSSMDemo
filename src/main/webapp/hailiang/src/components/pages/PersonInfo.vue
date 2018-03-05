@@ -463,9 +463,9 @@ props:{
         }
     },
     methods: {
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+        indexloading: function(){
+            this.$emit('getloading',false);
+        },
         search:function() {
             var _self = this;
             if (_self.searchText.replace(/\s/g, '').length < 1) {
@@ -920,7 +920,7 @@ indexloading: function(){
         },
     mounted: function () {
         //this.$refs.head.style.display = 'block';
-this.indexloading();
+        this.indexloading();
     }
 }
 </script>
