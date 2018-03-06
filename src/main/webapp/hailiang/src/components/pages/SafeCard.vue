@@ -14,7 +14,7 @@
                 <Button type="primary" @click="refresh" style="margin-left:20px;">刷新</Button>
             </div>
         </nav>
-    <Table border stripe size="small" :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change"></Table>
+    <Table ref='table' border stripe size="small" :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-click="handleRow"></Table>
     <Page :total="totalRecord" show-total show-elevator :current="page.current" size='small' @on-change="next"
           :page-size="page.pageNum" size='small'></Page>
     <Modal
@@ -137,7 +137,15 @@ props:{
                 modal3:false,
                 columns: [
                     {
+                        type: 'index',
+                        width: 40,
+                        align: 'center',
+                        fixed: 'left'
+                    },
+                    {
                         type: 'selection',
+                        width: 60,
+                        fixed: 'left',
                         align: 'center'
                     },
                     {
@@ -149,6 +157,7 @@ props:{
                     {
                         title: '安全卡附件',
                         align: 'center',
+                        width: 100,
                         key: 'safeCardFiles',
                         render: function (h, params) {
                             return h('div', [
@@ -182,10 +191,10 @@ props:{
                     {
                         title: '说明书附件',
                         align: 'center',
+                        width: 100,
                         key: 'introductionFile',
                         render: function (h, params) {
                             return h('div', [
-
                                 h('Button', {
                                     props: {
                                         type: 'text',
@@ -214,7 +223,7 @@ props:{
                         align: 'center',
                         key: 'createTime',
                         sortable: true
-                    },
+                    }/*,
                     {
                         title: '操作',
                         key: 'action',
@@ -254,7 +263,7 @@ props:{
                                 ]);
                             }
                         }.bind(this)
-                    }
+                    }*/
                 ],
                 data: [],
                 openState: '',
@@ -576,7 +585,14 @@ indexloading: function(){
                 // }else {
                 //     window.location.href="../../state.html";
                 // }
-            }
+            },
+            handleRow: function(data,index){
+                var _self=this;
+                // console.log(data);
+                // console.log(index);
+                //_self.data1[index].checked=true;
+                this.$refs.table.toggleSelect(index);
+            }//当点击一行是触发该函数，同时会触发chooseAll
         },
         activated:function(){//created:
         	this.getData();
@@ -594,7 +610,7 @@ this.indexloading();
 
 <style scoped>
 nav {
-    padding: 10px 50px;
+    padding: 10px 34px 10px 16px;
     display: flex;
     justify-content: space-between;
     justify-items: center;

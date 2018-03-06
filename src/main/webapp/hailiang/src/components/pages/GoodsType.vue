@@ -2,11 +2,15 @@
 	<div class="goodstype" ref='head'>	
 	    <nav>
 	        <div class="first_btn">
-	            <Button type="primary" @click="open($event)" v-if="userType===1">添加</Button>
+	            <!-- <Button type="primary" @click="open($event)" v-if="userType===1">添加</Button>
 	            <Tooltip content="删除所选货物信息" placement="bottom-start">
 	                <Button type="error" @click="del" v-if="userType===1">删除</Button>
-	            </Tooltip>
-	            
+	            </Tooltip> -->
+	            <Button type="primary" @click="open($event)">添加</Button><!-- 如果需要权限加上v-if="userType===1" -->
+                <Button type="primary" @click="open($event)">修改</Button>
+                <Button type="primary" @click="open($event)">查看</Button>
+                <!-- <Button type="primary" @click="">打印</Button> -->
+                <Button type="error" @click="del_demo">删除</Button>
 	        </div>
 	        <div>
 	            <Input placeholder="请输入名称..." style="width: 300px" v-model="searchText" @keyup.native.enter="search"></Input>
@@ -14,7 +18,7 @@
 	            <Button type="primary" @click="refresh" style="margin-left:20px;">刷新</Button>
 	        </div>
 	    </nav>
-	    <Table border stripe :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-click="row_cli"></Table>
+	    <Table ref='table' border stripe :columns="columns" :data="data" @on-selection-change="sel_change" @on-row-click="row_cli" @on-row-click="handleRow"></Table>
 	    <Page 
 	        :total="totalRecord"  
 	        show-total 
@@ -32,13 +36,13 @@
 	        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
 	            <Row>
 	                <Form-Item label="名称" prop="name">
-	                    <Input v-model="formValidate.name" placeholder="请输入名称"></Input>
+	                    <Input v-model="formValidate.name" placeholder="请输入名称" v-bind:disabled="openState==='查看'"></Input>
 	                </Form-Item>
 	                <Form-Item label="国际名称" prop="nationName">
-	                    <Input v-model="formValidate.nationName" placeholder="请输入国际名称"></Input>
+	                    <Input v-model="formValidate.nationName" placeholder="请输入国际名称" v-bind:disabled="openState==='查看'"></Input>
 	                </Form-Item>
 	                <Form-Item label="备注" prop="remark">
-	                    <Input v-model="formValidate.remark" placeholder="请输入备注" type="textarea" :rows="4"></Input>
+	                    <Input v-model="formValidate.remark" placeholder="请输入备注" type="textarea" :rows="4" v-bind:disabled="openState==='查看'"></Input>
 	                </Form-Item>
 	            </Row>
 	        </Form>
@@ -57,6 +61,14 @@
 	        <p v-if="onedel">是否删除该条数据</p>
 	        <p v-else>是否确认删除{{delArr.length}}条数据</p>
 	    </Modal>
+        <Modal
+            v-model="model2"
+            :title="m_tit"
+            :scrollable='false'
+            @on-ok="m_ok"
+            @on-cancel="m_cancel">
+            <p>{{m_msg}}</p>
+        </Modal>
 	</div>
 </template>
 
@@ -64,12 +76,12 @@
 import dataUrl from '../../assets/config.js'
 	export default{
 		name:'GoodsType',
-props:{
-    indexloading: {
-        type: Boolean,
-        default: true
-    }
-},
+        props:{//这里的东西需要改掉，换成用路由:id
+            indexloading: {
+                type: Boolean,
+                default: true
+            }
+        },
 		data:function(){
 			return {
                 userType: '',
@@ -99,10 +111,19 @@ props:{
                 onedel:false,
                 modal1: false,
                 modal2: false,
+                model2: false,
                 searchText: '',
                 columns: [
                     {
+                        type: 'index',
+                        width: 40,
+                        align: 'center',
+                        fixed: 'left'
+                    },
+                    {
                         type: 'selection',
+                        width: 60,
+                        fixed: 'left',
                         align: 'center'
                     },
                     {
@@ -129,10 +150,11 @@ props:{
                     {
                         title: '操作',
                         key: 'action',
+                        width: 100,
                         align: 'center',
                         fixed: 'right',
                         render: function (h, params) {
-                            if (this.userType === 1) {
+                            /*if (this.userType === 1) {
                                 return h('div', [
                                     h('Button', {
                                         props: {
@@ -157,9 +179,6 @@ props:{
                                         },
                                         on: {
                                             click: function () {
-                                                /*this.delArr.push(this.data[params.index].id);*/
-                                                //this.delone.splice(0,1,this.data[params.index].id);
-                                                //console.log(this.data[params.index].id);
                                                 this.delone=this.data[params.index].id;
                                                 this.del_index(this.data[params.index].id);
                                                 this.onedel=true;
@@ -167,7 +186,7 @@ props:{
                                         }
                                     }, '删除')
                                 ]);
-                            } else {
+                            } else {*/
                                 return h('div', [
                                     h('Button', {
                                         props: {
@@ -175,13 +194,14 @@ props:{
                                             size: 'small'
                                         },
                                         on: {
-                                            click: function () {
+                                            click: function (e) {//这里需要整理下，全部整合到model1
+                                                e.stopPropagation();//防止造成点击一行事件
                                                 this.show(params.index);
                                             }.bind(this)
                                         }
                                     }, '查看')
                                 ]);
-                            }
+                            //}
                         }.bind(this)
                     }
                 ],
@@ -190,13 +210,14 @@ props:{
                 loading: false,
                 file: null,
                 delArr: [],
-                delone: ''
+                delone: null,
+                del_msg: false
             }
 		},
         methods: {
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+            indexloading: function(){
+                this.$emit('getloading',false);
+            },
             show:function(index) {
                 this.$Modal.success({
                     title: '货物类型信息',
@@ -224,21 +245,32 @@ indexloading: function(){
                         url: dataUrl.dataUrl.goodsType.del+_self.delone,
                         cache: false,
                         success: function (data) {
+                            _self.$Message.info("删除成功");
+                            _self.delArr=[];
+                            _self.delone=null;
                             _self.getData();
-                            _self.$Message.info('刪除成功');
+                            _self.del_msg=false
+                        },
+                        error: function(){
+                            _self.$Message.info("删除失败");
+                            _self.del_msg=false;
                         }
                     });
-                    _self.delone='';
-                    _self.onedel=false;
                 }else{
                     $.ajax({
                         type: 'GET',
                         url: dataUrl.dataUrl.goodsType.del+_self.delArr,
                         cache: false,
                         success: function (data) {
-                            _self.delArr = [];
+                            _self.$Message.info("删除成功");
+                            _self.delArr=[];
+                            _self.delone=null;
                             _self.getData();
-                            _self.$Message.info('刪除成功');
+                            _self.del_msg=false
+                        },
+                        error: function(){
+                            _self.$Message.info("删除失败");
+                            _self.del_msg=false;
                         }
                     });
                     _self.delArr=[];
@@ -277,7 +309,7 @@ indexloading: function(){
                     });
                 }
             },
-            chooseAll:function(data) {
+            /*chooseAll:function(data) {
                 var _self = this;
                 //console.log(this.data.selection);
                 _self.delArr=[];
@@ -287,18 +319,20 @@ indexloading: function(){
                     }
                 }
                 
-            },
+            },*/
             sel_change:function(data){
                 var _self = this;
-                //console.log(data);
-                _self.delArr=[];
+                console.log(data);
+                _self.delArr=[];//放置所以被选择行的id
+                _self.delone=null;//放置单独的一行的所有信息
                 if(data.length){
-
                     for (var i in data) {
-                        _self.delArr.push(data[i].id);
+                        _self.delArr.push(data[i].id); 
                     }
                 }
-                
+                if(data.length==1){
+                    _self.delone=data[0];
+                }
             },
             next:function(data) {
                 this.page.current = data;
@@ -316,9 +350,32 @@ indexloading: function(){
             },
             open:function(obj) {
                 var _self = this;
-                if ($.trim(obj.currentTarget.innerText)== "添加") {
+                var iText=obj.currentTarget.innerText;
+                if (iText== "添加") {
+                    _self.openState="添加";
                     _self.$refs['formValidate'].resetFields();
-                    _self.openState =$.trim(obj.currentTarget.innerText);
+                }else if(iText=="修改"){
+                    if(!_self.delone){
+                        _self.m_tit="选项提示";
+                        _self.m_msg="请选择一行数据进行修改，不可多选也不可不选";
+                        _self.model2=true;
+                        return ;
+                    }
+                    _self.openState="修改";
+                    for(let key in _self.delone){
+                        _self.formValidate[key]=_self.delone[key];
+                    }
+                }else if(iText=="查看"){
+                    if(!_self.delone){
+                        _self.m_tit="选项提示";
+                        _self.m_msg="请选择一行数据进行查看，不可多选也不可不选";
+                        _self.model2=true;
+                        return ;    
+                    }
+                    _self.openState="查看";
+                    for(let key in _self.delone){
+                        _self.formValidate[key]=_self.delone[key];
+                    }
                 }
                 this.modal1 = true;
             },
@@ -349,6 +406,11 @@ indexloading: function(){
             upMessage:function() {
                 var _self = this;
                 _self.loading = true;
+                if(_self.openState=="查看"){
+                    _self.modal1=false;
+                    _self.loading=false;
+                    return ;
+                }
                 _self.$refs.formValidate.validate(function (valid) {
 
                     if (valid) {
@@ -407,6 +469,41 @@ indexloading: function(){
                 } else {
                     window.location.href = "../../state.html";
                 }*/
+            },
+            handleRow: function(data,index){//当点击一行是触发该函数，同时会触发chooseAll
+                var _self=this;
+                // console.log(data);
+                // console.log(index);
+                //_self.data1[index].checked=true;
+                this.$refs.table.toggleSelect(index);
+            },
+            del_demo: function(){//点击上方nav处删除按钮触发
+                var _self=this;
+                if(_self.delArr.length>0){
+                    _self.del_msg=true;
+                    _self.m_tit="删除提示";
+                    _self.m_msg="请确认是否删除该"+_self.delArr.length+"条数据";
+                    _self.model2=true;
+                }else{
+                    _self.m_tit="选项提示";
+                    _self.m_msg="请选择要删除的数据，至少选择一行数据";
+                    _self.model2=true;
+                }
+            },
+            m_ok: function(){
+                var _self=this;
+                _self.model2=false;
+                _self.m_tit=null;
+                _self.m_msg=null;
+                if(_self.del_msg){
+                    _self.ok_del();
+                }
+            },
+            m_cancel: function(){
+                var _self=this;
+                _self.model2=false;
+                _self.m_tit=null;
+                _self.m_msg=null;
             }
         },
         activated:function() {//created:
@@ -418,7 +515,7 @@ indexloading: function(){
         },
         mounted: function(){
 
-this.indexloading();
+            this.indexloading();
         },
         beforeDestroy: function(){
             this.$emit('getloading',true);
@@ -431,7 +528,7 @@ this.indexloading();
     height: 1000px;
 }
 nav {/*这个地方可以都改一下，将这个搜索框与左侧‘首页’字样对齐*/
-    padding: 10px 50px;
+    padding: 10px 34px 10px 16px;
     display: flex;
     justify-content: space-between;
     justify-items: center;

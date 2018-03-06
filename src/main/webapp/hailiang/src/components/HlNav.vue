@@ -32,8 +32,8 @@
 		            托运管理
 		        </template>
 		        <MenuItem name="5-1"><router-link tag="div" class="link_div" to='/eleorder'>电子运单信息</router-link></MenuItem>
-		        <MenuItem name="5-2"><router-link tag="div" class="link_div" to='/shipperinfo'>托运方</router-link></MenuItem>
-		        <MenuItem name="5-3"><router-link tag="div" class="link_div" to='/recaddress'>收货站点</router-link></MenuItem>
+		        <MenuItem name="5-2" v-if="userType==3"><router-link tag="div" class="link_div" to='/shipperinfo'>托运方</router-link></MenuItem>
+		        <MenuItem name="5-3" v-if="userType==3"><router-link tag="div" class="link_div" to='/recaddress'>收货站点</router-link></MenuItem>
 		    </Submenu>
 		    <Submenu name="6">
 		        <template slot="title">

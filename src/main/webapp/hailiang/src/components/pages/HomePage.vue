@@ -148,7 +148,14 @@ props:{
                 } else {
                     alert('正在搜索！！！');
                 }
-            }
+            },
+            handleRow: function(data,index){
+                var _self=this;
+                // console.log(data);
+                // console.log(index);
+                //_self.data1[index].checked=true;
+                this.$refs.table.toggleSelect(index);
+            }//当点击一行是触发该函数，同时会触发chooseAll
         },
         beforeDestroy: function(){
             this.$emit('getloading',true);
@@ -165,7 +172,7 @@ props:{
     height: 1000px;
 }
 nav {/*这个地方可以都改一下，将这个搜索框与左侧‘首页’字样对齐*/
-    padding: 10px 50px;
+    padding: 10px 34px 10px 16px;
     display: flex;
     justify-content: flex-end;
     justify-items: center;

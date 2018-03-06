@@ -6,7 +6,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search"></i-Button>
         </div>-->
     </nav>
-    <i-Table :columns="columns" :data="data" border stripe></i-Table>
+    <i-Table :columns="columns" :data="data" border stripe  @on-row-click="handleRow" ref='table'></i-Table>
     <Page :total="totalRecord" show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum" size='small'></Page>
@@ -80,9 +80,9 @@ props:{
             }
         },
         methods: {
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+            indexloading: function(){
+                this.$emit('getloading',false);
+            },
             show:function(index) {
                 this.$Modal.info({
                     title: '培训信息',
@@ -139,7 +139,14 @@ indexloading: function(){
                         }
                     });
                 }
-            }
+            },
+            handleRow: function(data,index){
+                var _self=this;
+                // console.log(data);
+                // console.log(index);
+                //_self.data1[index].checked=true;
+                this.$refs.table.toggleSelect(index);
+            }//当点击一行是触发该函数，同时会触发chooseAll
         },
         activated: function() {//created:
         	var _self = this;

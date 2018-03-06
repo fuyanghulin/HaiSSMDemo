@@ -10,7 +10,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search" @click="search"></i-Button>
         </div>
     </nav>
-    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe></i-Table>
+    <i-Table ref='table' :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe @on-row-click="handleRow"></i-Table>
     <Page :total="totalRecord"  show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum" size='small'></Page>
@@ -317,7 +317,14 @@ indexloading: function(){
                     _self.openState = $.trim(obj.currentTarget.innerText);
                 }
                 this.modal1 = true;
-            }
+            },
+            handleRow: function(data,index){
+                var _self=this;
+                // console.log(data);
+                // console.log(index);
+                //_self.data1[index].checked=true;
+                this.$refs.table.toggleSelect(index);
+            }//当点击一行是触发该函数，同时会触发chooseAll
         },
         activated: function () {//created:
         	var _self = this;
@@ -348,7 +355,7 @@ this.indexloading();
 <style scoped>
 /*@import 'https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css'*/
         nav {
-            padding: 10px 50px;
+            padding: 10px 34px 10px 16px;
             display: flex;
             justify-content: space-between;
             justify-items: center;

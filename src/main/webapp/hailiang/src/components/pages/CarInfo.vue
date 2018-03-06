@@ -8,9 +8,17 @@
             
             <Tooltip content="删除所选车辆信息" placement="bottom-start">
                 <Button type="error" style="margin-left: 20px;" @click.stop="del" v-if="userType==3">删除</Button>
-            </Tooltip><!-- 原来是moredelete函数 -->
+            </Tooltip>原来是moredelete函数
             <Button type="primary" v-if="userType==3" disabled>修改</Button>
             <Button type="primary" @click="carDetail">车档信息</Button>
+
+            <!-- 
+            <Button type="primary" @click="open($event)">添加</Button>
+            <Button type="primary" @click="open($event)">修改</Button>
+            <Button type="primary" @click="open($event)">查看</Button>
+            <Button type="primary" @click="">打印</Button>
+            <Button type="error" @click="delSiteBatch">删除</Button>
+            <Button type="primary" @click="carDetail">车档信息</Button> -->
 
         </div>
         <div>
@@ -20,7 +28,7 @@
         </div>
     </nav>
     <!--数据区块-->
-    <Table border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></Table>
+    <Table ref='table' border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis @on-row-click="handleRow"></Table>
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage" :current="page.current" 
           :page-size="page.pageNum" show-total show-elevator size='small'></Page>
@@ -1704,6 +1712,13 @@ props:{
                 });
             }
             _self.searchText='';
+        },
+        handleRow: function(data,index){
+            var _self=this;
+            // console.log(data);
+            // console.log(index);
+            //_self.data1[index].checked=true;
+            this.$refs.table.toggleSelect(index);
         }
     }
 }

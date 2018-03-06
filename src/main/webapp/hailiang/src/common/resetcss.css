@@ -92,3 +92,9 @@ body .ivu-modal .ivu-select-dropdown{
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu){
 	color: inherit;
 }
+
+
+body{
+	min-width: 912px; 
+	width:expression(document.body.clientWidth < 912? "912px": "auto" ); 
+}

@@ -14,7 +14,7 @@
             <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table border stripe size='small' :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open'></i-Table>
+    <i-Table ref='table' border stripe size='small' :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open' @on-row-click="handleRow"></i-Table>
     <Page :total="totalRecord" size='small' show-total
           show-elevator :current="page.current" @on-change="next" :page-size="page.pageNum"></Page>
 
@@ -1515,6 +1515,13 @@ props:{
                 }
             });
         },
+        handleRow: function(data,index){
+            var _self=this;
+            // console.log(data);
+            // console.log(index);
+            //_self.data1[index].checked=true;
+            this.$refs.table.toggleSelect(index);
+        }//当点击一行是触发该函数，同时会触发chooseAll
     }
 
 }
@@ -1522,7 +1529,7 @@ props:{
 
 <style scoped>
 nav {
-    padding: 10px 50px;
+    padding: 10px 34px 10px 16px;
     display: flex;
     justify-content: space-between;
     justify-items: center;

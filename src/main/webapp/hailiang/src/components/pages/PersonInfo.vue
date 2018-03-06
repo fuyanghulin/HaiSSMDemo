@@ -2,10 +2,17 @@
 <div class="personinfo">	
     <nav>
         <div>
-            <i-Button type="primary" @click="open($event)" v-if="userType===3">添加</i-Button>
+            <!-- <i-Button type="primary" @click="open($event)" v-if="userType===3">添加</i-Button>
             <Tooltip content="删除所选人员信息" placement="bottom-start">
                 <i-Button type="error" @click="del" v-if="userType===3">删除</i-Button>
-            </Tooltip>
+            </Tooltip> -->
+
+
+            <Button type="primary" @click="open($event)">添加</Button>
+            <Button type="primary" @click="open($event)">修改</Button>
+            <Button type="primary" @click="open($event)">查看</Button>
+            <!-- <Button type="primary" @click="">打印</Button> -->
+            <Button type="error" @click="deldemo">删除</Button>
             
         </div>
         <div>
@@ -14,7 +21,7 @@
             <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table ref='table' border stripe :columns="columns" :data="data" @on-selection-change="chooseAll" @on-row-click="handleRow"></i-Table>
     <Page :total="totalRecord" show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum" size='small'></Page>
@@ -165,6 +172,14 @@
         <p v-if="onedel">是否删除该条数据</p>
         <p v-else>是否确认删除{{delArr.length}}条数据</p>
     </Modal>
+    <Modal
+        v-model="model2"
+        :title="m_tit"
+        :scrollable='false'
+        @on-ok="m_ok"
+        @on-cancel="m_cancel">
+        <p>{{m_msg}}</p>
+    </Modal>
 </div>
 </template>
 
@@ -260,7 +275,7 @@ props:{
             columns: [
                 {
                     type: 'index',
-                    width: 60,
+                    width: 40,
                     align: 'center',
                     fixed: 'left'
                 },
@@ -346,9 +361,9 @@ props:{
                     width: 200
                 },
                 {
-                    title: '查看打印',
+                    title: '操作',
                     key: 'action1',
-                    width: 150,
+                    width: 100,
                     align: 'center',
                     fixed: 'right',
                     render: function (h, params) {
@@ -370,85 +385,9 @@ props:{
                                             this.modal1 = true;
                                         }.bind(this)
                                     }
-                                }, '查看'),
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            /*this.delArr.push(this.data[params.index].id);
-                                            this.del();*/
-
-                                            // this.delone=this.data[params.index].id;
-                                            // this.del_index(this.data[params.index].id);
-                                            // this.onedel=true;
-                                            this.$Message.info('打印功能尚未完善！');
-                                        }.bind(this)
-                                    }
-                                }, '打印')
+                                }, '查看')
                             ]);
                     }.bind(this)                        
-                },
-                {
-                    title: '操作',
-                    key: 'action',
-                    width: 150,
-                    align: 'center',
-                    fixed: 'right',
-                    render: function (h, params) {
-                        if (this.userType == 3) {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            this.openState = "修改";
-                                            console.log(this.data[params.index]);
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data[params.index]));
-                                            this.modal1 = true;
-                                        }.bind(this)
-                                    }
-                                }, '修改'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            /*this.delArr.push(this.data[params.index].id);
-                                            this.del();*/
-                                            this.delone=this.data[params.index].id;
-                                                this.del_index(this.data[params.index].id);
-                                                this.onedel=true;
-                                        }.bind(this)
-                                    }
-                                }, '删除')
-                            ]);
-                        } else {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            this.$Message.error('登录企业账号可进行删除修改等操作');
-                                        }.bind(this)
-                                    }
-                                }, '不可修改')
-                            ]);
-                        }
-                    }.bind(this)
                 }
             ],
             data: [],
@@ -456,10 +395,14 @@ props:{
             loading: false,
             delArr: [],
             searchText: '',
-            onedel:false,
-            delone:'',
+            onedel:false,//这个就不需要了
+            delone:null,
             modal2:false,
-            spinShow:true
+            spinShow:true,
+            model2: false,
+            m_tit: '',
+            m_msg: '',
+            del_msg: false
         }
     },
     methods: {
@@ -579,17 +522,6 @@ props:{
                 //_self.delArr = [];
             }
             
-        },
-        chooseAll:function(data) {
-            var _self = this;
-            if(_self.delArr.length){
-                _self.delArr=[];
-            }{
-                for (var i in data) {
-                    _self.delArr.push(data[i].id);
-                }
-            }
-            
         },*/
             del:function() {
                 var _self = this;
@@ -624,9 +556,20 @@ props:{
                         type: 'GET',
                         url: dataUrl.dataUrl.person.del+_self.delone,
                         cache: false,
-                        success: function (data) {
+                        /*success: function (data) {
                             _self.getData();
                             _self.$Message.info('刪除成功');
+                        },*/
+                        success: function(){
+                            _self.$Message.info("删除成功");
+                            _self.delArr=[];
+                            _self.delone=null;
+                            _self.getData();
+                            _self.del_msg=false
+                        },
+                        error: function(){
+                            _self.$Message.info("删除失败");
+                            _self.del_msg=false;
                         }
                     });
                     _self.delone='';
@@ -636,51 +579,49 @@ props:{
                         type: 'GET',
                         url: dataUrl.dataUrl.person.del+_self.delArr,
                         cache: false,
-                        success: function (data) {
+                        /*success: function (data) {
                             _self.delArr = [];
                             _self.getData();
                             _self.$Message.info('刪除成功');
+                        }*/
+                        success: function(){
+                            _self.$Message.info("删除成功");
+                            _self.delArr=[];
+                            _self.delone=null;
+                            _self.getData();
+                            _self.del_msg=false
+                        },
+                        error: function(){
+                            _self.$Message.info("删除失败");
+                            _self.del_msg=false;
                         }
                     });
                     _self.delArr=[];
                 }
                 
             },
-            /*chooseAll:function(data) {
-                var _self = this;
-                for (var i in data) {
-                    _self.delArr.push(data[i].id);
-                }
-            }*/
             cancel_del:function(){
                 this.modal2=false;
                 this.delone='';
                 this.onedel=false;
                 this.$refs['formValidate'].resetFields();
             },
-            /*chooseAll:function(data) {
-                var _self = this;
-                if(_self.delArr.length){
-                    _self.delArr=[];
-                }else{
-                   for (var i in data) {
-                        _self.delArr.push(data[i].id);
-                    } 
-                }
-                
-            },*/
             chooseAll:function(data) {
                 var _self = this;
-                //console.log(this.data.selection);
-                _self.delArr=[];
+                console.log(data);
+                _self.delArr=[];//放置所以被选择行的id
+                _self.delone=null;//放置单独的一行的所有信息
                 if(data.length){
                     for (var i in data) {
-                        _self.delArr.push(data[i].id);
+                        _self.delArr.push(data[i].id); 
                     }
+                }
+                if(data.length==1){
+                    _self.delone=data[0];
                 }
                 
             },
-            sel_change:function(data){
+            /*sel_change:function(data){
                 var _self = this;
                 //console.log(data);
                 _self.delArr=[];
@@ -691,7 +632,7 @@ props:{
                     }
                 }
                 
-            },
+            },*/
         success:function(data) {
             this.formValidate.pictureName = data[0];
             this.formValidate.pictureUrl = data[1];
@@ -742,12 +683,43 @@ props:{
             }
         },
         open:function(obj) {
-            if ($.trim(obj.currentTarget.innerText) == "添加") {
+            var iText=null;
+            var _self=this;
+            console.log(_self.delone);
+            console.log(_self.delone);
+            //先默认添加，打开图片上传
+            iText=event.currentTarget.innerText;
+            if (iText == "添加") {
                 this.$refs['formValidate'].resetFields();
                 this.formValidate.picUser = null;
-                this.openState = $.trim(obj.currentTarget.innerText);
+                this.openState = "添加";
                 if (this.formValidate.id != undefined)
                     this.formValidate.id = '';
+            }else if(iText=="查看"){
+                if(!_self.delone){
+                    _self.m_tit="选项提示";
+                    _self.m_msg="请选择一行数据进行查看，不可多选也不可不选";
+                    _self.model2=true;
+                    return ;    
+                }
+
+                _self.openState="查看";
+                for(let key in _self.delone){
+                    _self.formValidate[key]=_self.delone[key];
+                }
+                _self.formValidate.picUser = "http://localhost:8080" + '/pic/' + _self.delone.pictureName;
+            }else if(iText=="修改"){
+                if(!_self.delone){
+                    _self.m_tit="选项提示";
+                    _self.m_msg="请选择一行数据进行修改，不可多选也不可不选";
+                    _self.model2=true;
+                    return ;
+                }
+                _self.openState="修改";
+                for(let key in _self.delone){
+                    _self.formValidate[key]=_self.delone[key];
+                }
+                _self.formValidate.picUser = "http://localhost:8080" + '/pic/' + _self.delone.pictureName;
             }
             this.modal1 = true;
         },
@@ -872,6 +844,44 @@ props:{
                     _self.$Message.info('上传失败');
                 }
             });
+        },
+        handleRow: function(data,index){
+            var _self=this;
+            // console.log(data);
+            // console.log(index);
+            //_self.data1[index].checked=true;
+            this.$refs.table.toggleSelect(index);
+        },//当点击一行是触发该函数，同时会触发chooseAll
+        m_ok: function(){
+            var _self=this;
+            _self.model2=false;
+            _self.m_tit=null;
+            _self.m_msg=null;
+            if(_self.del_msg){
+                _self.ok_del();
+            }
+        },
+        m_cancel: function(){
+            var _self=this;
+            _self.model2=false;
+            _self.m_tit=null;
+            _self.m_msg=null;
+        },
+        deldemo: function(){//删除逻辑
+            var _self=this;
+            console.log("进入删除逻辑");
+            console.log(_self.delArr);
+
+            if(_self.delArr.length>0){
+                _self.del_msg=true;
+                _self.m_tit="删除提示";
+                _self.m_msg="请确认是否删除该"+_self.delArr.length+"条数据";
+                _self.model2=true;
+            }else{
+                _self.m_tit="选项提示";
+                _self.m_msg="请选择要删除的数据，至少选择一行数据";
+                _self.model2=true;
+            }
         }
     },
     activated: function() {//created:
@@ -889,7 +899,7 @@ props:{
                     }
                 }
             });
-            _self.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
+            //_self.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
         }else if(_self.userType==2){
             $.ajax({
                 type: 'GET',
@@ -901,7 +911,7 @@ props:{
                     }
                 }
             });
-            this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
+            //this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
         } else {
             _self.userType = 3;
             $.ajax({
@@ -915,9 +925,9 @@ props:{
         }
         _self.getData();
     },
-        beforeDestroy: function(){
-            this.$emit('getloading',true);
-        },
+    beforeDestroy: function(){
+        this.$emit('getloading',true);
+    },
     mounted: function () {
         //this.$refs.head.style.display = 'block';
         this.indexloading();
@@ -928,7 +938,7 @@ props:{
 <style scoped>
 
         nav {
-            padding: 10px 50px;
+            padding: 10px 34px 10px 16px;
             display: flex;
             justify-content: space-between;
             justify-items: center;

@@ -59,11 +59,13 @@ export default {
   },
   methods:{
     exit:function(){
+      this.$router.push('/');
       this.$cookies.remove("ID");
       this.$cookies.remove("companyID");
       this.$cookies.remove("companyName");
       this.$cookies.remove("roleID");
       this.$emit('isState',true);
+
     },
     chgloading:function(msg){
       this.indexloading=msg;

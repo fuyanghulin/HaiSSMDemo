@@ -5,17 +5,15 @@
             <Button type="primary" @click="open($event)">添加</Button>
             <Button type="primary" @click="open($event)">修改</Button>
             <Button type="primary" @click="open($event)">查看</Button>
-            <Button type="primary" @click="">打印</Button>
-            <Tooltip content="删除所选托运方信息" placement="bottom-start">
-                <Button type="error" style="margin-left: 20px;" @click="delSiteBatch">删除</Button>
-            </Tooltip><!-- 原来是moredelete函数 -->
+            <!-- <Button type="primary" @click="">打印</Button> -->
+            <Button type="error" @click="delSiteBatch">删除</Button>
         </div>
         <div>
-            <Button type="primary" @click="getAll" style="margin-left:20px;">刷新</Button>
+            <Button type="primary" @click="getAll" style="margin-left:20px;" :loading="loading">刷新</Button>
         </div>
     </nav>
     <!--数据区块-->
-    <Table border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis></Table>
+    <Table ref="table" border stripe :columns="columns" :data="data1" @on-selection-change="chooseAll" ellipsis @on-row-click="handleRow"></Table>
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage" :current="page.current" 
           :page-size="page.pageNum" show-total show-elevator size='small'></Page>
@@ -69,6 +67,8 @@
                     <div v-else style="width: 200px;height:230px;">
                         <img :src="formValidate.linkmanPhotoPath" v-show="formValidate.linkmanPhotoPath"
                                  style="background-position: 100%;height: 100%;width: 100%;" />
+                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff;padding-top: 80px"
+                          v-if="!formValidate.linkmanPhotoPath"></Icon>
                     </div>
                 </Col>
             </Row>
@@ -90,9 +90,17 @@
 		</Form>
         <div slot="footer">
             <Button type="text" style="width: 100px;" @click="cancel">取消</Button>
-            <Button type="primary" @click="open_ok"  style="width: 100px;">确定</Button>
+            <Button type="primary" @click="open_ok" :loading="loading" style="width: 100px;">确定</Button>
         </div>
 	</Modal>
+    <Modal
+        v-model="model2"
+        :title="m_tit"
+        :scrollable='false'
+        @on-ok="m_ok"
+        @on-cancel="m_cancel">
+        <p>{{m_msg}}</p>
+    </Modal><!-- m_tit:删除提示 选项提示   m_msg:是否删除所选数据 请确认选定要进行操作的数据   -->
 </div>
 </template>
 
@@ -167,8 +175,44 @@ export default{
 	                    ellipsis: true
 	                },
 	                {///留一个一个查看按钮，其余全部在上方nav处显示
-
-	                } ],
+	                	title: '操作',
+                        key: 'action',
+                        width: 100,
+                        align: 'center',
+                        fixed: 'right',
+                        render: function(h, params){
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: function (e) {
+                                        	e.stopPropagation();
+                                        	var _self=this;
+                                            //this.show(params.index);
+                                            console.log(params)
+                                            _self.openState="查看";
+											// _self.theCity[0]=params.row.province;
+											// _self.theCity[1]=params.row.city;
+											// _self.theCity[2]=params.row.district;//theCity: ['浙江','宁波市','余姚市'],
+											this.$set(_self.theCity,0,params.row.province);
+											this.$set(_self.theCity,1,params.row.city);
+											this.$set(_self.theCity,2,params.row.district);
+											for(let key in params.row){
+												//if(_self.hasOwnProperty(key)){
+													_self.formValidate[key]=params.row[key];
+												//}
+											}
+											_self.model1=true;
+											//return false;
+                                        }.bind(this)
+                                    }
+                                },'查看')
+                            ]);
+                        }.bind(this)
+	                }],
 	        data1: [],
 	        formValidate: {
                 siteName: '',
@@ -203,7 +247,10 @@ export default{
 	        openState: '添加',
             pictureName: '',
             pictureUrl: '',
-            up_photo: 'http://localhost:8080/HaiSSMDemo/upSitePhoto.action'
+            up_photo: 'http://localhost:8080/HaiSSMDemo/upSitePhoto.action',
+            loading: false,
+            m_tit: null,
+            m_msg: null
 		}
 
 	},
@@ -241,6 +288,7 @@ export default{
 		// 获取该公司下所有托运方
 		getAll: function(){
             var _self = this;
+            _self.loading=true;
             console.log(_self.userType);
             console.log("进入getall函数");
             //console.log(this.userType);  后台接口 int current,int pageNum,int companyId,String type
@@ -267,12 +315,15 @@ export default{
                             data.dataList[i].linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data.dataList[i].linkmanPhotoPath;
                         }*/
                         _self.data1 = data.dataList;
+                        _self.loading=false;
                         console.log(_self.data1);
                         
+                    },
+                    error: function(){
+                    	_self.$Message.error("获取服务器数据失败");
+                    	_self.loading=false;
                     }
                 });
-            //}
-            _self.searchText='';
 		},
 		// 展开一个托运方信息
 		open: function(event){
@@ -286,16 +337,24 @@ export default{
 			//添加
 			if(iText=="添加"){
 				_self.openState='添加';
+				_self.$set(_self.theCity,0,'浙江');
+				_self.$set(_self.theCity,1,"宁波市");
+				_self.$set(_self.theCity,2,"余姚市");
 			//查看
 			}else if(iText=="查看"){
 				if(!_self.oneArr){
-					window.alert("请选择要查看的数据");
+					_self.m_tit="选项提示";
+					_self.m_msg="请选择一行数据进行查看，不可多选也不可不选";
+					_self.model2=true;
 					return ;	
 				}
 				_self.openState="查看";
-				_self.theCity[0]=_self.oneArr.province;
-				_self.theCity[1]=_self.oneArr.city;
-				_self.theCity[2]=_self.oneArr.district;//theCity: ['浙江','宁波市','余姚市'],
+				// _self.theCity[0]=_self.oneArr.province;
+				// _self.theCity[1]=_self.oneArr.city;
+				// _self.theCity[2]=_self.oneArr.district;//theCity: ['浙江','宁波市','余姚市'],
+				_self.$set(_self.theCity,0,_self.oneArr.province);
+				_self.$set(_self.theCity,1,_self.oneArr.city);
+				_self.$set(_self.theCity,2,_self.oneArr.district);
 				for(let key in _self.oneArr){
 					//if(_self.hasOwnProperty(key)){
 						_self.formValidate[key]=_self.oneArr[key];
@@ -310,13 +369,18 @@ export default{
 			//修改
 			}else if(iText=="修改"){
 				if(!_self.oneArr){
-					window.alert("请选择要修改的数据");
+					_self.m_tit="选项提示";
+					_self.m_msg="请选择一行数据进行修改，不可多选也不可不选";
+					_self.model2=true;
 					return ;
 				}
 				_self.openState="修改";
-				_self.theCity[0]=_self.oneArr.province;
-				_self.theCity[1]=_self.oneArr.city;
-				_self.theCity[2]=_self.oneArr.district;
+				// _self.theCity[0]=_self.oneArr.province;
+				// _self.theCity[1]=_self.oneArr.city;
+				// _self.theCity[2]=_self.oneArr.district;
+				_self.$set(_self.theCity,0,_self.oneArr.province);
+				_self.$set(_self.theCity,1,_self.oneArr.city);
+				_self.$set(_self.theCity,2,_self.oneArr.district);
 				for(let key in _self.oneArr){
 					//if(_self.hasOwnProperty(key)){
 						_self.formValidate[key]=_self.oneArr[key];
@@ -347,10 +411,10 @@ export default{
             //this.formValidate.pictureUrl = data[1];
             this.loadingStatus = false;
             this.formValidate.linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data[0];
-            this.$Message.success('上传成功');
+            this.$Message.success('照片上传成功');
         },
         error:function() {
-            this.$Message.success('上传失败');
+            this.$Message.success('照片上传失败');
         },
         cancel:function(){
         	var _self=this;
@@ -369,7 +433,7 @@ export default{
         },
         open_ok: function(){
             var _self = this;
-            //_self.loading = true;
+            _self.loading = true;
             console.log("进入open_ok");
             _self.$refs.formValidate.validate(function (valid) {
                 if (_self.openState == "查看") {
@@ -379,21 +443,27 @@ export default{
 	        		//_self.formValidate.linkmanPhotoPath=null;
 	        		//_self.formValidate.remark=null;
                     //return ;
-                } else if (_self.openState == "添加") {
-                    if (valid) {
+                    _self.loading=false;
+                    _self.$refs['formValidate'].resetFields();
+	        		_self.formValidate.linkmanPhotoPath=null;
+	        		_self.formValidate.remark=null;
+	        		_self.model1=false;
+                }else if(_self.openState == "添加") {
+                    if(valid) {
                     	_self.insertSite();
+                    }else{
+                    	_self.loading=false;
                     }
-                } else{// if (_self.openState == "修改")
+                }else{// if (_self.openState == "修改")
                 	if(valid){
                 		_self.updateSite();
-                	}
+                	}else{
+                    	_self.loading=false;
+                    }
                 }
         		// _self.oneArr=null;
         		// _self.delArr=[];
-        		_self.$refs['formValidate'].resetFields();
-        		_self.formValidate.linkmanPhotoPath=null;
-        		_self.formValidate.remark=null;
-        		_self.model1=false;
+        		
         		//_self.theCity=['浙江','宁波市','余姚市'];
             });
         },
@@ -418,7 +488,17 @@ export default{
             		// _self.formValidate.remark=null;
         			_self.$Message.info("完成添加");
         			_self.getAll();
-        			_self.model1=false;
+        			//_self.model1=false;
+        			_self.loading=false;
+                    _self.$refs['formValidate'].resetFields();
+	        		_self.formValidate.linkmanPhotoPath=null;
+	        		_self.formValidate.remark=null;
+	        		_self.model1=false;
+            	},
+            	error: function(){
+            		_self.loading=false;
+            		_self.$Message.error("添加失败");
+            		//_self.model1=false;
             	}
             });
         },
@@ -440,7 +520,17 @@ export default{
             		// _self.formValidate.remark=null;
         			_self.$Message.info("完成修改");
         			_self.getAll();
-        			_self.model1=false;
+        			//_self.model1=false;
+        			_self.loading=false;
+                    _self.$refs['formValidate'].resetFields();
+	        		_self.formValidate.linkmanPhotoPath=null;
+	        		_self.formValidate.remark=null;
+	        		_self.model1=false;
+        		},
+        		error: function(){
+            		_self.loading=false;
+            		_self.$Message.error("更新失败");
+            		//_self.model1=false;
         		}
         	});
         },
@@ -450,7 +540,11 @@ export default{
         	console.log(_self.delArr);
 
         	if(_self.delArr.length>0){
-        		$.ajax({
+        		_self.del_msg=true;
+        		_self.m_tit="删除提示";
+				_self.m_msg="请确认是否删除该"+_self.delArr.length+"条数据";
+				_self.model2=true;
+        		/*$.ajax({
         			url: 'http://localhost:8080/HaiSSMDemo/delSiteBatch.action',
         			traditional:true,
         			data: {arrays:_self.delArr},
@@ -460,12 +554,19 @@ export default{
         				_self.$Message.info("删除成功");
         				_self.delArr=[];
         				_self.getAll();
+        				_self.del_msg=false
+        			},
+        			error: function(){
+        				_self.$Message.info("删除失败");
+        				_self.del_msg=false
         			}
-        		});
+        		});*/
         	}else{
-        		alert("请选择要删除的数据")
+				_self.m_tit="选项提示";
+				_self.m_msg="请选择要删除的数据，至少选择一行数据";
+				_self.model2=true;
         	}
-        }
+        },
         /*postData: function(idata){
         	var _self=this;
         	consoel.log("在postData函数中");
@@ -481,6 +582,45 @@ export default{
         		}
         	});
         }*/
+        handleRow: function(data,index){
+        	var _self=this;
+        	// console.log(data);
+        	// console.log(index);
+        	//_self.data1[index].checked=true;
+        	this.$refs.table.toggleSelect(index);
+        },
+        m_ok: function(){
+        	var _self=this;
+        	_self.model2=false;
+        	_self.m_tit=null;
+        	_self.m_msg=null;
+        	if(_self.del_msg){
+        		$.ajax({
+        			url: 'http://localhost:8080/HaiSSMDemo/delSiteBatch.action',
+        			traditional:true,
+        			data: {arrays:_self.delArr},
+        			type: 'POST',
+        			cache: false,
+        			success: function(){
+        				_self.$Message.info("删除成功");
+        				_self.delArr=[];
+                        _self.oneArr=null;
+        				_self.getAll();
+        				_self.del_msg=false
+        			},
+        			error: function(){
+        				_self.$Message.info("删除失败");
+        				_self.del_msg=false;
+        			}
+        		});
+        	}
+        },
+        m_cancel: function(){
+            var _self=this;
+            _self.model2=false;
+            _self.m_tit=null;
+            _self.m_msg=null;
+        }
 	}//methods结束
 }
 </script>

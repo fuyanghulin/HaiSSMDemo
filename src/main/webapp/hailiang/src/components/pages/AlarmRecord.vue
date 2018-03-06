@@ -9,7 +9,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search"></i-Button>
         </div>
     </nav>
-    <i-Table border stripe :columns="columns" :data="data" @on-selection-change="chooseAll"></i-Table>
+    <i-Table ref='table' border stripe :columns="columns" :data="data" @on-selection-change="chooseAll" @on-row-click="handleRow"></i-Table>
     <Page :total="totalRecord"
           show-total show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum" size='small'></Page>
@@ -154,13 +154,20 @@ export default{
 					_self.getData();
 				}
 			}
+        },
+        handleRow: function(data,index){
+            var _self=this;
+            // console.log(data);
+            // console.log(index);
+            //_self.data1[index].checked=true;
+            this.$refs.table.toggleSelect(index);
         }
 }
 </script>
 
 <style scoped>
         nav {
-            padding: 10px 50px;
+            padding: 10px 34px 10px 16px;
             display: flex;
             justify-content: space-between;
             justify-items: center;

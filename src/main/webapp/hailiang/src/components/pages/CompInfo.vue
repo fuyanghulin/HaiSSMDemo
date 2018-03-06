@@ -2,10 +2,12 @@
 	<div class="compinfo" ref="head">
 		<nav>
 	        <div>
-	            <Button type="primary" @click="open($event)" v-if="userType===1">添加</Button>
-	            <Tooltip content="删除所选企业信息" placement="bottom-start">
-	                <Button type="error" style="margin-left: 20px;" @click="del" v-if="userType===1">删除</Button>
-	            </Tooltip>
+                <Button type="primary" @click="open($event)" v-if="userType===1">添加</Button>
+                <Button type="primary" @click="open($event)" v-if="userType===1">修改</Button>
+	            <Button type="primary" @click="open($event)">查看</Button>
+	            <!-- <Tooltip content="删除所选企业信息" placement="bottom-start"> -->
+	                <Button type="error" @click="del" v-if="userType===1">删除</Button>
+	            <!-- </Tooltip> -->
 	            
 	        </div>
 	        <div>
@@ -15,7 +17,7 @@
 	        </div>
 	    </nav>
 	    <!--数据区块-->
-	    <Table border stripe :columns="columns" :data="data1" @on-selection-all="chooseAll" @on-selection-change="sel_change" ellipsis></Table>
+	    <Table ref='table' border stripe :columns="columns" :data="data1"  @on-selection-change="sel_change" ellipsis @on-row-click="handleRow"></Table><!-- @on-selection-all="chooseAll" -->
 	    <!--\总页数-->
 	    <Page :total="totalRecord" size='small' @on-change="changePage"
 	          :page-size="page.pageNum" show-total show-elevator></Page>
@@ -157,6 +159,14 @@
 	        <p v-if="onedel">是否删除该条数据</p>
 	        <p v-else>是否确认删除{{delArr.length}}条数据</p>
 	    </Modal>
+        <Modal
+            v-model="model2"
+            :title="m_tit"
+            :scrollable='false'
+            @on-ok="m_ok"
+            @on-cancel="m_cancel">
+            <p>{{m_msg}}</p>
+        </Modal>
 	</div>
 </template>
 
@@ -249,6 +259,12 @@ props:{
             state:true,/*步骤状态*/
             columns: [
                 {
+                    type: 'index',
+                    width: 40,
+                    align: 'center',
+                    fixed: 'left'
+                },
+                {
                     type: 'selection',
                     width: 60,
                     align: 'center',
@@ -339,10 +355,10 @@ props:{
                     title: '操作',
                     key: 'action',
                     align: 'center',
-                    width: 150,
+                    width: 100,
                     fixed: 'right',
                     render: function (h, params) {
-                        if(this.userType===1){
+                        /*if(this.userType===1){
                             return h('div', [
                                 h('Button', {
                                     props: {
@@ -375,7 +391,7 @@ props:{
                                     }
                                 }, '删除')
                             ]);
-                        }else{
+                        }else{*/
                             return h('div', [
                                 h('Button', {
                                     props: {
@@ -394,7 +410,7 @@ props:{
                                     }
                                 }, '查看')
                             ]);
-                        }
+                        //}
 
                     }.bind(this)
                 }],
@@ -443,9 +459,13 @@ props:{
             cityData: [],
             modal2: false,
             onedel:false,
-            delone:'',
+            delone: null,
             delArr:[],
-            openmodal2:'下一步'
+            openmodal2:'下一步',
+            model2: false,
+            m_tit: '',
+            m_msg: '',
+            del_msg: false
         }
     },
     activated: function () {//created:
@@ -480,15 +500,15 @@ props:{
         //console.log(this.$refs.company);
         //console.log(this.company);
         //console.log(this.ruleValidate);
-this.indexloading();
-    },
+        this.indexloading();
+            },
         beforeDestroy: function(){
             this.$emit('getloading',true);
         },
     methods: {
-indexloading: function(){
-    this.$emit('getloading',false);
-},
+        indexloading: function(){
+            this.$emit('getloading',false);
+        },
         submit: function (name) {
             var _self=this;
             _self.$refs[name].validate(function (valid) {
@@ -500,16 +520,21 @@ indexloading: function(){
             });
         },
         del:function() {
-            var _self = this;
-            //console.log("所选个数："+_self.delArr.length);
+            
 
-            if(_self.delArr.length>0){//kk加了一个判断
-                //console.log("进入modal2");
-                _self.modal2=true;
-                /*if(ensure_del){
-                    ok_del();
-                }*/
-                
+            var _self=this;
+            console.log("进入删除逻辑");
+            console.log(_self.delArr);
+
+            if(_self.delArr.length>0){
+                _self.del_msg=true;
+                _self.m_tit="删除提示";
+                _self.m_msg="请确认是否删除该"+_self.delArr.length+"条数据";
+                _self.model2=true;
+            }else{
+                _self.m_tit="选项提示";
+                _self.m_msg="请选择要删除的数据，至少选择一行数据";
+                _self.model2=true;
             }
             
         },
@@ -527,12 +552,23 @@ indexloading: function(){
                     type: 'GET',
                     url: dataUrl.dataUrl.carrier.del+_self.delone,
                     cache: false,
-                    success: function (data) {
+                    /*success: function (data) {
                         _self.getAll();
                         _self.$Message.info('刪除成功');
+                    },*/
+                    success: function(){
+                        _self.$Message.info("删除成功");
+                        _self.delArr=[];
+                        _self.delone=null;
+                        _self.getAll();
+                        _self.del_msg=false
+                    },
+                    error: function(){
+                        _self.$Message.info("删除失败");
+                        _self.del_msg=false;
                     }
                 });
-                _self.delone='';
+                _self.delone=null;
                 _self.onedel=false;
             }else{
                 //console.log('想删除多条');
@@ -540,49 +576,60 @@ indexloading: function(){
                     type: 'GET',
                     url: dataUrl.dataUrl.carrier.del+_self.delArr,
                     cache: false,
-                    success: function (data) {
+                    /*success: function (data) {
                         _self.delArr = [];
                         _self.getAll();
                         _self.$Message.info('刪除成功');
+                    }*/
+                    success: function(){
+                        _self.$Message.info("删除成功");
+                        _self.delArr=[];
+                        _self.delone=null;
+                        _self.getAll();
+                        _self.del_msg=false
+                    },
+                    error: function(){
+                        _self.$Message.info("删除失败");
+                        _self.del_msg=false;
                     }
                 });
                 _self.delArr=[];
             }
             
         },
-            getData:function() {
-                var _self = this;
-                _self.$Loading.start();
-                $.ajax({
-                    type: 'GET',
-                    url: dataUrl.dataUrl.carrier.all,
-                    cache: false,
-                    data: _self.page,
-                    success: function (data) {
-                        _self.$Loading.finish();
-                        if (typeof data == "object") {
-                            _self.totalRecord = data.totalRecord;
-                            _self.page.current = data.currentPage;
-                            for (var key in data.dataList) {
-                                data.dataList[key].createTime = _self.format(data.dataList[key].createTime);
-                            }
-                            _self.data = data.dataList;
-                        } else {
-                            _self.data = [];
+        getData:function() {
+            var _self = this;
+            _self.$Loading.start();
+            $.ajax({
+                type: 'GET',
+                url: dataUrl.dataUrl.carrier.all,
+                cache: false,
+                data: _self.page,
+                success: function (data) {
+                    _self.$Loading.finish();
+                    if (typeof data == "object") {
+                        _self.totalRecord = data.totalRecord;
+                        _self.page.current = data.currentPage;
+                        for (var key in data.dataList) {
+                            data.dataList[key].createTime = _self.format(data.dataList[key].createTime);
                         }
+                        _self.data = data.dataList;
+                    } else {
+                        _self.data = [];
                     }
-                });
-            },
-            add0:function(m) {
-                return m < 10 ? '0' + m : m
-            },
-            format:function(nS) {
-                var time = new Date(parseInt(nS));
-                var y = time.getFullYear();
-                var m = time.getMonth() + 1;
-                var d = time.getDate();
-                return y + '-' + this.add0(m) + '-' + this.add0(d);
-            },
+                }
+            });
+        },
+        add0:function(m) {
+            return m < 10 ? '0' + m : m
+        },
+        format:function(nS) {
+            var time = new Date(parseInt(nS));
+            var y = time.getFullYear();
+            var m = time.getMonth() + 1;
+            var d = time.getDate();
+            return y + '-' + this.add0(m) + '-' + this.add0(d);
+        },
        /* moreDelete: function () {
             var _self = this;
             if (this.theChecked.length > 0) {
@@ -612,7 +659,7 @@ indexloading: function(){
         },*/
         cancel_del:function(){
             this.modal2=false;
-            this.delone='';
+            this.delone= null;
             this.onedel=false;
             this.current=0;
         },
@@ -727,49 +774,65 @@ indexloading: function(){
             this.state=true;
         },
         open: function(obj) {
+            var _self=this;
             this.openmodal2='下一步';
-            if ($.trim(obj.currentTarget.innerText)== "添加") {
+            console.log(_self.delone);
+            var iText=null;
+            iText=event.currentTarget.innerText;
+            if (iText== "添加") {
                 for (var key in this.company) {
                     this.company[key] = '';
                 }
-                this.openState = $.trim(obj.currentTarget.innerText);
+                this.openState = "添加";
                 //console.log(this.openState);
+            }else if(iText=="查看"){
+                if(!_self.delone){
+                    _self.m_tit="选项提示";
+                    _self.m_msg="请选择一行数据进行查看，不可多选也不可不选";
+                    _self.model2=true;
+                    return ;    
+                }
+                _self.openState="查看";
+                for(let key in _self.delone){
+                    _self.company[key]=_self.delone[key];
+                }
+            //修改
+            }else if(iText=="修改"){
+                if(!_self.delone){
+                    _self.m_tit="选项提示";
+                    _self.m_msg="请选择一行数据进行修改，不可多选也不可不选";
+                    _self.model2=true;
+                    return ;
+                }
+                _self.openState="修改";
+                for(let key in _self.delone){
+                    _self.company[key]=_self.delone[key];
+                }
+                _self.openmodal2='确认';
             }
             //this.$refs['formValidate'].resetFields();
             this.modal1 = true;
+            console.log(_self.company);
         },
-        /*chooseAll: function (selection) { // 全选
-            this.theChecked = [];
-            for (var i = 0 ; i < selection.length; i++) {
-                this.theChecked.push(selection[i].id);
-            }
-        },*/
         change: function (index) {
             this.openState = "修改";
             this.company = JSON.parse(JSON.stringify(this.data1[index]));
             this.modal1 = true;
             // this.op = 1;
         },
-        chooseAll:function(data) {
-            var _self = this;
-            _self.delArr=[];
-            if(data.length){
-                for (var i in data) {
-                    _self.delArr.push(data[i].id);
-                }
-            }
-            
-        },
         sel_change:function(data){
             var _self = this;
-            _self.delArr=[];
-            if(data.length){
-
+            console.log(data);
+            _self.delArr=[];//放置所以被选择行的id
+            _self.delone=null;//放置单独的一行的所有信息
+            if(data.length>0){
                 for (var i in data) {
-                    _self.delArr.push(data[i].id);
+                    _self.delArr.push(data[i].id); 
                 }
             }
-            
+            if(data.length==1){
+                _self.delone=data[0];
+            }
         },
         time: function (times) {
             var d = new Date(parseInt(times));
@@ -857,15 +920,36 @@ indexloading: function(){
                     _self.current=0;
                 }
             });
+        },
+        handleRow: function(data,index){
+            var _self=this;
+            // console.log(data);
+            // console.log(index);
+            //_self.data1[index].checked=true;
+            this.$refs.table.toggleSelect(index);
+        },//当点击一行是触发该函数，同时会触发chooseAll
+        m_ok: function(){
+            var _self=this;
+            _self.model2=false;
+            _self.m_tit=null;
+            _self.m_msg=null;
+            if(_self.del_msg){
+                _self.ok_del();
+            }
+        },
+        m_cancel: function(){
+            var _self=this;
+            _self.model2=false;
+            _self.m_tit=null;
+            _self.m_msg=null;
         }
     }
-	}
+}
 </script>
 
 <style scoped>
-/*@import '../../common/someinfo.css'好像也有吧*/
 nav {
-    padding: 10px 50px;
+    padding: 10px 34px 10px 16px;
     display: flex;
     justify-content: space-between;
     justify-items: center;
@@ -877,24 +961,7 @@ nav div:first-child button {
 .ivu-table-cell{
     padding: 0;
 }
-/*不明白下面这个样式为什么不起作用，所以放到resetcss里了，这样很不好*/
-/*   .compinfo .ivu-modal-content {
-        margin-top: 20px;
-    }
 
-    .compinfo .ivu-form-item-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .compinfo .ivu-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }*/
-
-/*不明白怎么td高度就不一样高了，*/
 .ivu-table td, .ivu-table th{
 	height: 48px;
 }

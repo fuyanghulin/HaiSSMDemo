@@ -9,7 +9,7 @@
             <i-Button type="primary" shape="circle" icon="ios-search"></i-Button>
         </div>
     </nav>
-    <i-Table :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe></i-Table>
+    <i-Table ref='table' :columns="columns" :data="data" @on-selection-change="chooseAll" border stripe @on-row-click="handleRow"></i-Table>
     <Page :total="totalPage"  show-total
           show-elevator :current="page.current" @on-change="next"
           :page-size="page.pageNum" size='small'></Page>
@@ -125,16 +125,16 @@ indexloading: function(){
                 this.page.current = data;
                 this.getData();
             },
-        format: function(nS) {
-            var time = new Date(parseInt(nS));
-            var y = time.getFullYear();
-            var m = time.getMonth() + 1;
-            var d = time.getDate();
-            return y + '-' + this.add0(m) + '-' + this.add0(d);
-        },
-        add0: function(m) {
-            return m < 10 ? '0' + m : m
-        },
+            format: function(nS) {
+                var time = new Date(parseInt(nS));
+                var y = time.getFullYear();
+                var m = time.getMonth() + 1;
+                var d = time.getDate();
+                return y + '-' + this.add0(m) + '-' + this.add0(d);
+            },
+            add0: function(m) {
+                return m < 10 ? '0' + m : m
+            },
             getData:function() {
                 var _self = this;
                 _self.$Loading.start();
@@ -163,7 +163,14 @@ indexloading: function(){
                         _self.$Loading.error();
                     }
                 });
-            }
+            },
+            handleRow: function(data,index){
+                var _self=this;
+                // console.log(data);
+                // console.log(index);
+                //_self.data1[index].checked=true;
+                this.$refs.table.toggleSelect(index);
+            }//当点击一行是触发该函数，同时会触发chooseAll
         },
         mounted: function () {
             //this.$refs.head.style.display = 'block';
@@ -195,7 +202,7 @@ this.indexloading();
 
 <style scoped>
         nav {
-            padding: 10px 50px;
+            padding: 10px 34px 10px 16px;
             display: flex;
             justify-content: space-between;
             justify-items: center;
