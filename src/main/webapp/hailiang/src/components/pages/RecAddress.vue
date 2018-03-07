@@ -279,6 +279,8 @@ export default{
         // 获取该公司下所有托运方
         getAll: function(){
             var _self = this;
+            _self.delArr=[];
+            _self.oneArr=null;
             _self.loading=true;
             console.log(_self.userType);
             console.log("进入getall函数");

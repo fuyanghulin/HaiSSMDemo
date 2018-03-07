@@ -492,6 +492,9 @@ indexloading: function(){
             },
             getData:function() {
                 var _self = this;
+
+                _self.delArr=[];
+                //_self.oneArr=null;
                 _self.$Loading.start();
                 $.ajax({
                     type: 'GET',

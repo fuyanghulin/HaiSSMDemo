@@ -22,17 +22,20 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 
 
-###功能
+##功能
 
 		该webapp主要是用于海梁单页面开发，以取代原先不大合理的框架设计，（readme文档写乱了_(:з」∠)_）
 
-###创建时间
+##创建时间
+
 		2018年2月24日21:34:32
 
-###作者
+##作者
+
 		qdhjkw@qq.com
 
-###规划
+##规划
+
 		先将原先功能全部移植到该单页面项目中
 		登录的设置，暂时考虑用v-if之类的来做
 		路由的设置，
@@ -40,7 +43,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 		原先部分页面未实现结构样式功能的分离，在移植过程中需要注意
 		对部分重复的js逻辑进行封装
 
-###注意
+##注意
+
 		该项目由原HaiSSMDemo拷贝而来，重命名为HaiSSMDemo2（2018年3月4日16:31:25：现已替代HaiSSMDemo）
 		前一个文件夹“HaiLiangpc”是之前做SPA的尝试
 		由于项目进度的特殊性以及个人能力的问题，该SPA开发采用npm run build打包后放在tomcat中运行测试（滑稽摊手）
@@ -48,7 +52,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 		需要做修改的地方：引入dataUrl并修改dataUrl.dataUrl、修改this.$cookies、手动添加userType
 		上线以后应将每个文件里的url做修改，目前是本地8080
 
-###事件
+##事件
+
 		|2018年2月24日21:41:55|先完成了服务器的配置，可以在8080访问到打包完的vue页面|
 		|2018年2月25日09:58:26|在考虑使用axios的时候发现原先jq的ajax请求使用很多，暂时决定使用jq|
 		|2018年2月25日11:03:47|引入vue-cookies|
@@ -60,13 +65,14 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ***
 
-###疑问
+##疑问
+
 		1.为什么在tomcat访问的路径是"http://localhost:8080/HaiSSMDemo2/index.html#/"，多个"#"
 		2.为什么在router-link外面写keep-alive会导致页面不跳转？
 		3.路由下的组件如何通信？
 
 ***
-####需要改进
+##需要改进
 
 		0.请求过多
 		1.刷新、搜索的时候，可以做优化
@@ -81,7 +87,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ***
 
 
-###2018年3月4日16:25:53
+##2018年3月4日16:25:53
 ##这之前已经把项目搬到SPA了
 ***
 	接下来的东西用来记录新的功能开发以及vue使用中遇到的问题
@@ -99,13 +105,23 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 		10.身份证、姓名、手机号的正则未做
 
 ***
-##改变Nav记录
+##改变Nav按钮记录
+
+	0.按钮目前是没有区分用户的，既所有用户可以查看修改删除，这是为了开发的时候能方便查看效果，修改完成后，应加上判断将部分按钮隐藏，或者做其他可行处理
 	1.2018年3月6日12:34:57：ShipperInfo和RecAddress页面已经完成的比较成熟，其他页面可以参照这个来修改完善了（正则和表单验证不完善）
 	2.goodstype做了button的显示修改，但是表格内的查看与nav的查看按钮触发modal不是同一个
 	3.safecard页面简单去除了表格的删除按钮，其他的就暂时不做了
 	4.compinfo页面基本完成修改，表格中的查看按钮为还未做修改，modal2模块暂时未删除
 	5.personinfo页面基本完成修改，表格中的查看按钮逻辑为做修改，modal2模块暂时未删除，页面需再优化
-	6.carinfo页面open方法不一样，看是否需要改成和其他页面一样，这里的button先放置，回头再来改这个页面★★
+	6.carinfo页面open方法不一样，看是否需要改成和其他页面一样，这里的button先放置，回头再来改这个页面★★(已经做了简单的修改，但是不如前几个页面简洁2018年3月7日12:58:16)
+	7.车辆信息和电子运单的delone字段保存的值是数据的id，暂时采用新字段delonecar和deloneord来代替实现功能
 
 ***
 	修改数据的逻辑：点击确定是会一定想服务器发送更新数据的，是否要做一个不发送未做任何改变就不发送请求的逻辑判断？（感觉不用了）
+	所有的userType需要做一些完善，首先这个值应该由路由:id这样传入，同时还可以把当前路由刷新一起实现（比如roleId加一段随机事件字符串将路由刷新）☆☆☆
+
+***
+
+	☆☆☆☆☆☆问题：刷新即getData或者getAll函数后，需要将delone|delArr|delonecar等清空
+	搞乱了，如果有地方点击查看出现问题，要么就是delone等字段没有初始化的问题
+	电子运单时间出现问题，显示出来的日期比原来靠前了一天

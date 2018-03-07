@@ -31,9 +31,15 @@
 		            <Icon type="ios-analytics"></Icon>
 		            托运管理
 		        </template>
-		        <MenuItem name="5-1"><router-link tag="div" class="link_div" to='/eleorder'>电子运单信息</router-link></MenuItem>
-		        <MenuItem name="5-2" v-if="userType==3"><router-link tag="div" class="link_div" to='/shipperinfo'>托运方</router-link></MenuItem>
-		        <MenuItem name="5-3" v-if="userType==3"><router-link tag="div" class="link_div" to='/recaddress'>收货站点</router-link></MenuItem>
+		        <MenuItem name="5-1">
+		        	<router-link tag="div" class="link_div" to='/eleorder'>电子运单信息</router-link>
+		        </MenuItem>
+		        <MenuItem name="5-2" v-if="userType!==1&&userType!==2"><!-- 这里因为发现userType的逻辑有待完善，所以先这样做取反判断 -->
+		        	<router-link tag="div" class="link_div" to='/shipperinfo'>托运方</router-link>
+		        </MenuItem>
+		        <MenuItem name="5-3" v-if="userType!==1&&userType!==2">
+		        	<router-link tag="div" class="link_div" to='/recaddress'>收货站点</router-link>
+		        </MenuItem>
 		    </Submenu>
 		    <Submenu name="6">
 		        <template slot="title">
@@ -71,6 +77,8 @@
 		},
 		created:function(){
 			this.userType=parseInt(this.$cookies.get("roleID")); 
+			console.log(this.$cookies.get('roleID'))
+			console.log(this.userType)
 		}
 	}
 </script>

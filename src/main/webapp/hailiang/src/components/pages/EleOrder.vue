@@ -2,7 +2,10 @@
 <div class="eleorder">
     <nav>
         <div>
-            <i-Button type="primary" @click="open($event)" v-if="userType==3">添加</i-Button>
+            <i-Button type="primary" @click="open($event)" >添加</i-Button><!-- v-if="userType==3" -->
+            <i-Button type="primary" @click="open($event)" >修改</i-Button>
+            <i-Button type="primary" @click="open($event)">查看</i-Button>
+            <i-Button type="primary" disabled >打印</i-Button>
             
             <Tooltip content="删除所选货物信息" placement="bottom-start">
                 <i-Button type="error" @click="del" v-if="userType===1">删除</i-Button>
@@ -14,15 +17,15 @@
             <i-Button type="primary" @click="getData" style="margin-left:20px;">刷新</i-Button>
         </div>
     </nav>
-    <i-Table ref='table' border stripe size='small' :columns="columns" :data="data" @on-selection-all="chooseAll" @on-selection-change="sel_change" @on-row-dblclick='print_open' @on-row-click="handleRow"></i-Table>
+    <i-Table ref='table' border stripe size='small' :columns="columns" :data="data" @on-selection-change="sel_change" @on-row-dblclick='print_open' @on-row-click="handleRow"></i-Table>
     <Page :total="totalRecord" size='small' show-total
           show-elevator :current="page.current" @on-change="next" :page-size="page.pageNum"></Page>
 
     <Modal
-            width="70%"
-            v-model="modal1"
-            :closable="false"
-            @on-cancel="cancel">
+        width="70%"
+        v-model="modal1"
+        :closable="false"
+        @on-cancel="cancel">
         <i-form ref="formValidate" :model="formValidate" :rules="ruleValidate" id='printhere'>
             <Row>
                 <i-Col span="11">
@@ -285,12 +288,13 @@
             <i-button type="primary" @click="upMessage" :loading="loading" style="width: 100px;">确定</i-button>
         </div>
     </Modal>
+
     <!--显示订单状态-->
     <Modal
-            width="60%"
-            v-model="modal2"
-            :closable="false"
-            :styles="{top: '20px'}">
+        width="60%"
+        v-model="modal2"
+        :closable="false"
+        :styles="{top: '20px'}">
         <div class="theMsgBox">
             <div class="oneheadBox">订单状态</div>
             <div style="height: 40px; line-height: 40px; text-align: center">
@@ -312,6 +316,8 @@
             </ul>
         </div>
     </Modal>
+
+
     <Modal
         v-model="modal3"
         title="删除提示"
@@ -381,119 +387,125 @@ props:{
                 }]
             },
             modal1: false,
-            columns: [{
+            columns: [
+                {
+                type: 'index',
+                width: 40,
+                align: 'center',
+                fixed: 'left'
+                },{
                 type: 'selection',
                 width: 60,
                 align: 'center',
                 fixed: 'left'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '托运方',
                 key: 'shipper'
-            }, {
+                }, {
                 width: 120,
                 align: 'center',
                 title: '托运日期',
                 key: 'realConsignDate',
                 sortable: true
-            }, {
+                }, {
                 width: 120,
                 align: 'center',
                 title: '装货时间',
                 key: 'realLoadingDate',
                 sortable: true
-            }, {
+                }, {
                 width: 120,
                 align: 'center',
                 title: '卸货时间',
                 key: 'realUploadDate',
                 sortable: true
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '发货点',
                 key: 'sendPlace'
-            }, {
+                }, {
                 width: 150,
                 align: 'center',
                 title: '发货城市',
                 key: 'sendCity'
-            }, {
+                }, {
                 width: 150,
                 align: 'center',
                 title: '装货地址',
                 key: 'loadPlace'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '装货联系人',
                 key: 'loadLinkman'
-            }, {
+                }, {
                 width: 120,
                 align: 'center',
                 title: '装货联系人电话',
                 key: 'loadLinkmanPhone'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '收货点',
                 key: 'receivePlace'
-            }, {
+                }, {
                 width: 150,
                 align: 'center',
                 title: '收货城市',
                 key: 'receiveCity'
-            }, {
+                }, {
                 width: 150,
                 align: 'center',
                 title: '卸货地址',
                 key: 'uploadAdress'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '卸货联系人',
                 key: 'uploadLinkman'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '卸货联系人电话',
                 key: 'uploadLinkmanPhone'
-            }, {
+                }, {
                 width: 150,
                 align: 'center',
                 title: '货物名称',
                 key: 'goodName'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '商品总数',
                 key: 'total',
                 sortable: true
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '重量',
                 key: 'weight',
                 sortable: true
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '体积',
                 key: 'volume',
                 sortable: true
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '运费',
                 key: 'freight',
                 sortable: true
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '车牌号',
                 key: 'carNum'
-            }, {
+                }, {
                 width: 100,
                 align: 'center',
                 title: '运单状态',
@@ -506,7 +518,8 @@ props:{
                                 //size: 'small'
                             },
                             on: {
-                                click: function() {
+                                click: function(e) {
+                                    e.stopPropagation();
                                     this.modal2 = true;
                                     var _self = this;
                                     this.theCarChecked = [];
@@ -548,9 +561,9 @@ props:{
                         }, '查看')
                     ]);
                 }.bind(this)
-            }, {
-                width: 150,
-                title: '查看打印',
+                }, {
+                width: 100,
+                title: '操作',
                 key: 'action1',
                 align: 'center',
                 fixed: 'right',
@@ -565,29 +578,21 @@ props:{
                                     marginRight: '5px'
                                 },
                                 on: {
-                                    click: function() {
+                                    click: function(e) {
+                                        e.stopPropagation();
                                         this.openState = "查看"; //需要在这里添加一步，修改拿到的货物和车辆信息
                                         var _self = this;
+                                        console.log(this.data[params.index])
+                                        console.log(params)
                                         this.btnclick(this.data[params.index], params);
                                         this.modal1 = true;
                                     }.bind(this)
                                 }
-                            }, '查看'),
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: function() {
-                                        this.$message.info('打印功能尚未完善！');
-                                    }.bind(this)
-                                }
-                            }, '打印')
+                            }, '查看')
                         ]);
                 }.bind(this)
-            }, {
-                width: 150,
+                }/*, {
+                width: 100,
                 title: '操作',
                 key: 'action',
                 align: 'center',
@@ -671,7 +676,7 @@ props:{
                     }
 
                 }.bind(this)
-            }],
+            }*/],
             modal2: false,
             data: [],
             waybillMsg: {},
@@ -681,7 +686,6 @@ props:{
             openState: '',
             loading: false,
             file: null,
-            delArr: [],
             goodsList: [],
             carList: [],
             goodsPosition: 0,
@@ -698,9 +702,11 @@ props:{
             theDriverLog: [],
             theCarChecked: [],
             delone: '',
+            delArr: [],
+            deloneord: null,//保存一行的数据信息，将赋值给查看和修改的界面
             onedel: false,
             modal3: false,
-            modalp: false,
+            modalp: false,//这里的是之前打印相关的代码，功能暂时不实现
             printInfo: {
                 hlCarinfo: {
                     companyName: '',
@@ -746,10 +752,10 @@ props:{
                     _self.userType = 1;
                 } else if (_self.$cookies.get("roleID") == 2) {
                     _self.userType = 2;
-                    this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
+                    //this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
                 } else {
                     _self.userType = 3;
-                    this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
+                    //this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
                 }
                 _self.getData();
             }
@@ -759,7 +765,7 @@ props:{
         /// 获得货物名称
         //企业
         //console.log('即将进入if语段');
-        if (_self.userType == '3') {
+        if (_self.userType == 3) {
             //console.log('进入该if语段');
             var idata = {};
             for (var key in _self.page) {
@@ -786,7 +792,7 @@ props:{
         } else {
             $.ajax({
                 type: 'GET',
-                url: dataUrl.dataUrl.waybill.goodInfo, //获取全部的电子运单
+                url: dataUrl.dataUrl.waybill.goodInfo, //获取全部
                 cache: false,
                 success: function(data) {
                     if (data.length > 0) {
@@ -1172,6 +1178,7 @@ props:{
                     cache: false,
                     success: function(data) {
                         _self.delArr = [];
+                        _self.deloneord=null;
                         _self.getData();
                         _self.$Message.info('刪除成功');
                     }
@@ -1185,7 +1192,7 @@ props:{
             this.delone = '';
             this.onedel = false;
         },
-        chooseAll: function(data) {
+        /*chooseAll: function(data) {
             var _self = this;
             //console.log(this.data.selection);
             _self.delArr = [];
@@ -1195,16 +1202,21 @@ props:{
                 }
             }
 
-        },
+        },*/
         sel_change: function(data) {
+            console.log(data);
             var _self = this;
             //console.log(data);
             _self.delArr = [];
+            _self.deloneord=null;
             if (data.length) {
 
                 for (var i in data) {
                     _self.delArr.push(data[i].id);
                 }
+            }
+            if(data.length==1){
+                _self.deloneord=data[0];
             }
 
         },
@@ -1352,7 +1364,8 @@ props:{
         },
         open: function(obj) {
             var _self = this;
-            if ($.trim(obj.currentTarget.innerText) == "添加") {
+            var iText=obj.currentTarget.innerText;
+            if (iText == "添加") {
                 //_self.$refs['formValidate'].resetFields();
                 for (var key in this.formValidate) {
                     this.formValidate[key] = '';
@@ -1376,7 +1389,26 @@ props:{
                     //this.carPosition = 0;
                     //this.carChange();
                 }
-                this.openState = $.trim(obj.currentTarget.innerText);
+                this.openState = "添加";
+            }else if(iText=="修改"){
+                if(_self.deloneord){
+                    _self.openState="修改";
+                    _self.btnclick(_self.deloneord);
+                    this.modal1 = true;
+                }else{
+                    alert("请选择一行数据");
+                }
+                return ;
+            }else if(iText=="查看"){
+                if(_self.deloneord){
+                    _self.openState="查看";
+                    _self.btnclick(_self.deloneord);
+                    this.modal1 = true;
+                }else{
+                    alert("请选择一行数据");
+                }
+                return ;
+
             }
             //this.$refs['formValidate'].resetFields();
             this.carChange();
@@ -1426,6 +1458,9 @@ props:{
         },
         getData: function() {
             var _self = this;
+            _self.delArr=[];
+            _self.deloneord=null;
+            _self.delone=null;
             _self.$Loading.start();
             if (_self.userType === 3) {
                 //根据公司ID查询数据

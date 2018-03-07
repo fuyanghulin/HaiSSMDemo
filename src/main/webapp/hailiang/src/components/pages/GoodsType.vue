@@ -381,6 +381,8 @@ import dataUrl from '../../assets/config.js'
             },
             getData:function() {
                 var _self = this;
+                _self.delArr=[];
+                _self.delone=null;
                 _self.$Loading.start();
                 $.ajax({
                     type: 'GET',

@@ -92,10 +92,11 @@ import dataUrl from '@/assets/config.js'
                 $.get(dataUrl.dataUrl.company.getName+companyId,function (obj,status) {
                     if(status==='success'){
                         state.companyName=obj.name;
-                        _self.$cookies.set("ID",state.ID,60*60*24*30);
-                        _self.$cookies.set("companyID",state.companyID,60*60*24*30);
-                        _self.$cookies.set("companyName",state.companyName,60*60*24*30);
-                        _self.$cookies.set("roleID",state.roleID,60*60*24*30);
+                        _self.$cookies.set("ID",state.ID,60*60*24*30);//是否登录的标志（这里的注释可能不准确，2018年3月7日09:04:17）
+                        _self.$cookies.set("companyID",state.companyID,60*60*24*30);//用户id
+                        _self.$cookies.set("companyName",state.companyName,60*60*24*30);//用户名
+                        //_self.$cookies.set("roleID",state.roleID,60*60*24*30);//存储用户的userType(2018年3月7日09:18:33这里有个问题，服务器没有给公司这个roleID返回值，但是一直用的是else判断，给页面的userType赋值为3)
+                        _self.$cookies.set("roleID",3,60*60*24*30);//现在将这个cookies的roleID改为3，不过注意2018年3月7日09:21:51之前数据库存储的公司都是没有role_id的
                         if(_self.$cookies.get("companyID")!==undefined){
                             _self.$Message.success('登录成功！');
                             //_self.setUserType(state.roleID);
@@ -158,7 +159,8 @@ import dataUrl from '@/assets/config.js'
                 var ID = _self.$cookies.get("ID");
                 if (ID == 1) {
                     _self.logininfo.istate=false;
-                    _self.logininfo.userType=_self.$cookies.get("roleID");//这个roleID表示客户类型，我是这样判断的
+                    _self.logininfo.userType=_self.$cookies.get("roleID");//这个roleID表示用户类型，
+                    console.log(_self.$cookies.get("roleID"));
                     _self.setState(_self.logininfo);//kk//通过setState函数改变istate，从而进入index页面，这个逻辑不确定是否完全可行，可能需要改进
                 }
             }
