@@ -8,14 +8,14 @@
             
             <Tooltip content="删除所选车辆信息" placement="bottom-start">
                 <Button type="error" style="margin-left: 20px;" @click.stop="del" v-if="userType==3">删除</Button>
-            </Tooltip>原来是moredelete函数
-            <Button type="primary" v-if="userType==3" disabled>修改</Button>
+            </Tooltip><!-- 原来是moredelete函数 -->
+            <Button type="primary" @click="open('1','2',$event)">查看</Button>
+            <Button type="primary" @click="open('1','2',$event)">修改</Button><!-- 这里传的字符1、2都是没必要的 -->
+            <!-- <Button type="primary" v-if="userType==3" disabled>修改</Button> -->
             <Button type="primary" @click="carDetail">车档信息</Button>
 
             <!-- 
             <Button type="primary" @click="open($event)">添加</Button>
-            <Button type="primary" @click="open($event)">修改</Button>
-            <Button type="primary" @click="open($event)">查看</Button>
             <Button type="primary" @click="">打印</Button>
             <Button type="error" @click="delSiteBatch">删除</Button>
             <Button type="primary" @click="carDetail">车档信息</Button> -->
@@ -32,13 +32,14 @@
     <!--\总页数-->
     <Page :total="totalRecord" @on-change="changePage" :current="page.current" 
           :page-size="page.pageNum" show-total show-elevator size='small'></Page>
+
+    <!-- 主要数据modal -->
     <Modal
-            v-model="model1"
-            width="65%"
-            :closable="false"
-            :scrollable='false'
-            @on-cancel="cancel"
-    >
+        v-model="model1"
+        width="65%"
+        :closable="false"
+        :scrollable='false'
+        @on-cancel="cancel">
         <i-form :model="formValidate" :rules="ruleValidate" ref="formValidate">
             <Row>
                 <i-Col span="11">
@@ -311,19 +312,21 @@
             <i-button type="primary" @click="upCarMessage" :loading="loading" style="width: 100px;">确定</i-button>
         </div>
     </Modal>
-    <Modal
-            v-model="model2"
-            width="65%"
-            :scrollable='true'
-            @on-cancel='cancel_map'
 
-    >
+    <!-- 百度地图的modal -->
+    <Modal
+        v-model="model2"
+        width="65%"
+        :scrollable='true'
+        @on-cancel='cancel_map'>
     	<p slot="header">
         </p>
         <div id="allmap" style="width: 100%;height: 500px;"></div>
         <div slot="footer">
         </div>
     </Modal>
+
+    <!-- 点击删除的一个确认删除提示 -->
     <Modal
         v-model="modal2"
         title="删除提示"
@@ -336,15 +339,14 @@
     </Modal>
 
 
-
+    <!-- 点击车档信息生成的modal -->
     <Modal
         v-model='model3'
         width="80%"
         :title="detailArr"
         :scrollable='true'
        style="z-index:800;"
-        @on-cancel="model3=false"
-        >
+        @on-cancel="model3=false">
         <nav>
             <div>
                 <Button type="primary" @click="addDetail($event)" v-if="userType==3">添加</Button><!-- 展开model4 -->
@@ -359,15 +361,14 @@
                 <Button type="primary" @click="carDetail" style="margin-left:20px;">刷新</Button>
             </div>
         </nav>
-        <Table border stripe :columns="detailcolumns" :data="detaildata" ellipsis width="100%"  @on-selection-change="chgdArr"></Table>
-    <!--\总页数-->
-        <!-- <Page :total="1" @on-change="" :current="1" 
-          :page-size="15" show-total show-elevator></Page> --><!-- 暂时放置 -->
+        <Table border stripe :columns="detailcolumns" :data="detaildata" ellipsis width="100%"  @on-selection-change="chgdArr"></Table> 
         <div slot="footer">
             <!-- <i-button type="text" style="width: 100px;" @click="">取消</i-button> -->
             <i-button type="primary" @click="model3=false;" style="width: 100px;">确定</i-button>
         </div>
     </Modal>
+
+    <!-- 添加车档信息 -->
     <Modal
         v-model='model4'
         width='80%'
@@ -411,6 +412,8 @@
             <i-button type="primary" @click="upload" style="width: 100px;">确定</i-button>
         </div>
     </Modal>
+
+    <!-- 查看车档信息图片的modal -->
     <modal
         v-model="model5"
         width="80%"
@@ -418,8 +421,7 @@
         :scrollable='true'
         @on-cancel="clsfive"
         @on-ok="clsfive"
-        style="z-index:1000;"
-    >
+        style="z-index:1000;">
         <!-- <iframe  :src="showImg" align="center" frameborder="0" width="100%" style="border-top: 1px solid #ddd;height: 700px;">
             <p>您的浏览器不支持 iframe 标签。</p>
         </iframe> -->
@@ -429,6 +431,8 @@
             <i-button type="primary" @click="clsfive" style="width: 100px;">确定</i-button>
         </div>
     </modal>
+
+    <!-- 删除车档信息的删除确认提示 -->
     <Modal
         v-model="model6"
         title="删除提示"
@@ -466,7 +470,7 @@ props:{
                 callback();
             }
         };
-        return {
+        return {//之前做过几次修改，可能有很多代码是多余的，暂未做整理(2018年3月7日09:42:08)
             index: 1,
             showImg: null,
             formDynamic: {
@@ -605,9 +609,15 @@ props:{
             new_point:null,
             detailcolumns:[
                 {
+                    type: 'index',
+                    width: 40,
+                    align: 'center',
+                    fixed: 'left'
+                },
+                {
                     type: 'selection',
                     align: 'center',
-                    //width: 120,
+                    width: 60,
                     fixed: 'left'
                 },
                 {
@@ -615,14 +625,14 @@ props:{
                     key: 'carNum',
                     align: 'center',
                     //width: 120,
-                    fixed: 'left'
+                    //fixed: 'left'
                 },
                 {
                     title: '车档信息名称',
                     key: 'fileName',
                     align: 'center',
                     //width: 200,
-                    fixed: 'left'
+                    //fixed: 'left'
                 },
                 /*{
                     title: '图片路径',
@@ -636,14 +646,14 @@ props:{
                     key: 'createTime',
                     align: 'center',
                     //width: 120,
-                    fixed: 'left'
+                    //fixed: 'left'
                 },
                 {
                     title: '修改时间',
                     key: 'updateTime',
                     align: 'center',
                     //width: 120,
-                    fixed: 'left'
+                    //fixed: 'left'
                 },
                 {
                     title: '车档信息图片',
@@ -677,9 +687,15 @@ props:{
             detaildata:[],//用来渲染车档信息的数据
             columns: [
                 {
+                    type: 'index',
+                    width: 40,
+                    align: 'center',
+                    fixed: 'left'
+                },
+                {
                     type: 'selection',
                     align: 'center',
-                    width: 120,
+                    width: 60,
                     fixed: 'left'
                 },
                 {
@@ -693,56 +709,56 @@ props:{
                     title: '挂车牌号',
                     key: 'guacarNum',
                     align: 'center',
-                    width: 120,
+                    //width: 120,
                     ellipsis: true
                 },
                 {
                     title: '车牌颜色',
                     key: 'carnumColor',
                     align: 'center',
-                    width: 120,
+                    //width: 120,
                     ellipsis: true
                 },
                 {
                     title: '车辆类型',
                     key: 'carType',
                     align: 'center',
-                    width: 150,
+                    //width: 150,
                     ellipsis: true
                 },
                 {
                     title: '载重',
                     key: 'allowWeight',
                     align: 'center',
-                    width: 120,
+                    //width: 120,
                     ellipsis: true
                 },
                 {
                     title: '车辆归属',
                     key: 'ownType',
                     align: 'center',
-                    width: 120,
+                    //width: 120,
                     ellipsis: true
                 },
                 {
                     title: '经营许可证',
                     key: 'cerNum',
                     align: 'center',
-                    width: 130,
+                    //width: 130,
                     ellipsis: true
                 },
                 {
                     title: '驾驶员',
                     key: 'driverName',
                     align: 'center',
-                    width: 120,
+                    //width: 120,
                     ellipsis: true
                 },
                 {
                     title: '押运员',
                     key: 'safer',
                     align: 'center',
-                    width: 120,
+                    //width: 120,
                     ellipsis: true
                 },
                 {
@@ -758,7 +774,8 @@ props:{
                                     size: 'small'
                                 },
                                 on: {
-                                    click: function () {  
+                                    click: function (e) {
+                                        e.stopPropagation();
                                         var _self=this;
                                         _self.$Notice.destroy();
                                         $.ajax({
@@ -795,10 +812,10 @@ props:{
                     }.bind(this)
                 },
                 {
-                    title: '查看打印',
+                    title: '操作',
                     key: 'action1',
                     align: 'center',
-                    width: 150,
+                    width: 100,
                     fixed: 'right',
                     render: function (h, params) {
                             return h('div', [
@@ -812,7 +829,8 @@ props:{
                                         marginRight: '5px'
                                     },
                                     on: {
-                                        click: function () {
+                                        click: function (e) {
+                                            e.stopPropagation();
                                             this.openState='查看';
                                             console.log('输出当行的人员信息');
                                             console.log(this.data1[params.index]);
@@ -820,71 +838,11 @@ props:{
                                             this.open(this.data1[params.index].driverName,this.data1[params.index].safer);
                                         }.bind(this)
                                     }
-                                }, '查看'),
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            this.$Message.info('打印功能尚未完善！');
-                                        }.bind(this)
-                                    }
-                                }, '打印')
+                                }, '查看')
                             ]);
                     }.bind(this)
-                },
-                {
-                    title: '操作',
-                    key: 'action',
-                    align: 'center',
-                    width: 150,
-                    fixed: 'right',
-                    render: function (h, params) {
-                        if (this.userType === 3) {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: function () {
-                                             this.title = '修改货运信息';
-                                            this.openState='修改';
-                                            this.formValidate = JSON.parse(JSON.stringify(this.data1[params.index]));
-                                            this.open(this.data1[params.index].driverName,this.data1[params.index].safer);
-                                        }.bind(this)
-                                    }
-                                }, '修改'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: function () {
-                                            //this.deleteOne(params.index);
-                                            console.log('想要删除一条数据');
-                                            this.delone=this.data1[params.index].id;
-                                            console.log(this.delone);
-                                            this.del_index(this.data1[params.index].id);
-                                            this.onedel=true;
-                                            console.log(this.onedel);
-                                        }.bind(this)
-                                    }
-                                }, '删除')
-                            ]);
-                        }
-                    }.bind(this)
-                }],
+                }
+            ],
             data1: [],//this.columns[this.columns.length-1].width===>尝试通过将这个值修改为0来隐藏不需要显示的td
 
             //detailData: [],
@@ -967,7 +925,8 @@ props:{
             loading: false,
             searchText: '',
             onedel:false,
-            delone:'',
+            delone:'',//这个是原来用来删除一辆车辆数据的
+            delonecar: null,//这里新建一个，用来存储查看时车辆信息
             delArr:[],//选择的车辆信息
             textState:{},
             seldArr: null,//选择的文档信息
@@ -984,11 +943,11 @@ props:{
         	if(_self.$cookies.get("roleID")==1){
         		_self.userType = 1;
         		_self.getAll();
-                this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
+                //this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
         	}else if(_self.$cookies.get("roleID")==2){
         		_self.userType = 2;
         		_self.getAll();
-                this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
+                //this.columns[this.columns.length-1].width=0;//2018年2月23日13:24:18添加用于隐藏td
         	}else{
                 _self.userType = 3;
                 _self.getAll();
@@ -1010,236 +969,236 @@ props:{
     },
     methods: {
 
-            handleUpload:function(file) {//选择完图片文件后，将图片信息保存在this.upitem.filePath
-                console.log("发生handleUpload事件");
-                this.upitem.filePath = file;
-                console.log(this.upitem.filePath);
-                return false;
-            },
-            upload:function() {
-                // 这里需要添加检测，1.提骄的数据是否完整；2.提交的车档信息是否重复
-                console.log("发送upload请求upCarAttach.action");
-                var _self = this;
+        handleUpload:function(file) {//选择完图片文件后，将图片信息保存在this.upitem.filePath
+            console.log("发生handleUpload事件");
+            this.upitem.filePath = file;
+            console.log(this.upitem.filePath);
+            return false;
+        },
+        upload:function() {
+            // 这里需要添加检测，1.提骄的数据是否完整；2.提交的车档信息是否重复
+            console.log("发送upload请求upCarAttach.action");
+            var _self = this;
 
-                var formData = new FormData();
-                formData.append('file', this.upitem.filePath);
-                var idata={};
-                idata.carNum=this.detailArr;
-                idata.fileName=this.upitem.fileName;
-                //idata.filePath=this.upitem.filePath;
-                console.log("输出看下要上传的idata原始样子");
-                console.log(idata);
-                $.ajax({
-                    url:  'http://localhost:8080/HaiSSMDemo/upCarAttach.action',
-                    type: 'post',
-                    processData: false, //不对表单处理
-                    contentType: false, //
-                    data: formData,
-                    cache:false,
-                    success:function(data) {
-                        console.log(data);
-                        //item.filePath = data[0];
-                        idata.filePath=data[0];
-                        if(_self.dstatus==1){
-                            console.log("即将执行postData")
-                            _self.postData(_self, 'http://localhost:8080/HaiSSMDemo/insertCarAttach.action', idata);
-                        }else{
-                            var udata={};
-                            udata.id=_self.upitem.id;
-                            udata.filePath=data[0];
-                            console.log(udata);
-                            _self.upData(udata);
-                        }
-                        
-            
-                    },
-                    error:function() {
-                        _self.$Message.error('上传失败')
-                        //_self.model4=false;
-                    }
-                });
-            },
-            handleFormatError:function(file) {
-                this.$Notice.warning({
-                    title: '文件格式不正确',
-                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
-                });
-            },
-            handleMaxSize:function(file) {
-                this.$Notice.warning({
-                    title: '超出文件大小限制',
-                    desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
-                });
-            },
-            upData: function(idata){
-                console.log("进入upData函数");
-                var _self=this;
-                
-                console.log(idata)
-                $.ajax({
-                    url: 'http://localhost:8080/HaiSSMDemo/updateCarAttach.action',
-                    type: 'post',
-                    data: idata,
-                    cache: false,
-                    success: function(){
-                        _self.$Message.info('上传成功');
-
-                        _self.carDetail();
-                        _self.upitem.filePath='';
-                        _self.upitem.fileName='未知';
-                        _self.model4=false;
-                        _self.seldArr=null;
-                    },
-                    error: function(){
-                        _self.$Message.info('上传失败');
-                    }
-                });
-            },
-            postData:function(_self, url, data) {
-                console.log("发送postData请求");
-                console.log(data);
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    data: data,
-                    cache: false,
-                    success: function(){
-                        _self.$Message.info('上传成功');
-
-                        _self.carDetail();
-                        _self.upitem.filePath='';
-                        _self.upitem.fileName='未知';
-                        _self.model4=false;
-                    },
-                    error: function(){
-                        _self.$Message.info('上传失败');
-                    }
-                });
-            },
-            upMessage:function(item) {
-                console.log("执行upMessage以及upitem是什么")
-                console.log(this.upitem);
-                var _self = this;
-                _self.$refs.formDynamic.validate(function (valid) {
-                    if (valid) {
-                        if (this.upitem.filePath == '') {
-                            _self.$Message.error('文件不可为空');
-                        } else {
-                            console.log("即将执行upload");
-                            _self.upload(item);
-                        }
-                    } else {
-                    }
-                });
-            },
-            chgFileName:function(value){
-                console.log("执行chgfilename");
-                this.upitem.fileName=value;
-                console.log(this.upitem.fileName);
-            },
-            handleRemove (index) {
-                this.formDynamic.items[index].status = 0;
-            },
-            carDetail:function(){
-                var _self=this;
-                if(_self.detailArr){
-                    var idata={};
-                    idata.current=1;
-                    idata.pageNum=15;
-                    idata.carNum=_self.detailArr;
-                    $.ajax({
-                        url: 'http://localhost:8080/HaiSSMDemo/selectCarAttach.action',
-                        type: 'post',
-                        cache: false,
-                        data: idata,
-                        success: function(data){
-
-                            _self.detaildata=data.dataList;
-                            for (var i in data.dataList) {
-                                data.dataList[i].filePath = "http://localhost:8080" + '/CarAttach/' + data.dataList[i].filePath;
-                                data.dataList[i].createTime = _self.format(data.dataList[i].createTime);
-                                data.dataList[i].updateTime = _self.format(data.dataList[i].updateTime);
-                            }
-                            console.log(_self.detaildata);
-                            _self.model3=true;
-                        },
-                        error: function(){
-                            _self.$Message.info('获取信息失败');
-                        }
-                    });
-                    
-                    console.log(_self.detailArr);
-                }else{
-                    alert("请选择一辆车的车档信息？？？");
-                    console.log(_self.detailArr);
-                }
-            },
-            addDetail:function(event){
-                var _self=this;
-                if(event.currentTarget.innerText=="添加"){
-                    _self.dstatus=1;
-                    _self.model4=true;
-                    return ;
-                }else if(event.currentTarget.innerText=="修改"){
-                    if(_self.seldArr){
-                        _self.dstatus=0;
-                        _self.model4=true;
-                        _self.upitem.fileName=_self.seldArr.fileName;
-                        _self.upitem.id=_self.seldArr.id;
-                        _self.upitem.filePath='';
-
+            var formData = new FormData();
+            formData.append('file', this.upitem.filePath);
+            var idata={};
+            idata.carNum=this.detailArr;
+            idata.fileName=this.upitem.fileName;
+            //idata.filePath=this.upitem.filePath;
+            console.log("输出看下要上传的idata原始样子");
+            console.log(idata);
+            $.ajax({
+                url:  'http://localhost:8080/HaiSSMDemo/upCarAttach.action',
+                type: 'post',
+                processData: false, //不对表单处理
+                contentType: false, //
+                data: formData,
+                cache:false,
+                success:function(data) {
+                    console.log(data);
+                    //item.filePath = data[0];
+                    idata.filePath=data[0];
+                    if(_self.dstatus==1){
+                        console.log("即将执行postData")
+                        _self.postData(_self, 'http://localhost:8080/HaiSSMDemo/insertCarAttach.action', idata);
                     }else{
-                        alert("只能同时修改一条车档信息");
+                        var udata={};
+                        udata.id=_self.upitem.id;
+                        udata.filePath=data[0];
+                        console.log(udata);
+                        _self.upData(udata);
                     }
                     
-
-
-                }
-                //this.model4=true;
-            },
-            clsfour: function(){
-                this.model4=false;
-                this.upitem.fileName='';
-                this.upitem.filePath='';
-                this.upitem.id=null;
-                this.upitem.carNum='';
-
-            },
-            clsfive:function(){
-                this.model5=false;
-                console.log("执行了clsM5,关闭图片的预览");
-                console.log(this.model5)
-                this.showImg=null;//不想说什么，不知道为什这行代码没有就会有错，明明点击新的按钮会把showImg重置的。。。改了半天，心累
-            },
-            chgdArr: function(data){
-                var _self = this;
-                //console.log(this.data.selection);
-                _self.seldArr=null;//选中修改的那条车档信息
-                _self.deldArr=[];//删除的车档信息数组
-                console.log("看一下选中一行的数据")
-                console.log(data);
-                if(data.length){
-                    for (var i in data) {
-                        _self.deldArr.push(data[i].id);
-                        
-                    }
-                }
-                if(data.length==1){
-
-                    _self.seldArr=data[0];
-                    console.log(_self.seldArr);
-                }
-            },
-            // searchDetail:function(){
-            //     if(this.searchDtext.replace(/\s/g, '').length < 1){
-            //         alert('搜索内容不可为空');
-            //     }else{
-            //         var idata={};
-            //         idata.current=1;
-            //         idata.
-            //     }
-            // }
         
+                },
+                error:function() {
+                    _self.$Message.error('上传失败')
+                    //_self.model4=false;
+                }
+            });
+        },
+        handleFormatError:function(file) {
+            this.$Notice.warning({
+                title: '文件格式不正确',
+                desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+            });
+        },
+        handleMaxSize:function(file) {
+            this.$Notice.warning({
+                title: '超出文件大小限制',
+                desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+            });
+        },
+        upData: function(idata){
+            console.log("进入upData函数");
+            var _self=this;
+            
+            console.log(idata)
+            $.ajax({
+                url: 'http://localhost:8080/HaiSSMDemo/updateCarAttach.action',
+                type: 'post',
+                data: idata,
+                cache: false,
+                success: function(){
+                    _self.$Message.info('上传成功');
+
+                    _self.carDetail();
+                    _self.upitem.filePath='';
+                    _self.upitem.fileName='未知';
+                    _self.model4=false;
+                    _self.seldArr=null;
+                },
+                error: function(){
+                    _self.$Message.info('上传失败');
+                }
+            });
+        },
+        postData:function(_self, url, data) {
+            console.log("发送postData请求");
+            console.log(data);
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: data,
+                cache: false,
+                success: function(){
+                    _self.$Message.info('上传成功');
+
+                    _self.carDetail();
+                    _self.upitem.filePath='';
+                    _self.upitem.fileName='未知';
+                    _self.model4=false;
+                },
+                error: function(){
+                    _self.$Message.info('上传失败');
+                }
+            });
+        },
+        upMessage:function(item) {
+            console.log("执行upMessage以及upitem是什么")
+            console.log(this.upitem);
+            var _self = this;
+            _self.$refs.formDynamic.validate(function (valid) {
+                if (valid) {
+                    if (this.upitem.filePath == '') {
+                        _self.$Message.error('文件不可为空');
+                    } else {
+                        console.log("即将执行upload");
+                        _self.upload(item);
+                    }
+                } else {
+                }
+            });
+        },
+        chgFileName:function(value){
+            console.log("执行chgfilename");
+            this.upitem.fileName=value;
+            console.log(this.upitem.fileName);
+        },
+        handleRemove (index) {
+            this.formDynamic.items[index].status = 0;
+        },
+        carDetail:function(){
+            var _self=this;
+            if(_self.detailArr){
+                var idata={};
+                idata.current=1;
+                idata.pageNum=15;
+                idata.carNum=_self.detailArr;
+                $.ajax({
+                    url: 'http://localhost:8080/HaiSSMDemo/selectCarAttach.action',
+                    type: 'post',
+                    cache: false,
+                    data: idata,
+                    success: function(data){
+
+                        _self.detaildata=data.dataList;
+                        for (var i in data.dataList) {
+                            data.dataList[i].filePath = "http://localhost:8080" + '/CarAttach/' + data.dataList[i].filePath;
+                            data.dataList[i].createTime = _self.format(data.dataList[i].createTime);
+                            data.dataList[i].updateTime = _self.format(data.dataList[i].updateTime);
+                        }
+                        console.log(_self.detaildata);
+                        _self.model3=true;
+                    },
+                    error: function(){
+                        _self.$Message.info('获取信息失败');
+                    }
+                });
+                
+                console.log(_self.detailArr);
+            }else{
+                alert("请选择一辆车的车档信息？？？");
+                console.log(_self.detailArr);
+            }
+        },
+        addDetail:function(event){
+            var _self=this;
+            if(event.currentTarget.innerText=="添加"){
+                _self.dstatus=1;
+                _self.model4=true;
+                return ;
+            }else if(event.currentTarget.innerText=="修改"){
+                if(_self.seldArr){
+                    _self.dstatus=0;
+                    _self.model4=true;
+                    _self.upitem.fileName=_self.seldArr.fileName;
+                    _self.upitem.id=_self.seldArr.id;
+                    _self.upitem.filePath='';
+
+                }else{
+                    alert("只能同时修改一条车档信息");
+                }
+                
+
+
+            }
+            //this.model4=true;
+        },
+        clsfour: function(){
+            this.model4=false;
+            this.upitem.fileName='';
+            this.upitem.filePath='';
+            this.upitem.id=null;
+            this.upitem.carNum='';
+
+        },
+        clsfive:function(){
+            this.model5=false;
+            console.log("执行了clsM5,关闭图片的预览");
+            console.log(this.model5)
+            this.showImg=null;//不想说什么，不知道为什这行代码没有就会有错，明明点击新的按钮会把showImg重置的。。。改了半天，心累
+        },
+        chgdArr: function(data){
+            var _self = this;
+            //console.log(this.data.selection);
+            _self.seldArr=null;//选中修改的那条车档信息
+            _self.deldArr=[];//删除的车档信息数组
+            console.log("看一下选中一行的数据")
+            console.log(data);
+            if(data.length){
+                for (var i in data) {
+                    _self.deldArr.push(data[i].id);
+                    
+                }
+            }
+            if(data.length==1){
+
+                _self.seldArr=data[0];
+                console.log(_self.seldArr);
+            }
+        },
+        // searchDetail:function(){
+        //     if(this.searchDtext.replace(/\s/g, '').length < 1){
+        //         alert('搜索内容不可为空');
+        //     }else{
+        //         var idata={};
+        //         idata.current=1;
+        //         idata.
+        //     }
+        // }
+    
      	//坐标转换完之后的回调函数
        	translateCallback: function (data){
          	if(data.status === 0) {
@@ -1442,9 +1401,10 @@ props:{
             
         },
         open: function (dd,ss,event) {
+            var _self = this;
             console.log('执行open函数，会拿到公司最新人员信息');
             //console.log(event.currentTarget.innerText);
-            this.model1 = true;
+            // this.model1 = true;
             if (event&&event.currentTarget.innerText == "添加") {
                 console.log(event.currentTarget.innerText);
                 this.$refs['formValidate'].resetFields();
@@ -1452,10 +1412,45 @@ props:{
                 if (this.formValidate.id != undefined){
                     this.formValidate.id = '';
                 }
+            }else if(event&&event.currentTarget.innerText=="修改"){//saferId  driverId
+                console.log("进入修改逻辑")
+                console.log(_self.delonecar);
+                if(_self.delonecar){
+                    this.openState ='修改';
+                    console.log(_self.delonecar)
+                    dd=_self.delonecar.driverName;
+                    ss=_self.delonecar.safer;
+                    //_self.formValidate=_self.delonecar;
+                    for(let key in _self.delonecar){
+                        _self.formValidate[key]=_self.delonecar[key];
+                    }
+                }else{
+                    //model弹出提示框
+                    alert("请选择一行数据")
+                    return ;
+                }
+
+            }else if(event&&event.currentTarget.innerText=="查看"){
+                //
+                console.log("进入查看逻辑")
+                console.log(_self.delonecar);
+                if(_self.delonecar){
+                    this.openState ='查看';
+                    console.log(_self.delonecar)
+                    dd=_self.delonecar.driverName;
+                    ss=_self.delonecar.safer;
+                    //_self.formValidate=_self.delonecar;
+                    for(let key in _self.delonecar){
+                        _self.formValidate[key]=_self.delonecar[key];
+                    }
+                }else{
+                    //model弹出提示框
+                    alert("请选择一行数据")
+                    return ;
+                }
             }
             console.log(this.formValidate.id);
             ////请求最新驾驶员数据
-            var _self = this;
             if(_self.userType===3){
                 //根据公司ID查询数据
                 _self.page.id=JSON.parse(_self.$cookies.get("companyID"));//Cookies.get("state")).companyID;
@@ -1477,7 +1472,7 @@ props:{
                             }
                             console.log('输出最新的驾驶员名单');
                             console.log(_self.driverList);
-                            if(_self.openState =='添加'){//初始化人员
+                            if(_self.openState =='添加'){//初始化人员    添加逻辑
 
                                 //console.log(_self.driverList);
                                 console.log('添加');
@@ -1488,7 +1483,8 @@ props:{
                                 _self.formValidate.driverName = _self.driverList[0].name;//_self.op
                                 _self.formValidate.safer = _self.safeList[0].name;//_self.sp
 
-                            }else{//将传入的人员信息渲染
+                            }else{//将传入的人员信息渲染   修改逻辑
+                                //if()
                                 for(var i=0;i<_self.driverList.length;i++){
                                     console.log(dd);
                                     if(_self.driverList[i].name==dd){
@@ -1505,6 +1501,11 @@ props:{
                                         _self.safer=_self.safeList[i];
                                         _self.formValidate.safer = _self.safeList[i].name;
                                     }
+
+
+
+
+                                    // 2018年3月7日10:21:57：这里车子的人员信息是通过name来获取的，因为最后渲染在页面的是名字，这里需要做一些代码，将数据获取的name改为用id，然后根据id获取name渲染到页面
                                 }
                             }
 
@@ -1550,116 +1551,121 @@ props:{
                     }
                 });
             }
+            _self.model1=true;
 
         },
         del:function() {
-                var _self = this;
-                if(_self.delArr.length>0){
-                    _self.modal2=true;
+            var _self = this;
+            if(_self.delArr.length>0){
+                _self.modal2=true;
+            }
+            
+        },
+        delDetail:function(){//点击删除按钮
+            var _self=this;
+            console.log("点击删除按钮,console一下deldArr");
+            console.log(_self.deldArr);
+            if(_self.deldArr.length>0){
+                _self.model6=true;
+            }
+        },
+        ok_deld: function(){//model6后面的“确认”按钮触发，删除车档信息
+            var _self=this;
+            var idata=[];
+            console.log(_self.deldArr)
+            for(let i in _self.deldArr){
+                idata[i]=_self.deldArr[i].id;
+            }
+            console.log('http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr);
+            $.ajax({
+                url: 'http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr,
+                cache: false,
+                type: 'post',
+                //data: idata,
+                success: function(data){
+                    _self.carDetail();
+                    _self.$Message.info("删除成功");
+                    _self.carDetail();
+                    _self.deldArr=[];
+                    _self.seldArr=null;
+                    _self.model6=false;
                 }
-                
-            },
-            delDetail:function(){//点击删除按钮
-                var _self=this;
-                console.log("点击删除按钮,console一下deldArr");
-                console.log(_self.deldArr);
-                if(_self.deldArr.length>0){
-                    _self.model6=true;
-                }
-            },
-            ok_deld: function(){//model6后面的“确认”按钮触发，删除车档信息
-                var _self=this;
-                var idata=[];
-                console.log(_self.deldArr)
-                for(let i in _self.deldArr){
-                    idata[i]=_self.deldArr[i].id;
-                }
-                console.log('http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr);
+            });
+        },
+        del_index:function(n){
+            var _self=this;
+            _self.modal2=true;
+            
+        },
+        ok_del:function(){
+            var _self=this;
+            if(_self.onedel){
                 $.ajax({
-                    url: 'http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr,
+                    type: 'GET',
+                    url: dataUrl.dataUrl.carInfo.del+_self.delone,
                     cache: false,
-                    type: 'post',
-                    //data: idata,
-                    success: function(data){
-                        _self.carDetail();
-                        _self.$Message.info("删除成功");
-                        _self.carDetail();
-                        _self.deldArr=[];
-                        _self.seldArr=null;
-                        _self.model6=false;
+                    success: function (data) {
+                        _self.getAll();
+                        _self.$Message.info('刪除成功');
                     }
                 });
-            },
-            del_index:function(n){
-                var _self=this;
-                _self.modal2=true;
-                
-            },
-            ok_del:function(){
-                var _self=this;
-                if(_self.onedel){
-                    $.ajax({
-                        type: 'GET',
-                        url: dataUrl.dataUrl.carInfo.del+_self.delone,
-                        cache: false,
-                        success: function (data) {
-                            _self.getAll();
-                            _self.$Message.info('刪除成功');
-                        }
-                    });
-                    _self.delone='';
-                    _self.onedel=false;
-                }else{
-                    console.log(_self.delArr);
-                    console.log(dataUrl.dataUrl.carInfo.del+_self.delArr,);
-                    $.ajax({
-                        type: 'GET',
-                        url: dataUrl.dataUrl.carInfo.del+_self.delArr,
-                        cache: false,
-                        success: function (data) {
-                            _self.delArr = [];
-                            _self.getAll();
-                            _self.$Message.info('刪除成功');
-                        }
-                    });
-                    _self.delArr=[];
-                }
-                
-            },
-            cancel_del:function(){
-                this.modal2=false;
-                this.delone='';
-                this.onedel=false;
-                this.$refs['formValidate'].resetFields();
-            },
-            chooseAll:function(data) {
-                var _self = this;
-                //console.log(this.data.selection);
-                _self.delArr=[];
-                _self.detailArr=null;
-                if(data.length){
-                    for (var i in data) {
-                        _self.delArr.push(data[i].id);
-                        
+                _self.delone='';
+                _self.onedel=false;
+            }else{
+                console.log(_self.delArr);
+                console.log(dataUrl.dataUrl.carInfo.del+_self.delArr,);
+                $.ajax({
+                    type: 'GET',
+                    url: dataUrl.dataUrl.carInfo.del+_self.delArr,
+                    cache: false,
+                    success: function (data) {
+                        _self.delArr = [];
+                        _self.getAll();
+                        _self.$Message.info('刪除成功');
                     }
-                }
-                if(data.length==1){
-                    _self.detailArr=data[i].carNum;
-                }
-                
-            },
-           /* sel_change:function(data){
-                var _self = this;
-                //console.log(data);
+                });
                 _self.delArr=[];
-                if(data.length){
+            }
+            
+        },
+        cancel_del:function(){
+            this.modal2=false;
+            this.delone='';
+            this.onedel=false;
+            this.$refs['formValidate'].resetFields();
+        },
+        chooseAll:function(data) {
+            var _self = this;
+            //console.log(this.data.selection);
+            _self.delArr=[];
+            _self.delonecar=null;
+            _self.detailArr=null;
+            if(data.length){
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
+                    
+                }
+            }
+            if(data.length==1){
+                _self.detailArr=data[0].carNum;
+                _self.delonecar=data[0];
+            }
+            console.log(_self.detailArr)
+            console.log(_self.delonecar)
+            
+        },
+       /* sel_change:function(data){
+            var _self = this;
+            //console.log(data);
+            _self.delArr=[];
+            if(data.length){
 
-                    for (var i in data) {
-                        _self.delArr.push(data[i].id);
-                    }
+                for (var i in data) {
+                    _self.delArr.push(data[i].id);
                 }
-                
-            },*/
+            }
+            
+        },*/
         changePage: function (cur) {
             // 分页跳转
             this.page.current = cur;
@@ -1667,6 +1673,9 @@ props:{
         },
         getAll: function () {
             var _self = this;
+            _self.delArr=[];
+            _self.delonecar=null;
+            _self.delone=null;
             console.log(this.userType);
             if (_self.userType == 3) {
                 //根据公司Name查询数据
@@ -1691,6 +1700,9 @@ props:{
                             _self.data1 = [];
                             console.log('1064ajax请求出错');
                         }
+                    },
+                    error: function(){
+                        _self.$Message.error("获取数据失败");
                     }
                 });
             } else {
@@ -1708,6 +1720,9 @@ props:{
                         } else {
                             _self.data1 = [];
                         }
+                    },
+                    error: function(){
+                        _self.$Message.error("获取数据失败");
                     }
                 });
             }
@@ -1764,3 +1779,6 @@ props:{
 		position: fixed !important;
      }
 </style>
+
+
+<!-- 代码。很乱 -->

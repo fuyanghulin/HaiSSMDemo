@@ -548,6 +548,9 @@ props:{
         getAll: function () {
             console.log('执行getAll函数');
             var _self = this;
+            _self.delArr=[];
+            //_self.delonecar=null;
+            _self.delone=null;
             if(_self.userType=='3'){
                 var idata={};
                 for(var key in _self.page){

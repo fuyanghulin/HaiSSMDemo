@@ -846,6 +846,10 @@ props:{
         },
         getAll: function () {
             var _self = this;
+            _self.delArr=[];
+            //_self.delonecar=null;
+            _self.delone=null;
+            
             $.ajax({
                 type: 'GET',
                 url: dataUrl.dataUrl.carrier.all,
