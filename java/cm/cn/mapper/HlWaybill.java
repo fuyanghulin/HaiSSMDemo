@@ -1,4 +1,4 @@
-package cm.cn.po;
+package cm.cn.mapper;
 
 import java.util.Date;
 

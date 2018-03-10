@@ -15,16 +15,21 @@ import cm.cn.mapper.HlGoodstypeMapper;
 import cm.cn.mapper.HlPeopleMapper;
 import cm.cn.mapper.HlSafecardMapper;
 import cm.cn.mapper.HlWaybillMapper;
+import cm.cn.mapper.HlWaybillSiteMapper;
 import cm.cn.mapper.MyCarInfoMapper;
 import cm.cn.mapper.MyGoodsInfoMapper;
 import cm.cn.mapper.MyGpsMapper;
+import cm.cn.mapper.MySiteMapper;
 import cm.cn.mapper.MyWaybillMapper;
+import cm.cn.mapper.MyWaybillSiteMapper;
 import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.Gpsinfo;
 import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCarinfoExample;
+import cm.cn.po.HlSite;
 import cm.cn.po.HlWaybill;
 import cm.cn.po.HlWaybillExample;
+import cm.cn.po.HlWaybillSite;
 import cm.cn.service.HlWaybillService;
 import cm.cn.util.GpsStatus;
 @Service
@@ -49,6 +54,12 @@ public class HlWaybillServiceImpl implements HlWaybillService {
     private HlSafecardMapper hlSafecardMapper;
     @Autowired
     private HlCarinfoMapper hlCarinfoMapper;
+    @Autowired
+    private HlWaybillSiteMapper hlWaybillSiteMapper;
+    @Autowired 
+    private MySiteMapper mySiteMapper;
+    @Autowired
+    private MyWaybillSiteMapper myWaybillSiteMapper;
 	@Override
 	public List<HlWaybill> selAllWaybill() {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
@@ -56,22 +67,22 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 		return hlWaybillMapper.selectByExample(example);
 	}
 	@Override
-	public List<HlWaybill> selWaybillByCompanyId(int company_id) {
+	public List<HlWaybill> selWaybillByCompanyId(int companyId) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlWaybillExample example = new HlWaybillExample();
 		HlWaybillExample.Criteria criteria = example.createCriteria();
-		criteria.andCompayIdEqualTo(company_id);
+		criteria.andCompanyIdEqualTo(companyId);
 		return hlWaybillMapper.selectByExample(example);
 	}
-	@Override
+	/*@Override
 	public List<HlWaybill> selWaybillByCompanyIdAndShipper(int companyId, String Shipper) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		HlWaybillExample example = new HlWaybillExample();
 		HlWaybillExample.Criteria criteria = example.createCriteria();
-		criteria.andCompayIdEqualTo(companyId);
+		criteria.andCompanyIdEqualTo(companyId);
 		criteria.andShipperLike("%"+Shipper+"%");
 		return hlWaybillMapper.selectByExample(example);
-	}
+	}*/
 	@Override
 	public HlWaybillDetail selWaybillDetail(String plateNo, int goods_id) {
 		Gpsinfo gpsinfo = new Gpsinfo();
@@ -138,12 +149,32 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		return hlWaybillMapper.selectByPrimaryKey(id);
 	}
-	@Override
+	/*@Override
 	public List<HlWaybill> selWaybillByShipper(String Shipper) {
 		HlWaybillExample example = new HlWaybillExample();
 		HlWaybillExample.Criteria criteria = example.createCriteria();
 		criteria.andShipperLike("%"+Shipper+"%");
 		return hlWaybillMapper.selectByExample(example);
+	}*/
+	@Override
+	public int insertWaybillAndSite(HlWaybillSite waybillSite) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		return hlWaybillSiteMapper.insertSelective(waybillSite);
+	}
+	@Override
+	public Integer[] selectSiteId(int waybillId) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		return myWaybillMapper.selectSiteId(waybillId);
+	}
+	@Override
+	public List<HlSite> selectSiteById(Integer[] arrays) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		return mySiteMapper.selSiteById(arrays);
+	}
+	@Override
+	public int delWaybillSite(int waybillId) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		return myWaybillSiteMapper.delWaybillSite(waybillId);
 	}
 
 }

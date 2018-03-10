@@ -74,4 +74,12 @@
 	          #{id}
 	    </foreach>
 	</delete>
+	<select id="selectSiteId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+	SELECT
+		site_id 
+	FROM
+		hl_waybill_site 
+	WHERE
+		waybill_id = #{waybillId};
+	</select>
 </mapper>

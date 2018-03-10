@@ -1,7 +1,8 @@
 package cm.cn.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cm.cn.po.HlWaybillDetail;
+import cm.cn.po.HlWaybillSite;
 import cm.cn.po.HlCheckWaybill;
+import cm.cn.po.HlSite;
 import cm.cn.po.HlWaybill;
+import cm.cn.po.HlWaybillAndSite;
 import cm.cn.po.Page;
 import cm.cn.service.HlCheckWaybillService;
 import cm.cn.service.HlWaybillService;
@@ -21,33 +25,53 @@ public class HlWaybillController {
 	private HlWaybillService hlWaybillService;
 	@Autowired
 	private HlCheckWaybillService hlCheckWaybillService;
-	@RequestMapping("/allWaybill")
+	@RequestMapping(value="/allWaybill",method=RequestMethod.POST)
 	@ResponseBody
-	public Page<HlWaybill> allWaybill(int current,int pageNum){
+	public Page<HlWaybillAndSite> allWaybill(int current,int pageNum){
 		List<HlWaybill> list =hlWaybillService.selAllWaybill();
-		Page<HlWaybill> page = null;
-		if (list.size()>0) {
-			page = new Page<>(current, pageNum,  list);
+		List<HlWaybillAndSite> listWaybillAndSite = new ArrayList<HlWaybillAndSite>();
+		for(int i=0;i<list.size();i++){
+			HlWaybillAndSite hlWaybillAndSite = new HlWaybillAndSite();
+			hlWaybillAndSite.setHlWaybill(list.get(i));
+			Integer[] a = hlWaybillService.selectSiteId(list.get(i).getId());
+			List<HlSite> listSite= hlWaybillService.selectSiteById(a);
+			hlWaybillAndSite.setListSite(listSite);
+			listWaybillAndSite.add(hlWaybillAndSite);
+		}
+		System.out.println(listWaybillAndSite);
+		Page<HlWaybillAndSite> page = null;
+		if(listWaybillAndSite.size()>0){
+			page = new Page<>(current, pageNum,  listWaybillAndSite);
 			return page;
 		}
 		else {
 			return null;
 		}
 	}
-	@RequestMapping("/selWaybillByCompanyId")
+	@RequestMapping(value="/selWaybillByCompanyId",method=RequestMethod.POST)
 	@ResponseBody
-	public Page<HlWaybill> selWaybillByCompanyId(int current,int pageNum,int company_id){
-		List<HlWaybill> list = hlWaybillService.selWaybillByCompanyId(company_id);
-		Page<HlWaybill> page = null;
-		if (list.size()>0) {
-			page = new Page<>(current, pageNum,  list);
+	public Page<HlWaybillAndSite> selWaybillByCompanyId(int current,int pageNum,int companyId){
+		List<HlWaybill> list = hlWaybillService.selWaybillByCompanyId(companyId);
+		List<HlWaybillAndSite> listWaybillAndSite = new ArrayList<HlWaybillAndSite>();
+		for(int i=0;i<list.size();i++){
+			HlWaybillAndSite hlWaybillAndSite = new HlWaybillAndSite();
+			hlWaybillAndSite.setHlWaybill(list.get(i));
+			Integer[] a = hlWaybillService.selectSiteId(list.get(i).getId());
+			List<HlSite> listSite= hlWaybillService.selectSiteById(a);
+			hlWaybillAndSite.setListSite(listSite);
+			listWaybillAndSite.add(hlWaybillAndSite);
+		}
+		System.out.println(listWaybillAndSite);
+		Page<HlWaybillAndSite> page = null;
+		if(listWaybillAndSite.size()>0){
+			page = new Page<>(current, pageNum,  listWaybillAndSite);
 			return page;
 		}
 		else {
 			return null;
 		}
 	}
-	@RequestMapping("/selWaybillByCompanyIdAndShipper")
+	/*@RequestMapping("/selWaybillByCompanyIdAndShipper")
 	@ResponseBody
 	public Page<HlWaybill> selWaybillByCompanyIdAndShipper(int current,int pageNum,int companyId,String Shipper){
 		List<HlWaybill> list = hlWaybillService.selWaybillByCompanyIdAndShipper(companyId, Shipper);
@@ -59,8 +83,8 @@ public class HlWaybillController {
 		else {
 			return null;
 		}
-	}
-	@RequestMapping("/selWaybillByShipper")
+	}*/
+	/*@RequestMapping("/selWaybillByShipper")
 	@ResponseBody
 	public Page<HlWaybill> selWaybillByShipper(int current,int pageNum,String Shipper){
 		List<HlWaybill> list = hlWaybillService.selWaybillByShipper(Shipper);
@@ -72,7 +96,7 @@ public class HlWaybillController {
 		else {
 			return null;
 		}
-	}
+	}*/
 	@RequestMapping("/selWaybillDetail")
 	@ResponseBody
 	public HlWaybillDetail selectGpsByPlateNo2(String plateNo,int goods_id){
@@ -84,16 +108,21 @@ public class HlWaybillController {
 			return null;
 		}
 	}
-
-	@RequestMapping("/getWaybillList")
-	@ResponseBody
-	public List<HlWaybill> getSafeCardsList(){
-		return hlWaybillService.selAllWaybill();
-	}
 	@RequestMapping(value="/insertWaybill",method=RequestMethod.POST)
 	@ResponseBody
-	public int insertWaybill(HlWaybill hlWaybill){
+	public int insertWaybill(HlWaybill hlWaybill,int[] siteId){
+		Date date=new Date();
+		hlWaybill.setCreateTime(date);
+		hlWaybill.setUpdateTime(date);
 		int i = hlWaybillService.insertWaybill(hlWaybill);
+		for(i=0;i<siteId.length;i++){
+			HlWaybillSite waybillSite = new HlWaybillSite();
+			waybillSite.setWaybillId(hlWaybill.getId());
+			waybillSite.setSiteId(siteId[i]);
+			waybillSite.setCreateTime(date);
+			waybillSite.setUpdateTime(date);
+			hlWaybillService.insertWaybillAndSite(waybillSite);
+		}
 		HlCheckWaybill hlCheckWaybill = new HlCheckWaybill();
 		hlCheckWaybill.setWaybillId(hlWaybill.getId());
 		hlCheckWaybill.setWaybillState("订单创建");
@@ -102,12 +131,27 @@ public class HlWaybillController {
 	}
 	@RequestMapping(value="/updateWaybill",method=RequestMethod.POST)
 	@ResponseBody
-	public int updateWaybill(HlWaybill hlWaybill){
+	public int updateWaybill(HlWaybill hlWaybill,int[] siteId){
+		Date date=new Date();
+		hlWaybillService.delWaybillSite(hlWaybill.getId());
+		for(int i=0;i<siteId.length;i++){
+			HlWaybillSite waybillSite = new HlWaybillSite();
+			waybillSite.setWaybillId(hlWaybill.getId());
+			waybillSite.setSiteId(siteId[i]);
+			waybillSite.setCreateTime(date);
+			waybillSite.setUpdateTime(date);
+			hlWaybillService.insertWaybillAndSite(waybillSite);
+		}
+		hlWaybill.setUpdateTime(date);
 		return hlWaybillService.updateWaybill(hlWaybill);
 	}
-	@RequestMapping(value="/delWaybillBatch")
+	@RequestMapping(value="/delWaybillBatch",method=RequestMethod.POST)
 	@ResponseBody
 	public int delWaybillBatch(int[] arrays){
+		for(int i=0;i<arrays.length;i++){
+			hlWaybillService.delWaybillSite(arrays[i]);
+		}
+		
 		return hlWaybillService.delWaybillBatch(arrays);
 	}
 	@RequestMapping(value="/selectWayBillByDriverName")

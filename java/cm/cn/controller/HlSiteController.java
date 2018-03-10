@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +71,8 @@ public class HlSiteController {
 	@RequestMapping(value="/updateSite",method=RequestMethod.POST)
 	@ResponseBody
 	public int updateSite(HlSite hlSite){
+		Date date=new Date();
+		hlSite.setUpdateTime(date);
 		return hlSiteService.updateSite(hlSite);
 	}
 

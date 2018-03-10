@@ -12,4 +12,16 @@
 	          #{id}
 	    </foreach>
 	</delete>
+	<select id="selSiteById" resultType="cm.cn.po.HlSite" parameterType="java.lang.Integer">
+		SELECT
+			* 
+		FROM
+			hl_site 
+		WHERE
+			id IN
+		<foreach collection="array" item="id" index="index"
+	          open="(" close=")" separator=",">
+	          #{id}
+	    </foreach>
+	 </select>
 </mapper>
