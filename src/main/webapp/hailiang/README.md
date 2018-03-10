@@ -20,12 +20,14 @@ npm run build --report
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-
+***
+***
+***
 
 ##功能
 
-		该webapp主要是用于海梁单页面开发，以取代原先不大合理的框架设计，（readme文档写乱了_(:з」∠)_）
-
+		该webapp主要是用于海梁单页面开发，以取代原先不大合理的框架设计，
+		
 ##创建时间
 
 		2018年2月24日21:34:32
@@ -125,3 +127,4 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 	☆☆☆☆☆☆问题：刷新即getData或者getAll函数后，需要将delone|delArr|delonecar等清空
 	搞乱了，如果有地方点击查看出现问题，要么就是delone等字段没有初始化的问题
 	电子运单时间出现问题，显示出来的日期比原来靠前了一天
+	弹出的modal需要加一个上padding和下padding
