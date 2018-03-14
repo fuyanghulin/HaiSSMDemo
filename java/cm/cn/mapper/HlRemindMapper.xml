@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cm.cn.mapper.HlRemindMapper" >
+   <select id="getRemind" resultType="cm.cn.po.HlRemind" parameterType="Integer">
+   <![CDATA[
+	 SELECT
+		SUM( businLicenceTime ) businLicenceTime,
+		SUM( businCertificateTime ) businCertificateTime,
+		SUM( insuranceDate ) insuranceDate,
+		SUM( dutyInsuranceDate ) dutyInsuranceDate,
+		SUM( dutypeoDate ) dutypeoDate,
+		SUM( roadDate ) roadDate,
+		SUM( certyearDate ) certyearDate,
+		SUM( yearcheckDate ) yearcheckDate,
+		SUM( tecDate ) tecDate,
+		SUM( secImprovedate ) secImprovedate,
+		SUM( driLicenceTime ) driLicenceTime,
+		SUM( driverzigezhengTime ) driverzigezhengTime,
+		SUM( driverzigezhengTime2 ) saferzigezhengTime 
+	FROM
+		(
+	SELECT
+		count( * ) businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_company 
+	WHERE
+		busin_licence_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		count( * ) businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_company 
+	WHERE
+		busin_certificate_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		count( * ) insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		insurance_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		count( * ) dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		duty_insurancedate <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		count( * ) dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		dutypeo_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		count( * ) roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		road_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		count( * ) certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		certyear_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		count( * ) yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		yearcheck_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		count( * ) tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		tec_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		count( * ) secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime 
+	FROM
+		hl_carinfo 
+	WHERE
+		sec_improvedate <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		count( * ) driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_people 
+	WHERE
+		people_type = 1 
+		AND dri_licence_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		count( * ) driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_people 
+	WHERE
+		people_type = 1 
+		AND driverzigezheng_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		count( * ) driverzigezhengTime2 
+	FROM
+		hl_people 
+	WHERE
+		people_type = 2 
+		AND driverzigezheng_time <= now( ) 
+		) t
+		]]>
+   </select>
+   <select id="getRemind2" resultType="cm.cn.po.HlRemind" parameterType="Integer">
+   <![CDATA[
+	 SELECT
+		SUM( businLicenceTime ) businLicenceTime,
+		SUM( businCertificateTime ) businCertificateTime,
+		SUM( insuranceDate ) insuranceDate,
+		SUM( dutyInsuranceDate ) dutyInsuranceDate,
+		SUM( dutypeoDate ) dutypeoDate,
+		SUM( roadDate ) roadDate,
+		SUM( certyearDate ) certyearDate,
+		SUM( yearcheckDate ) yearcheckDate,
+		SUM( tecDate ) tecDate,
+		SUM( secImprovedate ) secImprovedate,
+		SUM( driLicenceTime ) driLicenceTime,
+		SUM( driverzigezhengTime ) driverzigezhengTime,
+		SUM( driverzigezhengTime2 ) saferzigezhengTime 
+	FROM
+		(
+	SELECT
+		count( * ) businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_company 
+	WHERE
+		id = #{companyId}  
+		AND busin_licence_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		count( * ) businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_company 
+	WHERE
+		id = #{companyId}  
+		AND busin_certificate_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		count( * ) insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId} 
+		AND insurance_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		count( * ) dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId} 
+		AND duty_insurancedate <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		count( * ) dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId} 
+		AND dutypeo_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		count( * ) roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId}  
+		AND road_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		count( * ) certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId}  
+		AND certyear_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		count( * ) yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId}  
+		AND yearcheck_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		count( * ) tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId} 
+		AND tec_date <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		count( * ) secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime 
+	FROM
+		hl_carinfo 
+	WHERE
+		company_id = #{companyId}  
+		AND sec_improvedate <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		count( * ) driLicenceTime,
+		0 driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_people 
+	WHERE
+		compay_id = #{companyId}  
+		AND people_type = 1 
+		AND dri_licence_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		count( * ) driverzigezhengTime,
+		0 driverzigezhengTime2 
+	FROM
+		hl_people 
+	WHERE
+		compay_id = #{companyId}  
+		AND people_type = 1 
+		AND driverzigezheng_time <= now( ) UNION ALL
+	SELECT
+		0 businLicenceTime,
+		0 businCertificateTime,
+		0 insuranceDate,
+		0 dutyInsuranceDate,
+		0 dutypeoDate,
+		0 roadDate,
+		0 certyearDate,
+		0 yearcheckDate,
+		0 tecDate,
+		0 secImprovedate,
+		0 driLicenceTime,
+		0 driverzigezhengTime,
+		count( * ) driverzigezhengTime2 
+	FROM
+		hl_people 
+	WHERE
+		compay_id = #{companyId}  
+		AND people_type = 2 
+		AND driverzigezheng_time <= now( ) 
+		) t
+		]]>
+   </select>
+   <select id="getCompanyRemindByBusiLic">
+   <![CDATA[
+   SELECT
+		* 
+	FROM
+		hl_company 
+	WHERE
+		business_licence <= now( )
+	]]>
+   </select>
+</mapper>

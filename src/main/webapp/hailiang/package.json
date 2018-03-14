@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "iview": "^2.9.2",
-    "vue": "^2.5.2",
+    "vue": "^2.5.16",
     "vue-cookies": "^1.5.5",
     "vue-router": "^3.0.1"
   },
