@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cm.cn.mapper.HlRemindMapper;
+import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCompany;
 import cm.cn.po.HlRemind;
 import cm.cn.service.HlRemindService;
@@ -19,13 +20,43 @@ public class HlRemindServiceImpl implements HlRemindService {
 	}
 	@Override
 	public List<HlCompany> getCompanyRemindByBusiLic() {
-		// TODO Auto-generated method stub
-		return null;
+		return hlRemindMapper.getCompanyRemindByBusiLic();
 	}
 	@Override
 	public List<HlCompany> getCompanyRemindByBusiCer() {
-		// TODO Auto-generated method stub
-		return null;
+		return hlRemindMapper.getCompanyRemindByBusiCer();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByInsuranceDate() {
+		return hlRemindMapper.getCarRemindByInsuranceDate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByDutyInsurancedate() {
+		return hlRemindMapper.getCarRemindByDutyInsurancedate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByDutypeoDate() {
+		return hlRemindMapper.getCarRemindByDutypeoDate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByCertyearDate() {
+		return hlRemindMapper.getCarRemindByCertyearDate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByRoadDate() {
+		return hlRemindMapper.getCarRemindByRoadDate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByYearcheckDate() {
+		return hlRemindMapper.getCarRemindByYearcheckDate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindByTecDate() {
+		return hlRemindMapper.getCarRemindByTecDate();
+	}
+	@Override
+	public List<HlCarinfo> getCarRemindBySecImprovedate() {
+		return hlRemindMapper.getCarRemindBySecImprovedate();
 	}
     
 }

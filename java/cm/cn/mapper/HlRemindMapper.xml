@@ -530,14 +530,104 @@
 		) t
 		]]>
    </select>
-   <select id="getCompanyRemindByBusiLic">
+   <select id="getCompanyRemindByBusiLic" resultType="cm.cn.po.HlPeople">
    <![CDATA[
    SELECT
 		* 
 	FROM
 		hl_company 
 	WHERE
-		business_licence <= now( )
+		busin_licence_time <= now( )
 	]]>
+   </select>
+   <select id="getCompanyRemindByBusiCer" resultType="cm.cn.po.HlPeople">
+   <![CDATA[
+   SELECT
+		* 
+	FROM
+		hl_company 
+	WHERE
+		busin_certificate_time <= now( )
+	]]>
+   </select>
+   <select id="getCarRemindByInsuranceDate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+   SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		insurance_date < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindByDutyInsurancedate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		duty_insurancedate < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindByDutypeoDate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		dutypeo_date < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindByCertyearDate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		certyear_date < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindByRoadDate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		road_date < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindByYearcheckDate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		yearcheck_date < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindByTecDate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		tec_date < now( );
+   ]]>
+   </select>
+   <select id="getCarRemindBySecImprovedate" resultType="cm.cn.po.HlCarinfo">
+   <![CDATA[
+      SELECT
+		* 
+	FROM
+		hl_carinfo 
+	WHERE
+		sec_improvedate < now( );
+   ]]>
    </select>
 </mapper>
