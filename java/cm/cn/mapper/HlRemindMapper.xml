@@ -630,4 +630,37 @@
 		sec_improvedate < now( );
    ]]>
    </select>
+   <select id="getPeopleRemindByDriLicenceTime" resultType="cm.cn.po.HlPeople">
+   <![CDATA[
+   SELECT
+		* 
+	FROM
+		hl_people 
+	WHERE
+		dri_licence_time <= now( ) 
+		AND people_type = 1
+   ]]>
+   </select>
+   <select id="getPeopleRemindByDriverzigezhengTime" resultType="cm.cn.po.HlPeople">
+   <![CDATA[
+	SELECT
+		* 
+	FROM
+		hl_people 
+	WHERE
+		driverzigezheng_time <= now( ) 
+		AND people_type = 1;   
+   ]]>
+   </select>
+   <select id="getPeopleRemindByDriverzigezhengTime2" resultType="cm.cn.po.HlPeople">
+   <![CDATA[
+   SELECT
+		* 
+	FROM
+		hl_people 
+	WHERE
+		driverzigezheng_time <= now( ) 
+		AND people_type = 2;
+   ]]>
+   </select>
 </mapper>

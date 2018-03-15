@@ -3,6 +3,7 @@ package cm.cn.service;
 import java.util.List;
 import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCompany;
+import cm.cn.po.HlPeople;
 import cm.cn.po.HlRemind;
 
 public interface HlRemindService {
@@ -25,4 +26,10 @@ public interface HlRemindService {
 	public List<HlCarinfo> getCarRemindByTecDate();
 	// 二级维护
 	public List<HlCarinfo> getCarRemindBySecImprovedate();
+	//驾驶证有效期
+	public List<HlPeople> getPeopleRemindByDriLicenceTime();
+	//驾驶员资格证
+	public List<HlPeople> getPeopleRemindByDriverzigezhengTime();
+	//押运员资格证
+	public List<HlPeople> getPeopleRemindByDriverzigezhengTime2();
 }

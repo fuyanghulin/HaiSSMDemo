@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCompany;
+import cm.cn.po.HlPeople;
 import cm.cn.po.HlRemind;
 import cm.cn.po.Page;
 import cm.cn.service.HlRemindService;
@@ -64,6 +65,26 @@ public class HlRemindController {
 			list =hlRemindService.getCarRemindBySecImprovedate();
 		}
 		Page<HlCarinfo> page = null;
+		if (list.size()>0) {
+			page = new Page<>(current, pageNum, list);
+			return page;
+		}
+		else {
+			return null;
+		}
+	}
+	@RequestMapping(value="/getPeopleRemind",method=RequestMethod.POST)
+	@ResponseBody
+	public Page<HlPeople> getPeopleRemind(int current, int pageNum,int id){
+		List<HlPeople> list = new ArrayList<>();
+		if(id==0){
+			list = hlRemindService.getPeopleRemindByDriLicenceTime();
+		}else if(id==1){
+			list = hlRemindService.getPeopleRemindByDriverzigezhengTime();
+		}else{
+			list = hlRemindService.getPeopleRemindByDriverzigezhengTime2();
+		}
+		Page<HlPeople> page = null;
 		if (list.size()>0) {
 			page = new Page<>(current, pageNum, list);
 			return page;

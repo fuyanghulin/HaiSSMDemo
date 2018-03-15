@@ -4,6 +4,7 @@ import java.util.List;
 
 import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCompany;
+import cm.cn.po.HlPeople;
 import cm.cn.po.HlRemind;
 
 public interface HlRemindMapper {
@@ -18,4 +19,7 @@ public interface HlRemindMapper {
 	public List<HlCarinfo> getCarRemindByYearcheckDate();
 	public List<HlCarinfo> getCarRemindByTecDate();
 	public List<HlCarinfo> getCarRemindBySecImprovedate();
+	public List<HlPeople> getPeopleRemindByDriLicenceTime();
+	public List<HlPeople> getPeopleRemindByDriverzigezhengTime();
+	public List<HlPeople> getPeopleRemindByDriverzigezhengTime2();
 }

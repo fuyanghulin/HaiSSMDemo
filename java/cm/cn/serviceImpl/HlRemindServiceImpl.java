@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import cm.cn.mapper.HlRemindMapper;
 import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCompany;
+import cm.cn.po.HlPeople;
 import cm.cn.po.HlRemind;
 import cm.cn.service.HlRemindService;
 @Service
@@ -57,6 +58,18 @@ public class HlRemindServiceImpl implements HlRemindService {
 	@Override
 	public List<HlCarinfo> getCarRemindBySecImprovedate() {
 		return hlRemindMapper.getCarRemindBySecImprovedate();
+	}
+	@Override
+	public List<HlPeople> getPeopleRemindByDriLicenceTime() {
+		return hlRemindMapper.getPeopleRemindByDriLicenceTime();
+	}
+	@Override
+	public List<HlPeople> getPeopleRemindByDriverzigezhengTime() {
+		return hlRemindMapper.getPeopleRemindByDriverzigezhengTime();
+	}
+	@Override
+	public List<HlPeople> getPeopleRemindByDriverzigezhengTime2() {
+		return hlRemindMapper.getPeopleRemindByDriverzigezhengTime2();
 	}
     
 }
