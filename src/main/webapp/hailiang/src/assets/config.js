@@ -1,7 +1,7 @@
 /**
  * Created by Admin on 2017/10/9.
  */
-var baseUrl = 'http://localhost:8080';
+var baseUrl = 'http://192.168.1.78:8080';
 var dataUrl = {
     login:{
         login:baseUrl+'/HaiSSMDemo/companyUserLogin.action',
@@ -48,6 +48,11 @@ var dataUrl = {
         del: baseUrl + '/HaiSSMDemo/delCarInfoBatch.action?arrays=',
         all: baseUrl + '/HaiSSMDemo/allCarInfo.action',
         map:baseUrl+'/HaiSSMDemo/selectGpsByPlateNO.action?plateNo=',
+        upCarAttach:baseUrl+'/HaiSSMDemo/upCarAttach.action',
+        insertCarAttach: baseUrl+'/HaiSSMDemo/insertCarAttach.action',
+        updateCarAttach: baseUrl+'/HaiSSMDemo/updateCarAttach.action',
+        selectCarAttach: baseUrl+'/HaiSSMDemo/selectCarAttach.action',
+        delCarAttach: baseUrl+'/delCarAttach.action?arrays='
     },
     carrier: {
         search: baseUrl + '/HaiSSMDemo/selectCompanyByName.action?current=1&pageNum=1000&name=',
@@ -103,6 +108,22 @@ var dataUrl = {
     trainLog: {
         all: baseUrl + '/HaiSSMDemo/selectPeixustate.action',
         getTrainLogByCompanyID:baseUrl+'/HaiSSMDemo/selectPeixunstateByCompanyId.action',
+    },
+    recaddress: {
+        upSitePhoto: baseUrl + '/HaiSSMDemo/upSitePhoto.action',
+        selSiteByCompanyIdAndType: baseUrl + '/HaiSSMDemo/selSiteByCompanyIdAndType.action',
+        insertSite: baseUrl + '/HaiSSMDemo/insertSite.action',
+        updateSite: baseUrl + '/HaiSSMDemo/updateSite.action',
+        delSiteBatch: baseUrl + '/HaiSSMDemo/delSiteBatch.action'
+
+    },
+    shipperinfo: {
+        upSitePhoto: baseUrl + '/HaiSSMDemo/upSitePhoto.action',
+        selSiteByCompanyIdAndType: baseUrl + '/HaiSSMDemo/selSiteByCompanyIdAndType.action',
+        insertSite: baseUrl + '/HaiSSMDemo/insertSite.action',
+        updateSite: baseUrl + '/HaiSSMDemo/updateSite.action',
+        delSiteBatch: baseUrl + '/HaiSSMDemo/delSiteBatch.action',
+        
     }
 }
 

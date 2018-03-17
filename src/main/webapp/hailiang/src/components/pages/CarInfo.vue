@@ -989,7 +989,7 @@ props:{
             console.log("输出看下要上传的idata原始样子");
             console.log(idata);
             $.ajax({
-                url:  'http://localhost:8080/HaiSSMDemo/upCarAttach.action',
+                url:  dataUrl.dataUrl.carinfo.upCarAttach,//'http://localhost:8080/HaiSSMDemo/upCarAttach.action',
                 type: 'post',
                 processData: false, //不对表单处理
                 contentType: false, //
@@ -1001,7 +1001,7 @@ props:{
                     idata.filePath=data[0];
                     if(_self.dstatus==1){
                         console.log("即将执行postData")
-                        _self.postData(_self, 'http://localhost:8080/HaiSSMDemo/insertCarAttach.action', idata);
+                        _self.postData(_self, dataUrl.dataUrl.carinfo.insertCarAttach, idata);//'http://localhost:8080/HaiSSMDemo/insertCarAttach.action'
                     }else{
                         var udata={};
                         udata.id=_self.upitem.id;
@@ -1036,7 +1036,7 @@ props:{
             
             console.log(idata)
             $.ajax({
-                url: 'http://localhost:8080/HaiSSMDemo/updateCarAttach.action',
+                url: dataUrl.dataUrl.carinfo.updateCarAttach,//'http://localhost:8080/HaiSSMDemo/updateCarAttach.action',
                 type: 'post',
                 data: idata,
                 cache: false,
@@ -1107,7 +1107,7 @@ props:{
                 idata.pageNum=15;
                 idata.carNum=_self.detailArr;
                 $.ajax({
-                    url: 'http://localhost:8080/HaiSSMDemo/selectCarAttach.action',
+                    url: dataUrl.dataUrl.carinfo.selectCarAttach,//'http://localhost:8080/HaiSSMDemo/selectCarAttach.action',
                     type: 'post',
                     cache: false,
                     data: idata,
@@ -1576,9 +1576,9 @@ props:{
             for(let i in _self.deldArr){
                 idata[i]=_self.deldArr[i].id;
             }
-            console.log('http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr);
+            //console.log('http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr);
             $.ajax({
-                url: 'http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='+_self.deldArr,
+                url: dataUrl.dataUrl.carInfo.delCarAttach+_self.deldArr,//'http://localhost:8080/HaiSSMDemo/delCarAttach.action?arrays='
                 cache: false,
                 type: 'post',
                 //data: idata,

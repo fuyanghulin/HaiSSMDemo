@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import dataUrl from '../../assets/config.js'
 import cityDatas from '../../assets/cityData.json'
 export default{
 	name: 'ShipperInfo',
@@ -247,7 +248,7 @@ export default{
 	        openState: '添加',
             pictureName: '',
             pictureUrl: '',
-            up_photo: 'http://localhost:8080/HaiSSMDemo/upSitePhoto.action',
+            up_photo: '',//dataUrl.dataUrl.shipperinfo.upSitePhoto,//'http://localhost:8080/HaiSSMDemo/upSitePhoto.action',
             loading: false,
             m_tit: null,
             m_msg: null
@@ -258,6 +259,7 @@ export default{
 		this.userType=this.$cookies.get('roleID');
 	},
 	activated: function(){
+        this.up_photo=dataUrl.dataUrl.shipperinfo.upSitePhoto;
 		this.cityData=cityDatas;
         this.userType=this.$cookies.get("roleID");
         console.log("在activate的：过程中");
@@ -303,7 +305,7 @@ export default{
                 console.log(idata);
                 $.ajax({
                     type: 'POST',
-                    url: 'http://localhost:8080/HaiSSMDemo/selSiteByCompanyIdAndType.action',
+                    url: dataUrl.dataUrl.shipperinfo.selSiteByCompanyIdAndType,//'http://localhost:8080/HaiSSMDemo/selSiteByCompanyIdAndType.action',
                     data: idata,
                     cache: false,
                     success: function (data) {
@@ -478,7 +480,7 @@ export default{
             console.log(_self.formValidate);
             _self.formValidate.id=null;
             $.ajax({
-            	url: 'http://localhost:8080/HaiSSMDemo/insertSite.action',
+            	url: dataUrl.dataUrl.shipperinfo.insertSite,//'http://localhost:8080/HaiSSMDemo/insertSite.action',
             	data: _self.formValidate,
             	type: 'POST',
             	cache: false,
@@ -510,7 +512,7 @@ export default{
             _self.formValidate.district = _self.theCity[2];
             _self.formValidate.type='0';
         	$.ajax({
-        		url: 'http://localhost:8080/HaiSSMDemo/updateSite.action',
+        		url: dataUrl.dataUrl.shipperinfo.updateSite,//'http://localhost:8080/HaiSSMDemo/updateSite.action',
         		data: _self.formValidate,
         		type: 'POST',
         		cache: false,
@@ -596,7 +598,7 @@ export default{
         	_self.m_msg=null;
         	if(_self.del_msg){
         		$.ajax({
-        			url: 'http://localhost:8080/HaiSSMDemo/delSiteBatch.action',
+        			url: dataUrl.dataUrl.shipperinfo.delSiteBatch,//'http://localhost:8080/HaiSSMDemo/delSiteBatch.action',
         			traditional:true,
         			data: {arrays:_self.delArr},
         			type: 'POST',
