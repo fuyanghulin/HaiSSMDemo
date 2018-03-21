@@ -102,7 +102,7 @@ indexloading: function(){
 },
             del:function() {
                 var _self = this;
-                $.get('http://localhost:8080/HaiSSMDemo2/delPeopleBatch.action?arrays=' + _self.delArr,
+                $.get(dataUrl.dataUrl.person.del + _self.delArr,
                     function (data, status) {
                         console.log(status);
                         if (status == 'success') {
@@ -139,7 +139,7 @@ indexloading: function(){
                 var _self = this;
                 _self.$Loading.start();
                 $.ajax({
-                    url: 'http://localhost:8080/HaiSSMDemo2/allPeople.action',
+                    url: dataUrl.dataUrl.baseUrl.baseUrl+'/HaiSSMDemo/allPeople.action',
                     type: 'get',
                     data: _self.page,
                     success:function(data) {

@@ -314,7 +314,7 @@ export default{
                         _self.totalRecord = data.totalRecord;
                         _self.current = data.currentPage;
                         /*for (var i in data.dataList) {
-                            data.dataList[i].linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data.dataList[i].linkmanPhotoPath;
+                            data.dataList[i].linkmanPhotoPath = dataUrl.dataUrl.baseUrl.baseUrl + '/SitePhoto/' + data.dataList[i].linkmanPhotoPath;
                         }*/
                         _self.data1 = data.dataList;
                         _self.loading=false;
@@ -412,7 +412,7 @@ export default{
             //this.formValidate.pictureName = data[0];
             //this.formValidate.pictureUrl = data[1];
             this.loadingStatus = false;
-            this.formValidate.linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data[0];
+            this.formValidate.linkmanPhotoPath = dataUrl.dataUrl.baseUrl.baseUrl + '/SitePhoto/' + data[0];
             this.$Message.success('照片上传成功');
         },
         error:function() {
@@ -547,7 +547,7 @@ export default{
 				_self.m_msg="请确认是否删除该"+_self.delArr.length+"条数据";
 				_self.model2=true;
         		/*$.ajax({
-        			url: 'http://localhost:8080/HaiSSMDemo/delSiteBatch.action',
+        			url: dataUrl.dataUrl.shipperinfo.delSiteBatch,
         			traditional:true,
         			data: {arrays:_self.delArr},
         			type: 'POST',
@@ -573,7 +573,7 @@ export default{
         	var _self=this;
         	consoel.log("在postData函数中");
         	$.ajax({
-        		url: 'http://localhost:8080/HaiSSMDemo/insertSite.action',
+        		url: dataUrl.dataUrl.shipperinfo.insertSite,
         		data: idata,
         		type: 'post',
         		cache: false,

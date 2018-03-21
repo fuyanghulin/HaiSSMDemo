@@ -1101,21 +1101,25 @@ props:{
         },
         carDetail:function(){
             var _self=this;
+            console.log(_self.detailArr);//kktest
             if(_self.detailArr){
+                console.log('即将进入ajax逻辑')
                 var idata={};
                 idata.current=1;
                 idata.pageNum=15;
                 idata.carNum=_self.detailArr;
+                console.log(idata);
                 $.ajax({
                     url: dataUrl.dataUrl.carinfo.selectCarAttach,//'http://localhost:8080/HaiSSMDemo/selectCarAttach.action',
                     type: 'post',
+                    traditional:true,
                     cache: false,
                     data: idata,
                     success: function(data){
 
                         _self.detaildata=data.dataList;
                         for (var i in data.dataList) {
-                            data.dataList[i].filePath = "http://localhost:8080" + '/CarAttach/' + data.dataList[i].filePath;
+                            data.dataList[i].filePath = dataUrl.dataUrl.baseUrl.baseUrl + '/CarAttach/' + data.dataList[i].filePath;
                             data.dataList[i].createTime = _self.format(data.dataList[i].createTime);
                             data.dataList[i].updateTime = _self.format(data.dataList[i].updateTime);
                         }

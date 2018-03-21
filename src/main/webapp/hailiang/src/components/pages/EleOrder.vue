@@ -1257,7 +1257,7 @@ props:{
                             _self.carMessage.driveLicence = data.driveLicence;
                             _self.carMessage.drivezigezheng = data.drivezigezheng;
                             _self.carMessage.driverPhone = data.phone;
-                            _self.carMessage.driverPictureUrl = 'http://localhost:8080' + '/pic/' + data.pictureName;
+                            _self.carMessage.driverPictureUrl = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.pictureName;
                             _self.carMessage.driveridNum = data.idNum;
                         }
                     }
@@ -1276,7 +1276,7 @@ props:{
                         if (data.id) {
                             _self.carMessage.saferzigezheng = data.drivezigezheng;
                             _self.carMessage.saferPhone = data.phone;
-                            _self.carMessage.saferPictureUrl = 'http://localhost:8080' + '/pic/' + data.pictureName;
+                            _self.carMessage.saferPictureUrl = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.pictureName;
                             _self.carMessage.saferidNum = data.idNum;
                         }
                     }
@@ -1431,9 +1431,9 @@ props:{
                 success: function(data) {
                     //console.log(data);
                     _self.printInfo = data;
-                    _self.printInfo.driver.pictureName = 'http://localhost:8080' + '/pic/' + data.driver.pictureName;
-                    _self.printInfo.safer.pictureName = 'http://localhost:8080' + '/pic/' + data.safer.pictureName;
-                    _self.printInfo.hlSafecard.safeCardName = 'http://localhost:8080' + '/SafeCard/' + data.hlSafecard.safeCardName;
+                    _self.printInfo.driver.pictureName = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.driver.pictureName;
+                    _self.printInfo.safer.pictureName = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.safer.pictureName;
+                    _self.printInfo.hlSafecard.safeCardName = dataUrl.dataUrl.baseUrl.baseUrl + '/SafeCard/' + data.hlSafecard.safeCardName;
                     console.log(_self.printInfo);
                 }
             });

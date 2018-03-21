@@ -384,7 +384,7 @@ export default{
         //目前是会先将图片上传，这个可以做修改成如，车档信息处一样
         success:function(data) {
             this.loadingStatus = false;
-            this.formValidate.linkmanPhotoPath = "http://localhost:8080" + '/SitePhoto/' + data[0];
+            this.formValidate.linkmanPhotoPath = dataUrl.dataUrl.baseUrl.baseUrl + '/SitePhoto/' + data[0];
             this.$Message.success('照片上传成功');
         },
         error:function() {

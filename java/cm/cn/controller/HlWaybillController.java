@@ -25,7 +25,7 @@ public class HlWaybillController {
 	private HlWaybillService hlWaybillService;
 	@Autowired
 	private HlCheckWaybillService hlCheckWaybillService;
-	@RequestMapping(value="/allWaybill",method=RequestMethod.POST)
+	@RequestMapping(value="/allWaybill",method=RequestMethod.GET)
 	@ResponseBody
 	public Page<HlWaybillAndSite> allWaybill(int current,int pageNum){
 		List<HlWaybill> list =hlWaybillService.selAllWaybill();

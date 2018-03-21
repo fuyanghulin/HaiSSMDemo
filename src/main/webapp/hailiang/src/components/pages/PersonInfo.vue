@@ -430,7 +430,7 @@ props:{
                                     } else if (data.dataList[i].peopleType == 2) {
                                         data.dataList[i].type = '押运员';
                                     }
-                                    data.dataList[i].picUser = "http://localhost:8080" + '/pic/' + data.dataList[i].pictureName;
+                                    data.dataList[i].picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.dataList[i].pictureName;
                                     data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
                                     data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
                                     data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);
@@ -471,7 +471,7 @@ props:{
                                     } else if (data.dataList[i].peopleType == 2) {
                                         data.dataList[i].type = '押运员';
                                     }
-                                    data.dataList[i].picUser = "http://localhost:8080" + '/pic/' + data.dataList[i].pictureName;
+                                    data.dataList[i].picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.dataList[i].pictureName;
                                     data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
                                     data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
                                     data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);
@@ -637,7 +637,7 @@ props:{
             this.formValidate.pictureName = data[0];
             this.formValidate.pictureUrl = data[1];
             this.loadingStatus = false;
-            this.formValidate.picUser = "http://localhost:8080" + '/pic/' + this.formValidate.pictureName;
+            this.formValidate.picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + this.formValidate.pictureName;
             this.$Message.success('上传成功');
         },
         error:function() {
@@ -707,7 +707,7 @@ props:{
                 for(let key in _self.delone){
                     _self.formValidate[key]=_self.delone[key];
                 }
-                _self.formValidate.picUser = "http://localhost:8080" + '/pic/' + _self.delone.pictureName;
+                _self.formValidate.picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + _self.delone.pictureName;
             }else if(iText=="修改"){
                 if(!_self.delone){
                     _self.m_tit="选项提示";
@@ -719,7 +719,7 @@ props:{
                 for(let key in _self.delone){
                     _self.formValidate[key]=_self.delone[key];
                 }
-                _self.formValidate.picUser = "http://localhost:8080" + '/pic/' + _self.delone.pictureName;
+                _self.formValidate.picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + _self.delone.pictureName;
             }
             this.modal1 = true;
         },
@@ -748,7 +748,7 @@ props:{
                                 } else if (data.dataList[i].peopleType == 2) {
                                     data.dataList[i].type = '押运员';
                                 }
-                                data.dataList[i].picUser = "http://localhost:8080" + '/pic/' + data.dataList[i].pictureName;
+                                data.dataList[i].picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.dataList[i].pictureName;
 
 
                                 console.log("执行了转换");
@@ -783,7 +783,7 @@ props:{
                                 } else if (data.dataList[i].peopleType == 2) {
                                     data.dataList[i].type = '押运员';
                                 }
-                                data.dataList[i].picUser = 'http://localhost:8080' + '/pic/' + data.dataList[i].pictureName;
+                                data.dataList[i].picUser = dataUrl.dataUrl.baseUrl.baseUrl + '/pic/' + data.dataList[i].pictureName;
                                 data.dataList[i].birthday = _self.format(data.dataList[i].birthday);
                                 data.dataList[i].driLicenceTime = _self.format(data.dataList[i].driLicenceTime);
                                 data.dataList[i].driverzigezhengTime = _self.format(data.dataList[i].driverzigezhengTime);

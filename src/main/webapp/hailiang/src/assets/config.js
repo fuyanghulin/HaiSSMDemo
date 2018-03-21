@@ -124,6 +124,9 @@ var dataUrl = {
         updateSite: baseUrl + '/HaiSSMDemo/updateSite.action',
         delSiteBatch: baseUrl + '/HaiSSMDemo/delSiteBatch.action',
         
+    },
+    baseUrl:{
+    	  baseUrl:baseUrl,
     }
 }
 
