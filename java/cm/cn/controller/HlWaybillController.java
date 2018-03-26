@@ -51,17 +51,16 @@ public class HlWaybillController {
 	@RequestMapping(value="/selWaybillByCompanyId",method=RequestMethod.POST)
 	@ResponseBody
 	public Page<HlWaybillAndSite> selWaybillByCompanyId(int current,int pageNum,int companyId){
-		List<HlWaybill> list = hlWaybillService.selWaybillByCompanyId(companyId);
+		List<HlWaybill> listHlWaybill = hlWaybillService.selWaybillByCompanyId(companyId);
 		List<HlWaybillAndSite> listWaybillAndSite = new ArrayList<HlWaybillAndSite>();
-		for(int i=0;i<list.size();i++){
+		for(int i=0;i<listHlWaybill.size();i++){
 			HlWaybillAndSite hlWaybillAndSite = new HlWaybillAndSite();
-			hlWaybillAndSite.setHlWaybill(list.get(i));
-			Integer[] a = hlWaybillService.selectSiteId(list.get(i).getId());
-			List<HlSite> listSite= hlWaybillService.selectSiteById(a);
+			hlWaybillAndSite.setHlWaybill(listHlWaybill.get(i));
+			Integer[] SiteId = hlWaybillService.selectSiteId(listHlWaybill.get(i).getId());
+			List<HlSite> listSite= hlWaybillService.selectSiteById(SiteId);
 			hlWaybillAndSite.setListSite(listSite);
 			listWaybillAndSite.add(hlWaybillAndSite);
 		}
-		System.out.println(listWaybillAndSite);
 		Page<HlWaybillAndSite> page = null;
 		if(listWaybillAndSite.size()>0){
 			page = new Page<>(current, pageNum,  listWaybillAndSite);
@@ -114,8 +113,8 @@ public class HlWaybillController {
 		Date date=new Date();
 		hlWaybill.setCreateTime(date);
 		hlWaybill.setUpdateTime(date);
-		int i = hlWaybillService.insertWaybill(hlWaybill);
-		for(i=0;i<siteId.length;i++){
+		int num = hlWaybillService.insertWaybill(hlWaybill);
+		for(int i=0;i<siteId.length;i++){
 			HlWaybillSite waybillSite = new HlWaybillSite();
 			waybillSite.setWaybillId(hlWaybill.getId());
 			waybillSite.setSiteId(siteId[i]);
@@ -127,7 +126,7 @@ public class HlWaybillController {
 		hlCheckWaybill.setWaybillId(hlWaybill.getId());
 		hlCheckWaybill.setWaybillState("订单创建");
 		hlCheckWaybillService.insertHlCheckWaybill(hlCheckWaybill);
-		return i;
+		return num;
 	}
 	@RequestMapping(value="/updateWaybill",method=RequestMethod.POST)
 	@ResponseBody
@@ -138,7 +137,6 @@ public class HlWaybillController {
 			HlWaybillSite waybillSite = new HlWaybillSite();
 			waybillSite.setWaybillId(hlWaybill.getId());
 			waybillSite.setSiteId(siteId[i]);
-			waybillSite.setCreateTime(date);
 			waybillSite.setUpdateTime(date);
 			hlWaybillService.insertWaybillAndSite(waybillSite);
 		}
