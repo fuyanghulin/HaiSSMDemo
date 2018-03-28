@@ -113,6 +113,7 @@ public class HlPeopleController {
 	@RequestMapping(value="/insertPeople",method=RequestMethod.POST)
 	@ResponseBody
 	public int insertPeople(HlPeople hlPeople){
+		System.out.println("+++++++++++++++++++++++"+hlPeople.getBirthday());
 		HlDriveruser hlDriveruser = new HlDriveruser();
 		int num = hlPeopleService.insertPeople(hlPeople);
 		if (num>0&&hlPeople.getPeopleType().equals("1")) {

@@ -14,7 +14,7 @@ import cm.cn.util.SendRequest;
 public class HaiTest {
 	@Test
 	public void testMsg(){
-		String phone = "17601510248" ;
+		String phone = "15927062311" ;
 		String code = "asdqwe";
 		boolean flag = GetCheckCode.getCode(phone, code);
 		System.out.println(flag);
