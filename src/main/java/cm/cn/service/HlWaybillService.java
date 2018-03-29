@@ -4,6 +4,8 @@ import java.util.List;
 
 import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.HlWaybillSite;
+import cm.cn.po.HlCarDrivingLog;
+import cm.cn.po.HlCarrierInfo;
 import cm.cn.po.HlSite;
 import cm.cn.po.HlWaybill;
 
@@ -34,6 +36,11 @@ public interface HlWaybillService {
 	public Integer[] selectSiteId(int waybillId);
 	//根据站点号查询站点信息
 	public List<HlSite> selectSiteById(Integer[] arrays);
-	
+	//根据电子运单id删除电子运单+
 	public int delWaybillSite(int waybillId);
+	//根据电子运单id获取承运人基本信息
+	public HlCarrierInfo getCarrierByWaybillId(int waybillId);
+	//根据电子运单id获取危运车辆行车日志
+	public HlCarDrivingLog getCarDrivingLogByWaybillId(int waybillId);
+	
 }

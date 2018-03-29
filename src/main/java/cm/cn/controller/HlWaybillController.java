@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.HlWaybillSite;
+import cm.cn.po.HlCarDrivingLog;
+import cm.cn.po.HlCarrierInfo;
 import cm.cn.po.HlCheckWaybill;
 import cm.cn.po.HlSite;
 import cm.cn.po.HlWaybill;
@@ -169,5 +171,31 @@ public class HlWaybillController {
 	@ResponseBody
 	public HlWaybill getWaybillBatchById(int id){
 		return hlWaybillService.selectById(id);
+	}
+	/**   
+	 * @Title: getCarrierByWaybillId   
+	 * @Description: 通过电子运单id获取承运人基本信息   
+	 * @param: @param waybillId
+	 * @param: @return      
+	 * @return: HlCarrierInfo      
+	 * @throws   
+	 */
+	@RequestMapping(value="/getCarrierByWaybillId")
+	@ResponseBody
+	public HlCarrierInfo getCarrierByWaybillId(int waybillId){
+		return hlWaybillService.getCarrierByWaybillId(waybillId);
+	}
+	/**   
+	 * @Title: getCarDrivingLogByWaybillId   
+	 * @Description:通过电子运单id获取危运车辆行车日志    
+	 * @param: @param waybillId
+	 * @param: @return      
+	 * @return: HlCarDrivingLog      
+	 * @throws   
+	 */
+	@RequestMapping(value="/getCarDrivingLogByWaybillId")
+	@ResponseBody
+	public HlCarDrivingLog getCarDrivingLogByWaybillId(int waybillId){
+		return hlWaybillService.getCarDrivingLogByWaybillId(waybillId);
 	}
 }

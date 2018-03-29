@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cm.cn.po.HlCompanyuser;
 import cm.cn.service.HlCompanyUserService;
+import cm.cn.util.Base64;
 
 @Controller
 public class HlCompanyUserController {
@@ -23,6 +24,8 @@ public class HlCompanyUserController {
 	@ResponseBody
 	public Map<Integer, String> insertCompanyUserAndPass(HlCompanyuser hlCompanyuser) {
 		Map<Integer, String> map = new HashMap<Integer, String>();
+		//对用户密码进行加密处理
+		hlCompanyuser.setPassword(Base64.encode(("*nbyy"+hlCompanyuser.getPassword()+"hlkj*").getBytes()));
 		// 先查询该用户是否存在，存在的话不能添加，不存在的话可以直接添加
 		int num = hlCompanyUserService.addCompanyUserAndPass(hlCompanyuser);
 		if(num!=0){
@@ -48,6 +51,8 @@ public class HlCompanyUserController {
 	@ResponseBody
 	public Map<Integer, Object> companyUserLogin(String name, String pass, HttpSession session) {
 		Map<Integer, Object> map = new HashMap<>();
+		//对密码进行加密,然后和数据库加密的密码进行比较
+		pass = Base64.encode(("*nbyy"+pass+"hlkj*").getBytes());
 		List<HlCompanyuser> list = hlCompanyUserService.selectByUserNameAndPassword(name, pass);
 		if (list.size() == 1) {
 			session.setAttribute("companyUser", list.get(0));

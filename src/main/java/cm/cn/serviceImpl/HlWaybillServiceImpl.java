@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import cm.cn.datasource.CustomerContextHolder;
 import cm.cn.mapper.HlCarinfoMapper;
+import cm.cn.mapper.HlCheckWaybillMapper;
 import cm.cn.mapper.HlGoodsinfoMapper;
 import cm.cn.mapper.HlGoodstypeMapper;
 import cm.cn.mapper.HlPeopleMapper;
@@ -24,8 +25,15 @@ import cm.cn.mapper.MyWaybillMapper;
 import cm.cn.mapper.MyWaybillSiteMapper;
 import cm.cn.po.HlWaybillDetail;
 import cm.cn.po.Gpsinfo;
+import cm.cn.po.HlCarDrivingLog;
 import cm.cn.po.HlCarinfo;
 import cm.cn.po.HlCarinfoExample;
+import cm.cn.po.HlCarrierInfo;
+import cm.cn.po.HlCheckWaybill;
+import cm.cn.po.HlCheckWaybillExample;
+import cm.cn.po.HlGoodsinfo;
+import cm.cn.po.HlGoodstype;
+import cm.cn.po.HlPeople;
 import cm.cn.po.HlSite;
 import cm.cn.po.HlWaybill;
 import cm.cn.po.HlWaybillExample;
@@ -60,6 +68,8 @@ public class HlWaybillServiceImpl implements HlWaybillService {
     private MySiteMapper mySiteMapper;
     @Autowired
     private MyWaybillSiteMapper myWaybillSiteMapper;
+    @Autowired
+    private HlCheckWaybillMapper hlCheckWaybillMapper;
 	@Override
 	public List<HlWaybill> selAllWaybill() {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
@@ -175,6 +185,85 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 	public int delWaybillSite(int waybillId) {
 		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
 		return myWaybillSiteMapper.delWaybillSite(waybillId);
+	}
+	@Override
+	public HlCarrierInfo getCarrierByWaybillId(int waybillId) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		
+		HlCarrierInfo hlCarrierInfo = new HlCarrierInfo();
+		
+		//通过电子运单id查询电子运单
+		HlWaybill hlWaybill = hlWaybillMapper.selectByPrimaryKey(waybillId);
+		
+		//通过电子运单id查询电子运单(Check)
+		HlCheckWaybillExample checkWaybillExample = new HlCheckWaybillExample();
+		HlCheckWaybillExample.Criteria checkWaybillCriteria = checkWaybillExample.createCriteria();
+		checkWaybillCriteria.andWaybillIdEqualTo(waybillId);
+		HlCheckWaybill hlCheckWaybill = hlCheckWaybillMapper.selectByExample(checkWaybillExample).get(0);
+		
+		//获取电子运单中车牌号,同多车牌号查询车辆信息
+		HlCarinfoExample carinfoExample = new HlCarinfoExample();
+		HlCarinfoExample.Criteria carinfoCriteria = carinfoExample.createCriteria();
+		carinfoCriteria.andCarNumEqualTo(hlWaybill.getCarNum());
+		HlCarinfo hlCarinfo = hlCarinfoMapper.selectByExample(carinfoExample).get(0);
+		
+		//获取车辆信息中驾驶员和押运员的id,同多id查询驾驶员和押运员的信息
+		HlPeople driver = hlPeopleMapper.selectByPrimaryKey(hlCarinfo.getDriverId());
+		HlPeople safer = hlPeopleMapper.selectByPrimaryKey(hlCarinfo.getSaferId());
+		
+		//获取电子运单中货物信息的id,通过id查询货物信息
+		HlGoodsinfo hlGoodsinfo = hlGoodsInfoMapper.selectByPrimaryKey(hlWaybill.getGoodsId());
+		
+		//获取货物信息中货物类型的id,通过id查询货物类型
+		HlGoodstype hlGoodstype = hlGoodstypeMapper.selectByPrimaryKey(hlGoodsinfo.getGoodstyleId());
+		
+		hlCarrierInfo.setHlCarinfo(hlCarinfo);
+		hlCarrierInfo.setDriver(driver);
+		hlCarrierInfo.setSafer(safer);
+		hlCarrierInfo.setHlCheckWaybill(hlCheckWaybill);
+		hlCarrierInfo.setHlGoodstype(hlGoodstype);
+		return hlCarrierInfo;
+	}
+	/**   
+	 * Title: getCarDrivingLogByWaybillId   
+	 * Description: 根据电子运单id获取危运车辆行车日志 
+	 * @param waybillId   
+	 * @see cm.cn.service.HlWaybillService#getCarDrivingLogByWaybillId(int)   
+	 */
+	@Override
+	public HlCarDrivingLog getCarDrivingLogByWaybillId(int waybillId) {
+		CustomerContextHolder.setCustomerType(CustomerContextHolder.DATA_SOURCE_GENERAL);
+		
+		//通过电子运单id查询电子运单
+        HlWaybill hlWaybill = hlWaybillMapper.selectByPrimaryKey(waybillId);
+        
+		//通过电子运单id查询电子运单(Check)
+		HlCheckWaybillExample checkWaybillExample = new HlCheckWaybillExample();
+		HlCheckWaybillExample.Criteria checkWaybillCriteria = checkWaybillExample.createCriteria();
+		checkWaybillCriteria.andWaybillIdEqualTo(waybillId);
+		HlCheckWaybill hlCheckWaybill = hlCheckWaybillMapper.selectByExample(checkWaybillExample).get(0);
+		
+		//获取电子运单中车牌号,同多车牌号查询车辆信息
+		HlCarinfoExample carinfoExample = new HlCarinfoExample();
+		HlCarinfoExample.Criteria carinfoCriteria = carinfoExample.createCriteria();
+		carinfoCriteria.andCarNumEqualTo(hlWaybill.getCarNum());
+		HlCarinfo hlCarinfo = hlCarinfoMapper.selectByExample(carinfoExample).get(0);
+		
+		//获取电子运单中货物信息的id,通过id查询货物信息
+		HlGoodsinfo hlGoodsinfo = hlGoodsInfoMapper.selectByPrimaryKey(hlWaybill.getGoodsId());
+				
+		//获取车辆信息中驾驶员和押运员的id,同多id查询驾驶员和押运员的信息
+		HlPeople driver = hlPeopleMapper.selectByPrimaryKey(hlCarinfo.getDriverId());
+		HlPeople safer = hlPeopleMapper.selectByPrimaryKey(hlCarinfo.getSaferId());
+		
+		
+		HlCarDrivingLog hlCarDrivingLog = new HlCarDrivingLog();
+		hlCarDrivingLog.setHlCheckWaybill(hlCheckWaybill);
+		hlCarDrivingLog.setHlCarinfo(hlCarinfo);
+		hlCarDrivingLog.setDriver(driver);
+		hlCarDrivingLog.setSafer(safer);
+		hlCarDrivingLog.setHlGoodsinfo(hlGoodsinfo);
+		return hlCarDrivingLog;
 	}
 
 }
