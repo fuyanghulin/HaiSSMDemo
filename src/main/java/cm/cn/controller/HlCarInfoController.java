@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import cm.cn.po.HlCarAttach;
 import cm.cn.po.HlCarinfo;
-import cm.cn.po.HlPeople;
 import cm.cn.po.Page;
 import cm.cn.service.HlCarInfoService;
 
