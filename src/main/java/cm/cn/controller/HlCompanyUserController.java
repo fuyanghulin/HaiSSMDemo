@@ -15,11 +15,26 @@ import cm.cn.po.HlCompanyuser;
 import cm.cn.service.HlCompanyUserService;
 import cm.cn.util.Base64;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description: 用于企业账户及登录管理 
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午7:50:17
+ * @modify:  
+ */
 @Controller
 public class HlCompanyUserController {
 	@Autowired
 	private HlCompanyUserService hlCompanyUserService;
 	// 添加公司的同时为其创建账户
+	/**   
+	 * @Title: insertCompanyUserAndPass   
+	 * @Description: 插入企业账户信息     
+	 * @param: @param hlCompanyuser
+	 * @param: @return     
+	 * @return: Map<Integer,String>      
+	 * @throws   
+	 */
 	@RequestMapping("/insertCompanyUserAndPass")
 	@ResponseBody
 	public Map<Integer, String> insertCompanyUserAndPass(HlCompanyuser hlCompanyuser) {
@@ -35,6 +50,14 @@ public class HlCompanyUserController {
 		}
 		return map;
 	}
+	/**   
+	 * @Title: companyaccount   
+	 * @Description: 判断用户是否已经存在     
+	 * @param: @param name
+	 * @param: @return     
+	 * @return: Map<Integer,String>      
+	 * @throws   
+	 */
 	@RequestMapping("/checkAccount")
 	@ResponseBody
 	public Map<Integer,String> companyaccount(String name){
@@ -47,6 +70,16 @@ public class HlCompanyUserController {
 		}
 		return map;
 	}
+	/**   
+	 * @Title: companyUserLogin   
+	 * @Description: 企业用户登陆处理     
+	 * @param: @param name
+	 * @param: @param pass
+	 * @param: @param session
+	 * @param: @return     
+	 * @return: Map<Integer,Object>      
+	 * @throws   
+	 */
 	@RequestMapping("/companyUserLogin")
 	@ResponseBody
 	public Map<Integer, Object> companyUserLogin(String name, String pass, HttpSession session) {

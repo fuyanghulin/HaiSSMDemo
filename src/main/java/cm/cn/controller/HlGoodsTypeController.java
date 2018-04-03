@@ -13,10 +13,27 @@ import cm.cn.po.HlGoodstype;
 import cm.cn.po.Page;
 import cm.cn.service.HlGoodsTypeService;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description: 货物类型 
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午8:13:45
+ * @modify:  
+ */
 @Controller
 public class HlGoodsTypeController {
 	@Autowired
 	private HlGoodsTypeService hlGoodsTypeService;
+	/**   
+	 * @Title: selectByGoodsTypeName   
+	 * @Description: 根据货物类型名称查询货物类型     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @param name
+	 * @param: @return     
+	 * @return: Page<HlGoodstype>      
+	 * @throws   
+	 */
 	@RequestMapping("/selectGoodsTypeByName")
 	@ResponseBody
 	public Page<HlGoodstype> selectByGoodsTypeName(int current,int pageNum,String name){
@@ -36,6 +53,15 @@ public class HlGoodsTypeController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: allGoodsType   
+	 * @Description: 查询所有货物类型(分页)     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @return     
+	 * @return: Page<HlGoodstype>      
+	 * @throws   
+	 */
 	@RequestMapping("allGoodsType")
 	@ResponseBody
 	public Page<HlGoodstype> allGoodsType(int current,int pageNum){
@@ -49,11 +75,26 @@ public class HlGoodsTypeController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: getSafeCardsList   
+	 * @Description: 查询所有货物类型     
+	 * @param: @return     
+	 * @return: List<HlGoodstype>      
+	 * @throws   
+	 */
 	@RequestMapping("/getGoodsTypeList")
 	@ResponseBody
 	public List<HlGoodstype> getSafeCardsList(){
 		return hlGoodsTypeService.selectAllGoodsType();
 	}
+	/**   
+	 * @Title: insertGoodsType   
+	 * @Description: 插入货物类型     
+	 * @param: @param hlGoodstype
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="insertGoodsType",method=RequestMethod.POST)
 	@ResponseBody
 	public int insertGoodsType(@RequestBody HlGoodstype hlGoodstype){
@@ -61,11 +102,27 @@ public class HlGoodsTypeController {
 		hlGoodstype.setCratetime(String.valueOf(System.currentTimeMillis()));
 		return hlGoodsTypeService.insertGoodsType(hlGoodstype);
 	}
+	/**   
+	 * @Title: updateGoodsType   
+	 * @Description: 更新货物类型     
+	 * @param: @param hlGoodstype
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="updateGoodsType",method=RequestMethod.POST)
 	@ResponseBody
 	public int updateGoodsType(@RequestBody HlGoodstype hlGoodstype){
 		return hlGoodsTypeService.updateGoodsType(hlGoodstype);
 	}
+	/**   
+	 * @Title: delGoodsTypeBatch   
+	 * @Description: 批量删除货物类型     
+	 * @param: @param arrays
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="delGoodsTypeBatch")
 	@ResponseBody
 	public int delGoodsTypeBatch(int[] arrays){

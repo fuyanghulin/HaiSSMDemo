@@ -21,12 +21,28 @@ import cm.cn.po.Page;
 import cm.cn.service.HlCheckWaybillService;
 import cm.cn.service.HlWaybillService;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description:电子运单信息 
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午9:16:06
+ * @modify:  
+ */
 @Controller
 public class HlWaybillController {
 	@Autowired
 	private HlWaybillService hlWaybillService;
 	@Autowired
 	private HlCheckWaybillService hlCheckWaybillService;
+	/**   
+	 * @Title: allWaybill   
+	 * @Description: 查询所有 电子运单     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @return     
+	 * @return: Page<HlWaybillAndSite>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/allWaybill",method=RequestMethod.GET)
 	@ResponseBody
 	public Page<HlWaybillAndSite> allWaybill(int current,int pageNum){
@@ -50,6 +66,16 @@ public class HlWaybillController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: selWaybillByCompanyId   
+	 * @Description: 根据企业id查询该企业的电子运单信息     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @param companyId
+	 * @param: @return     
+	 * @return: Page<HlWaybillAndSite>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/selWaybillByCompanyId",method=RequestMethod.POST)
 	@ResponseBody
 	public Page<HlWaybillAndSite> selWaybillByCompanyId(int current,int pageNum,int companyId){
@@ -99,6 +125,15 @@ public class HlWaybillController {
 			return null;
 		}
 	}*/
+	/**   
+	 * @Title: selectGpsByPlateNo2   
+	 * @Description: 查询电子运单一览     
+	 * @param: @param plateNo
+	 * @param: @param goods_id
+	 * @param: @return     
+	 * @return: HlWaybillDetail      
+	 * @throws   
+	 */
 	@RequestMapping("/selWaybillDetail")
 	@ResponseBody
 	public HlWaybillDetail selectGpsByPlateNo2(String plateNo,int goods_id){
@@ -110,6 +145,15 @@ public class HlWaybillController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: insertWaybill   
+	 * @Description: 插入电子运单     
+	 * @param: @param hlWaybill
+	 * @param: @param siteId
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="/insertWaybill",method=RequestMethod.POST)
 	@ResponseBody
 	public int insertWaybill(HlWaybill hlWaybill,int[] siteId){
@@ -131,6 +175,15 @@ public class HlWaybillController {
 		hlCheckWaybillService.insertHlCheckWaybill(hlCheckWaybill);
 		return i;
 	}
+	/**   
+	 * @Title: updateWaybill   
+	 * @Description: 更新电子运单     
+	 * @param: @param hlWaybill
+	 * @param: @param siteId
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="/updateWaybill",method=RequestMethod.POST)
 	@ResponseBody
 	public int updateWaybill(HlWaybill hlWaybill,int[] siteId){
@@ -147,6 +200,14 @@ public class HlWaybillController {
 		hlWaybill.setUpdateTime(date);
 		return hlWaybillService.updateWaybill(hlWaybill);
 	}
+	/**   
+	 * @Title: delWaybillBatch   
+	 * @Description: 批量删除电子运单     
+	 * @param: @param arrays
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="/delWaybillBatch",method=RequestMethod.POST)
 	@ResponseBody
 	public int delWaybillBatch(int[] arrays){
@@ -156,6 +217,14 @@ public class HlWaybillController {
 		
 		return hlWaybillService.delWaybillBatch(arrays);
 	}
+	/**   
+	 * @Title: selectWayBillByDriverName   
+	 * @Description: 根据驾驶员姓名查询电子运单(X)     
+	 * @param: @param name
+	 * @param: @return     
+	 * @return: List<HlWaybill>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/selectWayBillByDriverName")
 	@ResponseBody
 	public List<HlWaybill> selectWayBillByDriverName(String name){
@@ -167,6 +236,14 @@ public class HlWaybillController {
 		//}
 		return hlWaybillService.selectWayBillByDriverName(name);
 	}
+	/**   
+	 * @Title: getWaybillBatchById   
+	 * @Description: 根据电子运单id查询电子运单信息     
+	 * @param: @param id
+	 * @param: @return     
+	 * @return: HlWaybill      
+	 * @throws   
+	 */
 	@RequestMapping(value="/getWaybillBatchById")
 	@ResponseBody
 	public HlWaybill getWaybillBatchById(int id){
@@ -187,7 +264,7 @@ public class HlWaybillController {
 	}
 	/**   
 	 * @Title: getCarDrivingLogByWaybillId   
-	 * @Description:通过电子运单id获取危运车辆行车日志    
+	 * @Description:根据电子运单id获取危运车辆行车日志台账   
 	 * @param: @param waybillId
 	 * @param: @return      
 	 * @return: HlCarDrivingLog      

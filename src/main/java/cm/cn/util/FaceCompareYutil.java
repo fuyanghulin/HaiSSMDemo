@@ -15,8 +15,8 @@ public class FaceCompareYutil {
 //	public static final String APP_ID = "10100648";
 	public static final String APP_ID = "10113173";
 	public static final String SECRET_ID = "AKIDc7b5d8QmA2oOn3RCze7OSxJTQ8viM5JY";
-	public static final String SECRET_KEY = "C9sQkpfGcnjV3NSJvJTO3RdZFfpjNlvq";
-	public static final String USER_ID = "123456";
+	public static final String SECRET_KEY = "T2b9g1PoEe4z03AHOVchnu17DJ5tnhbU";
+	public static final String USER_ID = "1846548223";
 	public static Map<String, Integer> faceCompare(String imageA,String imageB) throws KeyManagementException, NoSuchAlgorithmException, IOException, JSONException{
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		Youtu faceYoutu = new Youtu(APP_ID, SECRET_ID, SECRET_KEY,Youtu.API_YOUTU_END_POINT,USER_ID);

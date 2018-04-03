@@ -12,6 +12,13 @@ import cm.cn.po.HlAlarm;
 import cm.cn.po.Page;
 import cm.cn.service.HlAlarmService;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description: 处理报警中心的有关信息
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午4:11:47
+ * @modify:  
+ */
 @Controller
 public class HlAlarmController {
 	@Autowired

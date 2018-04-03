@@ -226,7 +226,7 @@ public class HlWaybillServiceImpl implements HlWaybillService {
 	}
 	/**   
 	 * Title: getCarDrivingLogByWaybillId   
-	 * Description: 根据电子运单id获取危运车辆行车日志 
+	 * Description: 根据电子运单id获取危运车辆行车日志台账 
 	 * @param waybillId   
 	 * @see cm.cn.service.HlWaybillService#getCarDrivingLogByWaybillId(int)   
 	 */

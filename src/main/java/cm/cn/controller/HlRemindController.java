@@ -16,15 +16,39 @@ import cm.cn.po.HlRemind;
 import cm.cn.po.Page;
 import cm.cn.service.HlRemindService;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description:首页过期信息提醒 
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午8:42:34
+ * @modify:  
+ */
 @Controller
 public class HlRemindController {
 	@Autowired
 	private HlRemindService hlRemindService;
+	/**   
+	 * @Title: getRemind   
+	 * @Description: 所有过期信息一览,只统计个数     
+	 * @param: @return     
+	 * @return: HlRemind      
+	 * @throws   
+	 */
 	@RequestMapping(value="/getRemind",method=RequestMethod.GET)
 	@ResponseBody
     public HlRemind getRemind(){
 		return hlRemindService.getRemind();
     }
+	/**   
+	 * @Title: getCompanyRemind   
+	 * @Description:企业过期信息     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @param id
+	 * @param: @return     
+	 * @return: Page<HlCompany>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/getCompanyRemind",method=RequestMethod.POST)
 	@ResponseBody
 	public Page<HlCompany> getCompanyRemind(int current, int pageNum,int id){
@@ -43,6 +67,16 @@ public class HlRemindController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: getCarRemind   
+	 * @Description: 车辆过期信息     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @param id
+	 * @param: @return     
+	 * @return: Page<HlCarinfo>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/getCarRemind",method=RequestMethod.POST)
 	@ResponseBody
 	public Page<HlCarinfo> getCarRemind(int current, int pageNum,int id){
@@ -73,6 +107,16 @@ public class HlRemindController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: getPeopleRemind   
+	 * @Description: 人员过期信息     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @param id
+	 * @param: @return     
+	 * @return: Page<HlPeople>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/getPeopleRemind",method=RequestMethod.POST)
 	@ResponseBody
 	public Page<HlPeople> getPeopleRemind(int current, int pageNum,int id){

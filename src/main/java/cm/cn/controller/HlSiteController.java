@@ -19,10 +19,25 @@ import org.springframework.web.multipart.MultipartFile;
 import cm.cn.po.HlSite;
 import cm.cn.po.Page;
 import cm.cn.service.HlSiteService;
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description: 站点信息 
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午9:05:45
+ * @modify:  
+ */
 @Controller
 public class HlSiteController {
 	@Autowired
 	private HlSiteService hlSiteService;
+	/**   
+	 * @Title: SitePhoto   
+	 * @Description: 上传站点负责人的图片信息     
+	 * @param: @param file
+	 * @param: @return     
+	 * @return: List<String>      
+	 * @throws   
+	 */
 	@RequestMapping("/upSitePhoto")
 	@ResponseBody
 	public List<String> SitePhoto(MultipartFile file){
@@ -45,11 +60,30 @@ public class HlSiteController {
 		}
 		return list;
 	}
+	/**   
+	 * @Title: insertSite   
+	 * @Description: 插入站点     
+	 * @param: @param hlSite
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="/insertSite",method=RequestMethod.POST)
 	@ResponseBody
     public int insertSite(HlSite hlSite){
     	return hlSiteService.insertSite(hlSite);
     }
+	/**   
+	 * @Title: selSiteByCompanyIdAndType   
+	 * @Description:根据公司id和站点类型查询站点信息     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @param companyId
+	 * @param: @param type
+	 * @param: @return     
+	 * @return: Page<HlSite>      
+	 * @throws   
+	 */
 	@RequestMapping(value="/selSiteByCompanyIdAndType",method=RequestMethod.POST)
 	@ResponseBody
 	public Page<HlSite> selSiteByCompanyIdAndType(int current,int pageNum,int companyId,String type){
@@ -63,11 +97,27 @@ public class HlSiteController {
 			return null;
 		}
 	}
+	/**   
+	 * @Title: delSiteBatch   
+	 * @Description:批量删除站点信息     
+	 * @param: @param arrays
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="/delSiteBatch",method=RequestMethod.POST)
 	@ResponseBody
 	public int delSiteBatch(int[] arrays){
 		return hlSiteService.delSiteBatch(arrays);
 	}
+	/**   
+	 * @Title: updateSite   
+	 * @Description:更新站点信息     
+	 * @param: @param hlSite
+	 * @param: @return     
+	 * @return: int      
+	 * @throws   
+	 */
 	@RequestMapping(value="/updateSite",method=RequestMethod.POST)
 	@ResponseBody
 	public int updateSite(HlSite hlSite){

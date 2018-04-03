@@ -13,10 +13,26 @@ import cm.cn.po.HlPeixunstate;
 import cm.cn.po.Page;
 import cm.cn.service.HlPeixunStateService;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description:
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午8:26:46
+ * @modify:  
+ */
 @Controller
 public class HlPeixunStateController {
 	@Autowired
 	private HlPeixunStateService hlPeixunStateService;
+	/**   
+	 * @Title: selectAllPeixunState   
+	 * @Description:获取培训状态     
+	 * @param: @param current
+	 * @param: @param pageNum
+	 * @param: @return     
+	 * @return: Page<HlPeixunstate>      
+	 * @throws   
+	 */
 	@RequestMapping("/selectPeixustate")
 	@ResponseBody
 	public Page<HlPeixunstate> selectAllPeixunState(int current,int pageNum){

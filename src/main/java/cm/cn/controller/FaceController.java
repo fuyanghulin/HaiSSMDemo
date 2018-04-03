@@ -5,16 +5,21 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import cm.cn.util.SendRequest;
 
+/**   
+ * Copyright © 2018 HAILIANG Info. Tech Ltd. All rights reserved.
+ * @Description: 用于人脸识别
+ * @author: 胡林   
+ * @date: 2018年4月2日 下午4:09:38
+ * @modify:  
+ */
 @Controller
 public class FaceController {
 	@RequestMapping(value="/faceCompare",method=RequestMethod.POST)

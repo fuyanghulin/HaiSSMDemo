@@ -40,7 +40,7 @@ public interface HlWaybillService {
 	public int delWaybillSite(int waybillId);
 	//根据电子运单id获取承运人基本信息
 	public HlCarrierInfo getCarrierByWaybillId(int waybillId);
-	//根据电子运单id获取危运车辆行车日志
+	//根据电子运单id获取危运车辆行车日志台账
 	public HlCarDrivingLog getCarDrivingLogByWaybillId(int waybillId);
 	
 }
