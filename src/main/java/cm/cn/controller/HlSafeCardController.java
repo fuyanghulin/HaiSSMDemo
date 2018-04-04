@@ -2,7 +2,9 @@ package cm.cn.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -106,6 +108,12 @@ public class HlSafeCardController {
 	@RequestMapping("/upfiles")
 	@ResponseBody
 	public List<String> upsafecardfiles(@RequestParam MultipartFile[] file){
+		Calendar date=Calendar.getInstance();	
+		SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd");
+		String timeName=format.format(date.getTime());
+		File safeCardDirectory=new File("D:/SafeCard/"+timeName);
+		safeCardDirectory.mkdir();
+		
 		List<String> list = new ArrayList<>();
 		 //获取文件名  
 		String safeCardFileName = file[0].getOriginalFilename();
@@ -115,13 +123,13 @@ public class HlSafeCardController {
 	    String newintroductionFileName = "introduction"+UUID.randomUUID()+introductionFileName.substring(introductionFileName.lastIndexOf("."));  
 	    // 存储的物理路径"D:\\"
  	 	String fileSavepath = "D:\\SafeCard\\";
-		File introductionFile = new File(fileSavepath + newintroductionFileName);
-		File safeCardFile = new File(fileSavepath+newsafeCardFileName);
+		File safeCardFile = new File(fileSavepath+timeName+"/"+newsafeCardFileName);
+		File introductionFile = new File(fileSavepath + timeName+"/"+ newintroductionFileName);
 		
 		list.add(safeCardFile.getAbsolutePath());
 		list.add(introductionFile.getAbsolutePath());
-		list.add(newsafeCardFileName);
-		list.add(newintroductionFileName);
+		list.add(timeName+"/"+newsafeCardFileName);
+		list.add(timeName+"/"+newintroductionFileName);
 		try {
 			file[0].transferTo(safeCardFile);
 			file[1].transferTo(introductionFile);

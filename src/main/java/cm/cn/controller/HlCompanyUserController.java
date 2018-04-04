@@ -98,7 +98,7 @@ public class HlCompanyUserController {
 	}
 	@RequestMapping(value="/noLogin")
 	@ResponseBody
-	public String noLogin(){
+	public String noLogin(HttpSession session){
 		return "login";
 	}
 	@RequestMapping(value="/checkSession")
@@ -109,11 +109,8 @@ public class HlCompanyUserController {
 	@RequestMapping(value = "/logout")
 	@ResponseBody
 	public String logout(HttpSession session) {
-		// session失效
 		System.out.println("logout");
 		session.removeAttribute("companyUser");
-		// 重定向到商品查询页面
-//		return "redirect:/index/first.action";
 		return "redirect:/";
 	}
 

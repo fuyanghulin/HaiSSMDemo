@@ -2,7 +2,9 @@ package cm.cn.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -137,14 +139,21 @@ public class HlPeopleController {
 	@RequestMapping("/upPicture")
 	@ResponseBody
 	public List<String> upPicture(MultipartFile file){
+		//根据日期新建文件夹
+		Calendar date=Calendar.getInstance();	
+		SimpleDateFormat format=new SimpleDateFormat("yyyyMMdd");
+		String timeName=format.format(date.getTime());
+		File directory=new File("D:/hailiangpic/"+timeName);
+		directory.mkdir();
+		
 		List<String> list = new ArrayList<>();
 		String originFileName = file.getOriginalFilename();
 		String newFileName = "photo"+UUID.randomUUID()+originFileName.substring(originFileName.lastIndexOf("."));
-		String parentsPath = "D:\\hailiangpic\\";
+		String parentsPath = "D:\\hailiangpic\\"+timeName+"\\";
 		File photo = new File(parentsPath+newFileName);
 		try {
 			file.transferTo(photo);
-			list.add(newFileName);
+			list.add(timeName+"/"+newFileName);
 			list.add(parentsPath+newFileName);
 		} catch (IllegalStateException | IOException e) {
 			e.printStackTrace();
