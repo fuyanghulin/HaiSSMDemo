@@ -55,4 +55,19 @@
 			plateNo = '${plateNo}' 
 			AND velocity > 85
   </select>
+  <select id="selectGpsTrack" resultType="cm.cn.po.GpsTrackResult" statementType="STATEMENT">
+		SELECT
+			longitude,
+			latitude,
+			sendTime,
+			direction,
+			velocity
+		FROM
+			${tableName}
+		WHERE
+			plateNo = '${plateNo}'
+			AND sendTime BETWEEN '${startTime}'
+			AND '${finishTime}'
+		ORDER BY sendTime
+    </select>
 </mapper>

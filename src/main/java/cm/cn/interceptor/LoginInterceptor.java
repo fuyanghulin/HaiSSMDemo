@@ -13,7 +13,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			throws Exception {
 		String uri = request.getRequestURI();
 		// TODO Auto-generated method stub
-		if(uri.contains("companyUserLogin.action")||uri.contains("noLogin")){
+		if(uri.contains("companyUserLogin.action")||uri.contains("noLogin")||uri.contains("logout")){
         	return true;
         }
 		HttpSession session = request.getSession();  

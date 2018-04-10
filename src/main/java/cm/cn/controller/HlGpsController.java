@@ -1,11 +1,13 @@
 package cm.cn.controller;
 
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import cm.cn.po.GpsTrack;
+import cm.cn.po.GpsTrackResult;
 import cm.cn.po.Gpsinfo;
 import cm.cn.service.HlGpsService;
 /**   
@@ -36,5 +38,18 @@ public class HlGpsController {
 		}else {
 			return null;
 		}
+	}
+	/**   
+	 * @Title: selectGpsTrack   
+	 * @Description: 根据车牌及时间查询运行轨迹    
+	 * @param: @param gpsTrack
+	 * @param: @return     
+	 * @return: List<GpsTrackResult>      
+	 * @throws   
+	 */
+	@RequestMapping(value = "/selectGpsTrack",method = RequestMethod.POST)
+	@ResponseBody
+	public List<GpsTrackResult> selectGpsTrack(GpsTrack gpsTrack){
+		return hlGpsService.selectGpsTrack(gpsTrack);
 	}
 }
